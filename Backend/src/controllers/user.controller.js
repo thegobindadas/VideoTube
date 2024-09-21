@@ -112,7 +112,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(404, "User does not exists")
     }
 
-    
+
     if (!password) {
         throw new ApiError(400, "Password is required")
     }
@@ -153,6 +153,45 @@ export const loginUser = asyncHandler(async (req, res) => {
                 refreshToken
             }, 
             "User logged in successfully"
+        )
+    )
+})
+
+
+export const logoutUser = asyncHandler(async (req, res) => {   
+
+    const logoutUser = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $unset: {
+                refreshToken: 1
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    if (!logoutUser) {
+        throw new ApiError(500, "Something went wrong while logging out the user")
+    }
+
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(
+        new ApiResponse(
+            200, 
+            {}, 
+            "User logged out successfully"
         )
     )
 })
