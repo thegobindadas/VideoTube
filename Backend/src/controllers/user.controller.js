@@ -29,6 +29,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 export const registerUser = asyncHandler(async (req, res) => {
     
     const { username, email, fullName, password } = req.body
+    
 
     if ([username, email, fullName, password].some(field => field?.trim() === "" || field?.trim() === undefined)) {
         throw new ApiError(400, "All fields are required")
@@ -95,6 +96,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
 
     const { username, email, password } = req.body
+    console.log(req.body);
+    
 
     if (!username && !email) {
         throw new ApiError(400, "Username or email is required")
@@ -109,6 +112,10 @@ export const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(404, "User does not exists")
     }
 
+    
+    if (!password) {
+        throw new ApiError(400, "Password is required")
+    }
 
     const isPasswordValid = await user.isPasswordCorrect(password)
 
@@ -132,7 +139,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         secure: true
     }
 
-    
+
     return res
     .status(200)
     .cookie("accessToken", accessToken, options)
