@@ -214,7 +214,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
         }
 
 
-        const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
+        const user = await User.findById(decodedToken?._id)
 
         if (!user) {
             throw new ApiError(401, "Invalid Refresh Token")
@@ -226,8 +226,8 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
         }
 
 
-        const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
-
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id)
+     
 
         const options = {
             httpOnly: true,
@@ -235,17 +235,17 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
         }
 
 
-        
+
         return res
         .status(200)
         .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
+        .cookie("refreshToken", refreshToken, options)
         .json(
             new ApiResponse(
                 200, 
                 {
                     accessToken,
-                    refreshToken: newRefreshToken
+                    refreshToken: refreshToken
                 }, 
                 "Access token refreshed successfully"
             )
