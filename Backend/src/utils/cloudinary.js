@@ -30,6 +30,27 @@ const uploadOnCloudinary = async (localFilePath) => {
 }
 
 
+const deletePhotoOnCloudinary = async (cloudinaryFilePathUrl) => {
+    try {
+        
+        if (!cloudinaryFilePathUrl) return null
+
+        const parts = cloudinaryFilePathUrl.split('/');
+        const fileName = parts[parts.length - 1].split('.')[0];
+        
+
+        const result = await cloudinary.uploader.destroy(fileName.toString(), {
+            resource_type: "image",
+            //type: 'authenticated'
+        });
+
+        return result;
+    } catch (error) {
+        return null
+    }
+};
+
+
 
 
 export { uploadOnCloudinary }
