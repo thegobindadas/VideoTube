@@ -258,3 +258,45 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
         throw new ApiError(500, error?.message || "Something went wrong while refreshing access token")
     }
 })
+
+
+export const changeCurrentPassword = asyncHandler(async (req, res) => {
+
+    const { currentPassword, newPassword, confirmNewPassword } = req.body
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+        throw new ApiError(400, "All fields are required")
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        throw new ApiError(400, "New password and confirm new password do not match")
+    }
+
+
+    const user = await User.findById(req.user?._id)
+
+    if (!user) {
+        throw new ApiError(404, "User not found")
+    }
+
+
+    const isPasswordValid = await user.isPasswordCorrect(currentPassword)
+
+    if (!isPasswordValid) {
+        throw new ApiError(401, "Invalid current password")
+    }
+
+    user.password = newPassword
+    await user.save({ validateBeforeSave: false })
+
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200, 
+            {}, 
+            "Password changed successfully"
+        )
+    )
+})
