@@ -7,7 +7,8 @@ import {
     logoutUser,
     refreshAccessToken,
     changeCurrentPassword,
-    getCurrentUser
+    getCurrentUser,
+    updateAccountDetails
 } from "../controllers/user.controller.js"
 
 
@@ -38,6 +39,8 @@ router.route("/refresh-token").post(refreshAccessToken)
 router.route("/change-password").post(verifyJWT, changeCurrentPassword)
 
 router.route("/current-user").get(verifyJWT, getCurrentUser)
+
+router.route("/update-account-details").patch(verifyJWT, updateAccountDetails)
 
 
 
