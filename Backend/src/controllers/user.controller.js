@@ -286,6 +286,7 @@ export const changeCurrentPassword = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid current password")
     }
 
+
     user.password = newPassword
     await user.save({ validateBeforeSave: false })
 
@@ -297,6 +298,21 @@ export const changeCurrentPassword = asyncHandler(async (req, res) => {
             200, 
             {}, 
             "Password changed successfully"
+        )
+    )
+})
+
+
+export const getCurrentUser = asyncHandler(async (req, res) => {
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200, 
+            {
+                user: req.user
+            }, 
+            "User fetched successfully"
         )
     )
 })
