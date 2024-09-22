@@ -11,6 +11,7 @@ import {
     updateAccountDetails,
     updateUserAvatar,
     updateUserCoverImage,
+    getUserChannelProfile,
 } from "../controllers/user.controller.js"
 
 
@@ -47,6 +48,8 @@ router.route("/update-account-details").patch(verifyJWT, updateAccountDetails)
 router.route("/update-avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
 
 router.route("/update-cover-image").patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage)
+
+router.route("/channel-profile/:username").get(verifyJWT, getUserChannelProfile)
 
 
 
