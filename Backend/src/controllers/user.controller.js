@@ -309,9 +309,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     .json(
         new ApiResponse(
             200, 
-            {
-                user: req.user
-            }, 
+            {user: req.user}, 
             "User fetched successfully"
         )
     )
