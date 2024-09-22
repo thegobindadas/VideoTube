@@ -400,3 +400,50 @@ export const updateUserAvatar = asyncHandler(async (req, res) => {
         )
     )
 })
+
+
+export const updateUserCoverImage = asyncHandler(async (req, res) => {
+
+    const coverImageLocalPath = req.file?.path
+
+    if (!coverImageLocalPath) {
+        throw new ApiError(400, "Cover image file is required")
+    }
+
+    //TODO: delete old image
+
+
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+
+    if(!coverImage) {
+        throw new ApiError(500, "Something went wrong while uploading cover image")
+    }
+
+
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set: {
+                coverImage: coverImage.url
+            }
+        },
+        {
+            new: true
+        }
+    ).select("-password -refreshToken")
+
+    if (!user) {
+        throw new ApiError(404, "User not found")
+    }
+
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            user, 
+            "Cover image updated successfully"
+        )
+    )
+})
