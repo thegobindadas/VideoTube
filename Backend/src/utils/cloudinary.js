@@ -11,13 +11,14 @@ cloudinary.config({
 
 
 
-const uploadOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath, folderName="videohub") => {
     try {
         if (!localFilePath) return null
 
         const response = await cloudinary.uploader.upload( localFilePath, {
+                folder: folderName,
                 resource_type: "auto",
-            }
+            },
         )
 
         fs.unlinkSync(localFilePath)
@@ -28,6 +29,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         return null
     }
 }
+
 
 
 const deletePhotoOnCloudinary = async (cloudinaryFilePathUrl) => {
