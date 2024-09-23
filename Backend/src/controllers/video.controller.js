@@ -1,9 +1,9 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { Video } from "../models/video.model";
-import { Mongoose } from "mongoose";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { uploadOnCloudinary } from "../utils/cloudinary";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { Video } from "../models/video.model.js";
+import mongoose from "mongoose";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
 
@@ -41,7 +41,7 @@ export const publishAVideo = asyncHandler(async (req, res) => {
     }
 
 
-    let publishVideoId = new Mongoose.Types.ObjectId().toHexString()
+    let publishVideoId = new mongoose.Types.ObjectId().toHexString()
 
     if (!publishVideoId) {
         throw new ApiError(500, "Something went wrong while generating video id")        
@@ -52,8 +52,6 @@ export const publishAVideo = asyncHandler(async (req, res) => {
 
 
     const videoFile = await uploadOnCloudinary(videoFileLocalPath, fileStorePathOnCloudinary)
-    console.log(videoFile);
-    
 
     if (!videoFile) {
         throw new ApiError(500, "Something went wrong while uploading video file")
@@ -73,6 +71,7 @@ export const publishAVideo = asyncHandler(async (req, res) => {
         thumbnail: thumbnail.url,
         title,
         description,
+        duration: videoFile.duration,
         owner: req.user?._id
     })
 
