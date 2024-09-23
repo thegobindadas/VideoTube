@@ -11,12 +11,12 @@ cloudinary.config({
 
 
 
-const uploadOnCloudinary = async (localFilePath, folderName="videohub") => {
+const uploadOnCloudinary = async (localFilePath, folderPath="videohub") => {
     try {
         if (!localFilePath) return null
 
         const response = await cloudinary.uploader.upload( localFilePath, {
-                folder: folderName,
+                folder: folderPath,
                 resource_type: "auto",
             },
         )
@@ -32,7 +32,7 @@ const uploadOnCloudinary = async (localFilePath, folderName="videohub") => {
 
 
 
-const deletePhotoOnCloudinary = async (cloudinaryFilePathUrl) => {
+export const deletePhotoOnCloudinary = async (cloudinaryFilePathUrl, folderPath="videohub") => {
     try {
         
         if (!cloudinaryFilePathUrl) return null
@@ -41,7 +41,7 @@ const deletePhotoOnCloudinary = async (cloudinaryFilePathUrl) => {
         const fileName = parts[parts.length - 1].split('.')[0];
         
 
-        const result = await cloudinary.uploader.destroy(fileName.toString(), {
+        const result = await cloudinary.uploader.destroy(`${folderPath}/${fileName.toString()}`, {
             resource_type: "image",
             //type: 'authenticated'
         });

@@ -423,14 +423,12 @@ export const updateUserCoverImage = asyncHandler(async (req, res) => {
     }
 
 
-    const deleteCoverImage = await deletePhotoOnCloudinary(req.user?.coverImage)
+    const deleteCoverImageInCloudinary = await deletePhotoOnCloudinary(req.user?.coverImage)
     
-
-    if (!deleteCoverImage) {
-        throw new ApiError(500, "Something went wrong while deleting cover image")
+    if (!deleteCoverImageInCloudinary) {
+        throw new ApiError(500, "Something went wrong while deleting cover image in cloudinary")
     }
     
-
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
@@ -448,6 +446,7 @@ export const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(404, "User not found")
     }
 
+    
 
     return res
     .status(200)
