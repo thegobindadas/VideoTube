@@ -3,6 +3,7 @@ import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 import { 
     publishAVideo,
+    getVideoById
 } from "../controllers/video.controller.js"
 
 
@@ -27,7 +28,9 @@ router.route("/").post(
     publishAVideo
 );
 
-
+router
+    .route("/:videoId")
+    .get(getVideoById)
 
 
 
