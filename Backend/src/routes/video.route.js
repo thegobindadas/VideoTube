@@ -3,7 +3,9 @@ import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 import { 
     publishAVideo,
-    getVideoById
+    getVideoById,
+    updateVideoDetails,
+    deleteVideo,
 } from "../controllers/video.controller.js"
 
 
@@ -31,6 +33,8 @@ router.route("/").post(
 router
     .route("/:videoId")
     .get(getVideoById)
+    
+router.route("/:videoId").patch(upload.single("thumbnail"), updateVideoDetails);
 
 
 
