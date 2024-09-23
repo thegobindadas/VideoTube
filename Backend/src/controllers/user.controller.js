@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { uploadOnCloudinary, deletePhotoOnCloudinary } from "../utils/cloudinary.js"
 
 
 
@@ -410,14 +410,21 @@ export const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Cover image file is required")
     }
 
-    //TODO: delete old image
-
-
+    
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if(!coverImage) {
         throw new ApiError(500, "Something went wrong while uploading cover image")
     }
+
+
+    const deleteCoverImage = await deletePhotoOnCloudinary(req.user?.coverImage)
+    
+
+    if (!deleteCoverImage) {
+        throw new ApiError(500, "Something went wrong while deleting cover image")
+    }
+    
 
 
     const user = await User.findByIdAndUpdate(
