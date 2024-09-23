@@ -363,13 +363,18 @@ export const updateUserAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar file is required")
     }
 
-    //TODO: delete old image - assignment
-
-
+    
     const avatar = await uploadOnCloudinary(avatarLocalPath)
 
     if(!avatar) {
         throw new ApiError(500, "Something went wrong while uploading avatar")
+    }
+
+
+    const deleteAvatarInCloudinary = await deletePhotoOnCloudinary(req.user?.avatar)
+    
+    if (!deleteAvatarInCloudinary) {
+        throw new ApiError(500, "Something went wrong while deleting avatar in cloudinary")
     }
 
 
