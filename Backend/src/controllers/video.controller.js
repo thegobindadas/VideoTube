@@ -3,7 +3,7 @@ import { Video } from "../models/video.model.js";
 import mongoose from "mongoose";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary, deletePhotoOnCloudinary } from "../utils/cloudinary.js";
 
 
 
@@ -95,28 +95,32 @@ export const publishAVideo = asyncHandler(async (req, res) => {
 
 export const getVideoById = asyncHandler(async (req, res) => {
     
-    const { videoId } = req.params
+    try {
+        const { videoId } = req.params
+        
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required")
+        }
     
-    if (!videoId) {
-        throw new ApiError(400, "Video id is required")
-    }
-
-
-    const video = await Video.findById(videoId)
-
-    if (!video) {
-        throw new ApiError(404, "Video does not exist")
-    }
-
-
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            video,
-            "Video fetched successfully"
+    
+        const video = await Video.findById(videoId)
+    
+        if (!video) {
+            throw new ApiError(404, "Video does not exist")
+        }
+    
+    
+    
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                video,
+                "Video fetched successfully"
+            )
         )
-    )
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching video")
+    }
 })
