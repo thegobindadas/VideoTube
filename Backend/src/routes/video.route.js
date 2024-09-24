@@ -36,6 +36,7 @@ router
     
 router.route("/:videoId").patch(upload.single("thumbnail"), updateVideoDetails);
 
+router.route("/:videoId").delete(deleteVideo)
 
 
 

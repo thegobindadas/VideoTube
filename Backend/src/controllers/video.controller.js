@@ -3,7 +3,7 @@ import { Video } from "../models/video.model.js";
 import mongoose from "mongoose";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { uploadOnCloudinary, deletePhotoOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary, deletePhotoOnCloudinary, deleteVideoOnCloudinary, deleteFolderOnCloudinary } from "../utils/cloudinary.js";
 
 
 
@@ -204,5 +204,67 @@ export const updateVideoDetails = asyncHandler(async (req, res) => {
 
     } catch (error) {
         throw new ApiError(500, error.message || "Something went wrong while updating video details")
+    }
+})
+
+
+export const deleteVideo = asyncHandler(async (req, res) => {
+    try {
+
+        const { videoId } = req.params
+        
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required")
+        }
+
+
+        const video = await Video.findById(videoId)
+
+        if (!video) {
+            throw new ApiError(404, "Video does not exist")
+        }
+
+
+        if (video.owner.toString() !== req.user._id.toString()) {
+            throw new ApiError(403, "Unauthorized to delete this video")
+        }
+
+
+        const deleteThumbnailOnCloudinary = await deletePhotoOnCloudinary(video.thumbnail)
+
+        if (deleteThumbnailOnCloudinary.result !== "ok") {
+            throw new ApiError(500, "Something went wrong while deleting thumbnail")
+        }
+
+
+        const deleteVideoFileOnCloudinary = await deleteVideoOnCloudinary(video.videoFile)
+
+        if (deleteVideoFileOnCloudinary.result !== "ok") {
+            throw new ApiError(500, "Something went wrong while deleting video")
+        }
+
+
+        await deleteFolderOnCloudinary(`videohub/${req.user?._id}/${video._id}`)
+
+
+        const deletedVideo = await video.deleteOne()
+
+        if (!deletedVideo) {
+            throw new ApiError(500, "Something went wrong while deleting folder")
+        }
+
+
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {},
+                "Video deleted successfully"
+            )
+        )
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while deleting video")
     }
 })
