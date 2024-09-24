@@ -288,7 +288,7 @@ export const togglePublishStatus = asyncHandler(async (req, res) => {
 
 
         if (video.owner.toString() !== req.user._id.toString()) {
-            throw new ApiError(403, "Unauthorized to update this video")
+            throw new ApiError(403, "Unauthorized to update status of this video")
         }
 
 
