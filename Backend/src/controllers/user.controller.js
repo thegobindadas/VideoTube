@@ -53,19 +53,20 @@ export const registerUser = asyncHandler(async (req, res) => {
     }else {
         throw new ApiError(400, "Avatar file is required")
     }
-    
-    let coverImageLocalPath;
-    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-        coverImageLocalPath = req.files.coverImage[0].path
-    }
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
     }
 
     
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
-    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+
+    
+    const avatar = await uploadOnCloudinary(avatarLocalPath, "videohub")
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath, "videohub")
 
     if (!avatar) {
         throw new ApiError(400, "Avatar upload failed")
@@ -364,7 +365,7 @@ export const updateUserAvatar = asyncHandler(async (req, res) => {
     }
 
     
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    const avatar = await uploadOnCloudinary(avatarLocalPath, "videohub")
 
     if(!avatar) {
         throw new ApiError(500, "Something went wrong while uploading avatar")
@@ -416,7 +417,7 @@ export const updateUserCoverImage = asyncHandler(async (req, res) => {
     }
 
     
-    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath, "videohub")
 
     if(!coverImage) {
         throw new ApiError(500, "Something went wrong while uploading cover image")
