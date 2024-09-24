@@ -94,7 +94,7 @@ export const publishAVideo = asyncHandler(async (req, res) => {
 
 
 export const getVideoById = asyncHandler(async (req, res) => {
-    
+
     try {
         const { videoId } = req.params
         
@@ -173,9 +173,9 @@ export const updateVideoDetails = asyncHandler(async (req, res) => {
             }
             
 
-            const deleteThumbnailOnCloudinary = await deletePhotoOnCloudinary(video.thumbnail, fileStorePathOnCloudinary)
+            const deleteThumbnailOnCloudinary = await deletePhotoOnCloudinary(video.thumbnail)
 
-            if (!deleteThumbnailOnCloudinary) {
+            if (deleteThumbnailOnCloudinary.result !== "ok") {
                 throw new ApiError(500, "Something went wrong while deleting thumbnail")
             }
 
@@ -250,7 +250,7 @@ export const deleteVideo = asyncHandler(async (req, res) => {
         const deletedVideo = await video.deleteOne()
 
         if (!deletedVideo) {
-            throw new ApiError(500, "Something went wrong while deleting folder")
+            throw new ApiError(500, "Something went wrong while deleting video folder")
         }
 
 
@@ -272,7 +272,7 @@ export const deleteVideo = asyncHandler(async (req, res) => {
 
 export const togglePublishStatus = asyncHandler(async (req, res) => {
     try {
-        
+
         const { videoId } = req.params
 
         if (!videoId) {

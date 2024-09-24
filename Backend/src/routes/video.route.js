@@ -31,9 +31,7 @@ router.route("/").post(
     publishAVideo
 );
 
-router
-    .route("/:videoId")
-    .get(getVideoById)
+router.route("/:videoId").get(getVideoById)
     
 router.route("/:videoId").patch(upload.single("thumbnail"), updateVideoDetails);
 
