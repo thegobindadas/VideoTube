@@ -268,3 +268,50 @@ export const deleteVideo = asyncHandler(async (req, res) => {
         throw new ApiError(500, error.message || "Something went wrong while deleting video")
     }
 })
+
+
+export const togglePublishStatus = asyncHandler(async (req, res) => {
+    try {
+        
+        const { videoId } = req.params
+
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required")
+        }
+
+
+        const video = await Video.findById(videoId)
+
+        if (!video) {
+            throw new ApiError(404, "Video does not exist")
+        }
+
+
+        if (video.owner.toString() !== req.user._id.toString()) {
+            throw new ApiError(403, "Unauthorized to update this video")
+        }
+
+
+        video.isPublished = !(video.isPublished)
+
+        const updatedVideo = await video.save({ validateBeforeSave: false });
+
+        if (!updatedVideo) {
+            throw new ApiError(500, "Something went wrong while toggling publish status")
+        }
+
+
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                video,
+                "Publish status toggled successfully"
+            )
+        )
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while toggling publish status")
+    }
+})
