@@ -97,43 +97,34 @@ export const getChannelSubscribers = asyncHandler(async (req, res) => {
                     from: "subscriptions",
                     localField: "_id",
                     foreignField: "channel",
-                    as: "subscribers",
-                    pipeline: [
-                        {
-                            $lookup: {
-                                    from: "users",
-                                    localField: "subscriber",
-                                    foreignField: "_id",
-                                    as: "subscribers_details",
-                                    pipeline: [
-                                    {
-                                        $project: {
-                                            username: 1,
-                                            fullName: 1,
-                                            avatar: 1
-                                        }
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            $unwind: "$subscribers_details"
-                        },
-                        {
-                            $project: {
-                                _id: 1,
-                                channel: 1,
-                                subscriber: 1,
-                                username: "$subscribers_details.username",
-                                fullName: "$subscribers_details.fullName",
-                                avatar: "$subscribers_details.avatar"
-                            }
-                        }
-                    ]
+                    as: "subscribers"
+                }
+            },
+            {
+                $unwind: "$subscribers"
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "subscribers.subscriber",
+                    foreignField: "_id",
+                    as: "subscriber_details"
+                }
+            },
+            {
+                $unwind: "$subscriber_details"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    subscriber: "$subscriber_details._id",
+                    username: "$subscriber_details.username",
+                    fullName: "$subscriber_details.fullName",
+                    avatar: "$subscriber_details.avatar"
                 }
             }
-
-        ])
+        ]);
+        
 
         if (!getChannelSubscribers?.length) {
             throw new ApiError(404, "Channel does not have any subscribers")
@@ -146,7 +137,7 @@ export const getChannelSubscribers = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                getChannelSubscribers[0].subscribers,
+                getChannelSubscribers,
                 "Subscribers fetched successfully"
             )
         )
