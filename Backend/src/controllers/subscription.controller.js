@@ -173,43 +173,34 @@ export const getSubscribedChannels = asyncHandler(async (req, res) => {
                     from: "subscriptions",
                     localField: "_id",
                     foreignField: "subscriber",
-                    as: "subscribedChannels",
-                    pipeline: [
-                        {
-                            $lookup: {
-                            from: "users",
-                            localField: "channel",
-                            foreignField: "_id",
-                            as: "channel_details",
-                            pipeline: [
-                                {
-                                    $project: {
-                                        username: 1,
-                                        fullName: 1,
-                                        avatar: 1
-                                    }
-                                }
-                            ]
-                            }
-                        },
-                        {
-                            $unwind: "$channel_details"
-                        },
-                        {
-                            $project: {
-                                _id:1,
-                                channel: 1,
-                                subscriber: 1,
-                                username: "$channel_details.username",
-                                fullName: "$channel_details.fullName",
-                                avatar: "$channel_details.avatar"
-                            }
-                        }
-                    ]
+                    as: "subscribedChannels"
+                }
+            },
+            {
+                $unwind: "$subscribedChannels"
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "subscribedChannels.channel",
+                    foreignField: "_id",
+                    as: "channel_details"
+                }
+            },
+            {
+                $unwind: "$channel_details"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    channel: "$channel_details._id",
+                    username: "$channel_details.username",
+                    fullName: "$channel_details.fullName",
+                    avatar: "$channel_details.avatar"
                 }
             }
-            
-        ])
+        ]);
+        
 
         if (!getSubscribedChannels?.length) {
             throw new ApiError(404, "User does not subscribed any channels")
@@ -222,7 +213,7 @@ export const getSubscribedChannels = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                getSubscribedChannels[0].subscribedChannels,
+                getSubscribedChannels,
                 "Subscribed channels fetched successfully"
             )
         )        
