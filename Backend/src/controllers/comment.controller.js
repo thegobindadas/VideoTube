@@ -56,7 +56,7 @@ export const updateComment = asyncHandler(async (req, res) => {
         const { content } = req.body
     
         if (!commentId) {
-            throw new ApiError(400, "Comment id is required")
+            throw new ApiError(400, "Comment Id id is required")
         }
 
 
