@@ -153,3 +153,55 @@ export const deleteComment = asyncHandler(async (req, res) => {
         throw new ApiError(500, error.message || "Something went wrong while deleting comment")
     }
 })
+
+
+export const getVideoComments = asyncHandler(async (req, res) => {
+    try {
+        const { videoId } = req.params
+        const { page = 1, limit = 10 } = req.query
+
+
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required")
+        }
+
+
+        if (!isValidObjectId(videoId)) {
+            throw new ApiError(400, "Invalid video id")
+        }
+
+
+        const comments = await Comment.find({ video: videoId })
+            .populate('owner', 'username avatar') // Populate the comment owner's username and avatar
+            .sort({ createdAt: -1 }) // Sort comments by newest first
+            .skip((page - 1) * limit) // Pagination: skip comments based on the page number
+            .limit(Number(limit)); // Limit the number of comments per page
+        
+
+        if (!comments) {
+            throw new ApiError(404, "Comments not found")
+        }
+
+        // Get total count of comments for the video
+        const totalComments = await Comment.countDocuments({ video: videoId });
+
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    comments,
+                    totalComments,
+                    totalPages: Math.ceil(totalComments / limit),
+                    currentPage: Number(page),
+                },
+                "Comments fetched successfully"
+            )
+        )
+
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching comments")
+    }
+})
