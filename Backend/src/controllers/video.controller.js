@@ -315,3 +315,58 @@ export const togglePublishStatus = asyncHandler(async (req, res) => {
         throw new ApiError(500, error.message || "Something went wrong while toggling publish status")
     }
 })
+
+
+export const getAllVideos = asyncHandler(async (req, res) => {
+    try {
+        const { page = 1, limit = 10, query = "", sortBy = "createdAt", sortType = "desc", userId } = req.query;
+
+        // Create a base search criteria object
+        const searchCriteria = {
+            isPublished: true // Only fetch published videos
+        };
+
+        // If query is provided, search in title or description
+        if (query) {
+            searchCriteria.$or = [
+                { title: { $regex: query, $options: "i" } }, // Case-insensitive search in title
+                { description: { $regex: query, $options: "i" } } // Case-insensitive search in description
+            ];
+        }
+
+        // If userId is provided, filter by the user's uploaded videos
+        if (userId && isValidObjectId(userId)) {
+            searchCriteria.owner = userId;
+        }
+
+        // Sorting: determine ascending or descending based on sortType
+        const sortOptions = {
+            [sortBy]: sortType === "asc" ? 1 : -1
+        };
+
+        // Fetch videos based on search criteria, pagination, and sorting
+        const videos = await Video.find(searchCriteria)
+            .sort(sortOptions) // Apply sorting
+            .skip((page - 1) * limit) // Skip for pagination
+            .limit(Number(limit)) // Limit the number of videos per page
+            .populate('owner', 'username fullName avatar') // Populate owner (channel) information
+            .select('title description thumbnail views createdAt'); // Select relevant video fields
+
+        // Get the total number of videos for pagination
+        const totalVideos = await Video.countDocuments(searchCriteria);
+
+        
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {
+                videos,
+                totalVideos,
+                totalPages: Math.ceil(totalVideos / limit),
+                currentPage: Number(page)
+            }, "Videos fetched successfully")
+        );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Error occurred while fetching videos");
+    }
+});
