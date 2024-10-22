@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem('user')) || null,
   subscriptions: [],
   watchHistory: [],
   status: 'idle',
@@ -15,10 +15,12 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action) {
       state.user = action.payload;
+      localStorage.setItem('user', JSON.stringify(action.payload));
     },
     logoutUser(state) {
       state.user = null;
       state.watchHistory = [];
+      localStorage.removeItem('user');
     },
     addSubscription(state, action) {
       state.subscriptions.push(action.payload);

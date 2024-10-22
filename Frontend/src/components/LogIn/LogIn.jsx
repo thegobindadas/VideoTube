@@ -1,34 +1,69 @@
 import React, { useState } from 'react'
-import { TextInput, Button } from "../index"
-import axios from 'axios';
-import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom';
+import { TextInput, Button } from "../index"
+import { useForm } from 'react-hook-form'
+import axios from 'axios';
+import { setUser } from '../../store/userSlice'
+import { useDispatch } from "react-redux"
 
 function LogIn() {
 
     const [error, setError] = useState("")
     const { register, handleSubmit, formState: { errors } } = useForm()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+
+    const getCurrentUser = async () => {
+        try {
+            const response = await axios.get('/api/v1/user/current-user', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+                        
+            return response.data.data.user
+
+        } catch (error) {
+            setError(error.response?.data.message || 'Error fetching current user');
+            console.error('Error fetching current user:', error);
+        }
+    }
+
 
     const LoginUser = async (data) => {
         setError("")
         try {
-            const formData = new FormData();
-    
-            if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(data.usernameOrEmail)) {
-                formData.append('email', data.usernameOrEmail);
-            } else {
-                formData.append('username', data.usernameOrEmail);
-            }
-            formData.append('password', data.password);
+            const loginData = {};
 
-            const response = await axios.post('/api/v1/user/login', formData, {
-                headers: {
-                'Content-Type': 'multipart/form-data',
-                },
-            });
-      
-          console.log('User logged in successfully:', response.data);
+            if (data.email) {
+                loginData.email = data.email;
+            }
+            if (data.username) {
+                loginData.username = data.username;
+            }
+            if (data.password) {
+                loginData.password = data.password;
+            }    
+
+            
+            const response = await axios.post('/api/v1/user/login', loginData);
+            
+            const { token } = response.data.data.accessToken; 
+            localStorage.setItem('token', token)
+
+            const { refreshToken } = response.data.data.refreshToken; 
+            localStorage.setItem('refreshToken', refreshToken)
+            
+
+            console.log('User logged in successfully:', response.data);
+
+
+            if (response.data) {
+                const user = await getCurrentUser()
+                
+                if(user) dispatch(setUser(user));
+            }
         } catch (error) {
             if (error.response?.data) {
                 const parser = new DOMParser();
@@ -53,16 +88,26 @@ function LogIn() {
             </div>
             <form onSubmit={handleSubmit(LoginUser)} className="my-14 flex w-full flex-col items-start justify-start gap-4">
                 
-                <TextInput
-                    label="Username or Email: "
-                    placeholder="Enter username or email"
-                    {...register("usernameOrEmail", {
-                        required: "Username or email is required",
-                    })}
-                />
-                {errors.usernameOrEmail && (
-                    <p className="text-red-500">{errors.usernameOrEmail.message}</p>
-                )}
+            <TextInput
+            label="Email: "
+            placeholder="Enter your email"
+            type="email"
+            {...register("email", {
+                required: true,
+                validate: {
+                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                    "Email address must be a valid address",
+                }
+            })}
+            />
+            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+
+            <TextInput
+                label="username: "
+                placeholder="Enter your username"
+                {...register("username", { required: true })}
+            />
+            {errors.username && <p className="text-red-500">Username is required.</p>}
 
                 <TextInput
                     label="Password: "

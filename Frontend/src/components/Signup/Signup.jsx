@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom';
 import { TextInput, AvatarInput, Button } from "../index"
+import { useForm } from 'react-hook-form'
 import axios from 'axios';
 
 function Signup() {
@@ -14,27 +14,27 @@ function Signup() {
     const registerUser = async (data) => {
         setError("")
         try {
-            const formData = new FormData();
-        
-            formData.append('fullName', data.name);
-            formData.append('email', data.email);
-            formData.append('username', data.username);
-            formData.append('password', data.password);
-        
+
+            const registerData = {}
+
+            registerData.fullName = data.fullName;
+            registerData.email = data.email;
+            registerData.username = data.username;
+            registerData.password = data.password;
 
             if (data.avatar.length > 0) {
-                formData.append('avatar', data.avatar[0]);
+                registerData.avatar = data.avatar[0]
             }
         
-            
-            const response = await axios.post('/api/v1/user/register', formData, {
+
+            const response = await axios.post('/api/v1/user/register', registerData, {
                 headers: {
                     'Content-Type': 'multipart/form-data', 
                 },
             });
         
-            console.log('User registered successfully:', response.data);
             if (response.data) {
+                console.log('User registered successfully:', response.data);
                 navigate("login")
             }
             
@@ -71,10 +71,11 @@ function Signup() {
                 <TextInput
                     label="Full Name: "
                     placeholder="Enter your full name"
-                    {...register("name", {
+                    {...register("fullName", {
                         required: true,
                     })}
-                /> 
+                />
+
                 <TextInput
                 label="Email: "
                 placeholder="Enter your email"
