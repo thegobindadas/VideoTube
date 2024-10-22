@@ -4,7 +4,6 @@ function TextInput({
     label,
     type = "text",
     className = "",
-    error,
     ...props
 }, ref) {
     const id = useId()
@@ -24,7 +23,6 @@ function TextInput({
              id={id}
              autoComplete="false"
             />
-            {error && <p className="text-xs text-red-500">{error}</p>}
         </div>
     )
 }
