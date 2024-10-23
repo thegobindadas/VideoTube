@@ -4,6 +4,9 @@ import Button from "./Buttons/Button";
 import Signup from "./Signup/Signup";
 import LogIn from "./LogIn/LogIn";
 import Header from "./Header/Header";
+import SidebarButton from "./Buttons/SidebarButton";
+import Sidebar from "./Sidebar/Sidebar";
+import VideoCard from "./VideoItem/VideoCard";
 
 
 
@@ -16,4 +19,7 @@ export {
     Signup,
     LogIn,
     Header,
+    SidebarButton,
+    Sidebar,
+    VideoCard,
 }
