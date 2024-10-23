@@ -8,6 +8,7 @@ import {
     deleteVideo,
     togglePublishStatus,
     getAllVideos,
+    getRecommendedVideos,
 } from "../controllers/video.controller.js"
 
 
@@ -41,6 +42,8 @@ router.route("/:videoId").delete(deleteVideo)
 router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
 
 router.route("/").get(getAllVideos)
+
+router.route("/recommended-videos/:videoId").get(getRecommendedVideos)
 
 
 

@@ -370,3 +370,74 @@ export const getAllVideos = asyncHandler(async (req, res) => {
         throw new ApiError(500, error.message || "Error occurred while fetching videos");
     }
 });
+
+
+export const getRecommendedVideos = asyncHandler(async (req, res) => {
+    try{
+        const { currentVideoId } = req.params
+        const { userId = null } = req.body
+
+        // Step 1: Fetch the current video details
+        const currentVideo = await Video.findById(currentVideoId)
+            .populate('owner', 'username')
+            .exec();
+        
+        // Step 2: Fetch videos from the same owner (i.e., channel)
+        let relatedVideos = await Video.find({
+            _id: { $ne: currentVideoId },  // Exclude the current video
+            owner: currentVideo.owner._id, // Same owner/channel
+            isPublished: true
+        })
+        .limit(5)
+        .exec();
+
+        // Step 3: Fetch videos based on similar title or description (use text search or regex)
+        const similarVideos = await Video.find({
+            _id: { $ne: currentVideoId },
+            $or: [
+                { title: { $regex: currentVideo.title.split(" ").join("|"), $options: "i" } },
+                { description: { $regex: currentVideo.description.split(" ").join("|"), $options: "i" } }
+            ],
+            isPublished: true
+        })
+        .limit(5)
+        .exec();
+
+        // Step 4: Fetch popular videos (based on views or likes)
+        const popularVideos = await Video.find({
+            _id: { $ne: currentVideoId },
+            isPublished: true
+        })
+        .sort({ views: -1 })  // Sort by most views
+        .limit(5)
+        .exec();
+
+        // Step 5: If user is logged in, fetch videos based on their watch history
+        let watchHistoryVideos = [];
+        if (userId) {
+            const user = await User.findById(userId).populate('watchHistory').exec();
+            watchHistoryVideos = user.watchHistory.filter(v => v._id.toString() !== currentVideoId);  // Remove the current video
+        }
+
+        // Step 6: Merge all video recommendations and remove duplicates
+        let allVideos = [...relatedVideos, ...similarVideos, ...popularVideos, ...watchHistoryVideos];
+        
+        // Remove duplicates
+        const uniqueVideos = allVideos.filter((video, index, self) =>
+            index === self.findIndex((v) => v._id.toString() === video._id.toString())
+        );
+
+        // Step 7: Limit results to show a fixed number of videos
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { videos: uniqueVideos.slice(0, 10) },
+                "Recommended Videos fetched successfully"
+            )
+        );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Error occurred while fetching recommended videos");
+    }
+})
