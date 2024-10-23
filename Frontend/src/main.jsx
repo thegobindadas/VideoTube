@@ -9,6 +9,7 @@ import store from './store/store.js'
 
 import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
 
 
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
+        element: <VideoGalleryPage />,
+      },
+      {
+        path: "signup",
         element: <SignupPage />,
       },
       {

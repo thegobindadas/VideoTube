@@ -63,6 +63,7 @@ function LogIn() {
                 const user = await getCurrentUser()
                 
                 if(user) dispatch(setUser(user));
+                navigate("/");
             }
         } catch (error) {
             if (error.response?.data) {
