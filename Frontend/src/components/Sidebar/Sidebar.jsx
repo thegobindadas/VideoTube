@@ -1,6 +1,6 @@
 import React from 'react'
 import { SidebarButton } from "../index"
-import { HomeIcon, LikedVideosIcon, HistoryIcon, ContentIcon, CollectionIcon, SubscriberIcon, SupportIcon, SettingIcon } from "../../assets"
+import { HomeIcon, LikedVideosIcon, HistoryIcon, ContentIcon, CollectionIcon, SubscribersIcon, SupportIcon, SettingIcon } from "../../assets"
 
 function Sidebar() {
 
@@ -23,7 +23,7 @@ function Sidebar() {
                 <SidebarButton label="Collections" Icon={CollectionIcon} />
             </li>
             <li className="">
-                <SidebarButton label="Subscribers" Icon={SubscriberIcon} />
+                <SidebarButton label="Subscribers" Icon={SubscribersIcon} />
             </li>
             <li className="hidden sm:block mt-auto">
                 <SidebarButton label="Support" Icon={SupportIcon} />

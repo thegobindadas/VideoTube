@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SubscriberIcon() {
+function SubscribersIcon() {
   return (
     <svg
       style={{ width: "100%" }}
@@ -17,4 +17,4 @@ function SubscriberIcon() {
   )
 }
 
-export default SubscriberIcon
+export default SubscribersIcon

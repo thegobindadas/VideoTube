@@ -8,10 +8,12 @@ import SettingIcon from "./SettingIcon";
 import HomeIcon from "./HomeIcon";
 import HistoryIcon from "./HistoryIcon";
 import CollectionIcon from "./CollectionIcon";
-import SubscriberIcon from "./SubscriberIcon";
+import SubscribersIcon from "./SubscribersIcon";
 import VideoIcon from "./VideoIcon";
 import TweetIcon from "./TweetIcon";
 import CheckboxIcon from "./CheckboxIcon";
+import LikeIcon from "./LikeIcon";
+import DislikeIcon from "./DislikeIcon";
 
 
 
@@ -26,8 +28,11 @@ export {
     HomeIcon,
     HistoryIcon,
     CollectionIcon,
-    SubscriberIcon,
+    SubscribersIcon,
     VideoIcon,
     TweetIcon,
     CheckboxIcon,
+    LikeIcon,
+    DislikeIcon,
+
 }
