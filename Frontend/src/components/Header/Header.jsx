@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from "../index"
-import { LogoIcon, SearchIcon, CloseIcon, LikedVideoIcon, ContentIcon, SupportIcon, SettingIcon } from "../../assets"
+import { LogoIcon, SearchIcon, CloseIcon, LikedVideosIcon, ContentIcon, SupportIcon, SettingIcon } from "../../assets"
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,7 +13,7 @@ function Header() {
     const buttonsData = [
         {
             label: "Liked Videos",
-            Icon: <LikedVideoIcon />
+            Icon: <LikedVideosIcon />
         },
         {
             label: "My Content",

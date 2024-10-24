@@ -1,7 +1,7 @@
 import LogoIcon from "./LogoIcon";
 import SearchIcon from "./SearchIcon";
 import CloseIcon from "./CloseIcon";
-import LikedVideoIcon from "./LikedVideoIcon";
+import LikedVideosIcon from "./LikedVideosIcon";
 import ContentIcon from "./ContentIcon";
 import SupportIcon from "./SupportIcon";
 import SettingIcon from "./SettingIcon";
@@ -21,7 +21,7 @@ export {
     LogoIcon,
     SearchIcon,
     CloseIcon,
-    LikedVideoIcon,
+    LikedVideosIcon,
     ContentIcon,
     SupportIcon,
     SettingIcon,

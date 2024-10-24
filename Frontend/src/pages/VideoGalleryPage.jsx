@@ -10,7 +10,7 @@ function VideoGalleryPage() {
     const dispatch = useDispatch();
     const { videos, loading, error, page, hasMore } = useSelector((state) => state.videos);
     const loader = useRef(null);
-    const [totalPages, setTotalPages] = useState(1);  // Total pages state
+    const [totalPages, setTotalPages] = useState(1);
 
 
     const fetchVideos = useCallback(async (page) => {

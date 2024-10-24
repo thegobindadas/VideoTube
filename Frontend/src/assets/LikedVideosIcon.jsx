@@ -1,6 +1,6 @@
 import React from 'react'
 
-function LikedVideoIcon() {
+function LikedVideosIcon() {
   return (
     <svg
       style={{ width: "100%" }}
@@ -17,4 +17,4 @@ function LikedVideoIcon() {
   )
 }
 
-export default LikedVideoIcon
+export default LikedVideosIcon
