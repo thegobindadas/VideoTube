@@ -15,11 +15,11 @@ router.use(verifyJWT);
 
 
 
-router.get('/c/subscription-status/:channelId', isSubscribed);
+router.get("/c/subscription-status/:channelId", isSubscribed);
 
 router.route("/c/:channelId").post(toggleSubscription);
 
-router.route("/Channel-subscribers/:subscriberId").get(getChannelSubscribers);
+router.route("/c/:channelId/subscribers").get(getChannelSubscribers);
 
 router.route("/subscribed-channels/:channelId").get(getSubscribedChannels)
 
