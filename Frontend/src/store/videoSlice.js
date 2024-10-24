@@ -4,22 +4,26 @@ const initialState = {
     videos: [],
     loading: false,
     error: null,
-    hasMore: true,
     page: 1,
+    hasMore: true
 };
 
 const videoSlice = createSlice({
     name: 'videos',
     initialState,
     reducers: {
-        setVideos: (state, action) => {
-            state.videos = [...state.videos, ...action.payload];
-        },
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
         setError: (state, action) => {
             state.error = action.payload;
+        },
+        setVideos: (state, action) => {
+            // Append unique videos by checking their _id
+            const newVideos = action.payload.filter(newVideo => 
+                !state.videos.some(existingVideo => existingVideo._id === newVideo._id)
+            );
+            state.videos = [...state.videos, ...newVideos];
         },
         setPage: (state, action) => {
             state.page = action.payload;
