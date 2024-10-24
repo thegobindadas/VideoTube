@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 import {
+    isSubscribed,
     toggleSubscription,
     getChannelSubscribers,
     getSubscribedChannels,
@@ -13,6 +14,8 @@ router.use(verifyJWT);
 
 
 
+
+router.get('/c/subscription-status/:channelId', isSubscribed);
 
 router.route("/c/:channelId").post(toggleSubscription);
 

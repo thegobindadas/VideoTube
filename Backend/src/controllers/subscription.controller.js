@@ -7,68 +7,101 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 
 
 
-export const toggleSubscription = asyncHandler(async (req, res) => {
-    try {
 
-        const { channelId }  = req.params
+export const isSubscribed = asyncHandler(async (req, res) => {
+    try {
+        const { channelId } = req.params;
 
         if (!channelId) {
-            throw new ApiError(400, "Channel id is required")
+            throw new ApiError(400, "Channel id is required");
         }
-
 
         if (!isValidObjectId(channelId)) {
-            throw new ApiError(400, "Invalid channel id")
+            throw new ApiError(400, "Invalid channel id");
         }
 
 
-        const existingSubscription = await Subscription.findOne({ channel: channelId, subscriber: req.user?._id })
+        // Check if the user is subscribed to the channel
+        const subscription = await Subscription.findOne({
+            channel: channelId,
+            subscriber: req.user?._id
+        });
+
+
+
+        // Respond with true or false based on the subscription status
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                { isSubscribed: !!subscription }, // Convert to boolean
+                "Subscription status retrieved successfully"
+            )
+        );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while checking subscription status");
+    }
+});
+
+
+export const toggleSubscription = asyncHandler(async (req, res) => {
+    try {
+        const { channelId } = req.params;
+
+        if (!channelId) {
+            throw new ApiError(400, "Channel id is required");
+        }
+
+        if (!isValidObjectId(channelId)) {
+            throw new ApiError(400, "Invalid channel id");
+        }
+
+
+        // Check if the subscription already exists
+        const existingSubscription = await Subscription.findOne({
+            channel: channelId,
+            subscriber: req.user?._id
+        });
 
         if (existingSubscription) {
-
-            const deleteSubscription = await Subscription.deleteOne()
+            // Unsubscribe if already subscribed
+            const deleteSubscription = await Subscription.deleteOne({
+                _id: existingSubscription._id // Ensure you're deleting the correct subscription
+            });
 
             if (!deleteSubscription) {
-                throw new ApiError(500, "Something went wrong while unsubscribing")
+                throw new ApiError(500, "Something went wrong while unsubscribing");
             }
 
-
-            return res
-            .status(200)
-            .json(
+            return res.status(200).json(
                 new ApiResponse(
                     200,
                     null,
                     "Subscription unsubscribed successfully"
                 )
-            )
-        }else{
-
+            );
+        } else {
+            // Subscribe if not already subscribed
             const subscription = await Subscription.create({
                 channel: channelId,
                 subscriber: req.user._id
-            })
-    
+            });
+
             if (!subscription) {
-                throw new ApiError(500, "Something went wrong while subscribing")
+                throw new ApiError(500, "Something went wrong while subscribing");
             }
-    
-    
-            return res
-            .status(200)
-            .json(
+
+            return res.status(201).json(
                 new ApiResponse(
-                    200,
+                    201,
                     subscription,
                     "Subscription subscribed successfully"
                 )
-            )
+            );
         }
-
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while toggling subscription")
+        throw new ApiError(500, error.message || "Something went wrong while toggling subscription");
     }
-})
+});
 
 
 // controller to return subscriber list of a channel
