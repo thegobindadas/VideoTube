@@ -6,254 +6,309 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 
 
 
-export const toggleVideoLike = asyncHandler(async (req, res) => {
+export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
     try {
-        const { videoId } = req.params
+        const { videoId } = req.params;
+        const { type } = req.body; // Expect "like" or "dislike" from the request body
 
-        if (!videoId) {
-            throw new ApiError(400, "Video id is required")
+        if (!videoId || !["like", "dislike"].includes(type)) {
+            throw new ApiError(400, "Video id and valid like/dislike type are required");
         }
-
 
         if (!isValidObjectId(videoId)) {
-            throw new ApiError(400, "Invalid video id")
+            throw new ApiError(400, "Invalid video id");
         }
 
 
-
-        const like = await Like.findOne({
+        // Check if a like or dislike already exists for the user on this video
+        const interaction = await LikeDislike.findOne({
             video: videoId,
             likedBy: req.user?._id
-        })
+        });
 
+        if (interaction) {
+            // If the same type of interaction exists, remove it (toggle off)
+            if (interaction.type === type) {
+                
+                await interaction.deleteOne();
+                
 
-        if (like) {
-            const deleteLike = await like.deleteOne()
-
-            if (!deleteLike) {
-                throw new ApiError(500, "Something went wrong while removing like from video")
+                return res
+                    .status(200)
+                    .json(
+                        new ApiResponse(
+                            200, 
+                            {}, 
+                            `${type.charAt(0).toUpperCase() + type.slice(1)} removed successfully`
+                        )
+                    );
+            } 
+            // If opposite type of interaction exists, update to new type
+            else {
+                
+                interaction.type = type;
+                
+                await interaction.save();
+                
+                
+                return res
+                    .status(200)
+                    .json(
+                        new ApiResponse(
+                            200, 
+                            interaction, 
+                            `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully`
+                        )
+                    );
             }
-
-
-            return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
-                    {},
-                    "Like removed successfully"
-                )
-            )
-        }else {
-
-            const newLike = await Like.create({
+        } else {
+            // No interaction exists, create a new like/dislike
+            const newInteraction = await LikeDislike.create({
                 video: videoId,
-                likedBy: req.user?._id
-            })
-
-            if (!newLike) {
-                throw new ApiError(500, "Something went wrong while like on video")
-            }
+                likedBy: req.user?._id,
+                type: type
+            });
 
 
             return res
-            .status(201)
-            .json(
-                new ApiResponse(
-                    200,
-                    newLike,
-                    "Like added successfully"
-                )
-            )
+                .status(201)
+                .json(
+                    new ApiResponse(
+                        201, 
+                        newInteraction, 
+                        `${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`
+                    )
+                );
         }
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while toggling like on video")
+        throw new ApiError(500, error.message || "Something went wrong while toggling like/dislike on video");
     }
-    
-})
+});
 
 
-export const toggleCommentLike = asyncHandler(async (req, res) => {
+export const toggleCommentLikeDislike = asyncHandler(async (req, res) => {
     try {
-        const { commentId } = req.params
+        const { commentId } = req.params;
+        const { type } = req.body; // Expecting the like/dislike type in the request body
 
-        if(!commentId) {
-            throw new ApiError(400, "Comment id is required")
+        if (!commentId) {
+            throw new ApiError(400, "Comment id is required");
         }
-
 
         if (!isValidObjectId(commentId)) {
-            throw new ApiError(400, "Invalid comment id")
+            throw new ApiError(400, "Invalid comment id");
+        }
+
+        if (!type || !["like", "dislike"].includes(type)) {
+            throw new ApiError(400, "Type is required and must be either 'like' or 'dislike'");
         }
 
 
-        const like = await Like.findOne({
+        // Check if the user has already liked/disliked the comment
+        const existingInteraction = await Like.findOne({
             comment: commentId,
-            likedBy: req.user?._id
-        })
+            likedBy: req.user?._id,
+        });
+
+        if (existingInteraction) {
+            // If the interaction type is the same, remove it
+            if (existingInteraction.type === type) {
+                
+                const deleteLike = await existingInteraction.deleteOne();
+
+                if (!deleteLike) {
+                    throw new ApiError(500, "Something went wrong while removing like/dislike from comment");
+                }
 
 
-        if (like) {
-            const deleteLike = await like.deleteOne()
+                return res
+                    .status(200)
+                    .json(
+                        new ApiResponse(
+                            200, 
+                            {}, 
+                            `${type.charAt(0).toUpperCase() + type.slice(1)} removed successfully`
+                        )
+                    );
+            } else {
+                // If the interaction type is different, update it
+                existingInteraction.type = type;
+                
+                await existingInteraction.save({ validateBeforeSave: false });
 
-            if (!deleteLike) {
-                throw new ApiError(500, "Something went wrong while removing like from comment")
+
+                return res
+                    .status(200)
+                    .json(
+                        new ApiResponse(
+                            200, 
+                            existingInteraction, 
+                            `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully`
+                        )
+                );
             }
-
-
-            return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
-                    {},
-                    "Like removed successfully"
-                )
-            )
-        }else {
+        } else {
+            // If there's no existing interaction, create a new one
             const newLike = await Like.create({
                 comment: commentId,
-                likedBy: req.user?._id
-            })
+                likedBy: req.user?._id,
+                type,
+            });
 
             if (!newLike) {
-                throw new ApiError(500, "Something went wrong while like on comment")
+                throw new ApiError(500, "Something went wrong while liking/disliking the comment");
             }
 
-
             return res
-            .status(201)
-            .json(
-                new ApiResponse(
-                    200,
-                    newLike,
-                    "Like added successfully"
-                )
-            )
+                .status(201)
+                .json(
+                    new ApiResponse(
+                        201, 
+                        newLike, 
+                        `${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`
+                    )
+                );
         }
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while toggling like on comment")
+        throw new ApiError(500, error.message || "Something went wrong while toggling like/dislike on comment");
     }
+});
 
-})
 
-
-export const toggleTweetLike = asyncHandler(async (req, res) => {
+export const toggleTweetLikeDislike = asyncHandler(async (req, res) => {
     try {
-        const { tweetId } = req.params
+        const { tweetId } = req.params;
+        const { type } = req.body; // Expecting "like" or "dislike" from the request body
 
-        if (!tweetId) {
-            throw new ApiError(400, "Tweet id is required")
+        if (!tweetId || !["like", "dislike"].includes(type)) {
+            throw new ApiError(400, "Tweet id and valid like/dislike type are required");
         }
-
 
         if (!isValidObjectId(tweetId)) {
-            throw new ApiError(400, "Invalid tweet id")
+            throw new ApiError(400, "Invalid tweet id");
         }
 
 
-        const like = await Like.findOne({
+        // Check if a like or dislike already exists for the user on this tweet
+        const interaction = await LikeDislike.findOne({
             tweet: tweetId,
             likedBy: req.user?._id
-        })
+        });
 
+        if (interaction) {
+            // If the same type of interaction exists, remove it (toggle off)
+            if (interaction.type === type) {
+                await interaction.deleteOne();
+                
+                
+                return res
+                    .status(200)
+                    .json(
+                        new ApiResponse(
+                            200, 
+                            {}, 
+                            `${type.charAt(0).toUpperCase() + type.slice(1)} removed successfully`
+                        )
+                    );
+            } 
+            // If the opposite type of interaction exists, update to the new type
+            else { 
+                interaction.type = type;
+                
+                await interaction.save();
+                
 
-        if(like) {
-            const deleteLike = await like.deleteOne()
-
-            if (!deleteLike) {
-                throw new ApiError(500, "Something went wrong while removing like from tweet")
+                return res
+                    .status(200)
+                    .json(
+                        new ApiResponse(
+                            200, 
+                            interaction, 
+                            `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully`
+                        )
+                    );
             }
-
-
-            return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
-                    {},
-                    "Like removed successfully"
-                )
-            )
-        }else {
-
-            const newLike = await Like.create({
+        } else {
+            // No interaction exists, create a new like/dislike
+            const newInteraction = await LikeDislike.create({
                 tweet: tweetId,
-                likedBy: req.user?._id
-            })
-
-            if (!newLike) {
-                throw new ApiError(500, "Something went wrong while like on tweet")
-            }
+                likedBy: req.user?._id,
+                type: type
+            });
 
 
             return res
-            .status(201)
-            .json(
-                new ApiResponse(
-                    200,
-                    newLike,
-                    "Like added successfully"
-                )
-            )
+                .status(201)
+                .json(
+                    new ApiResponse(
+                        201, 
+                        newInteraction, 
+                        `${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`
+                    )
+            
+                );
         }
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while toggling like on tweet")
+        throw new ApiError(500, error.message || "Something went wrong while toggling like/dislike on tweet");
     }
-})
+});
 
 
 export const getLikedVideos = asyncHandler(async (req, res) => {
-    //TODO: get all liked videos
-
-    const getAllLikedVideos = await Like.aggregate([
-        {
-            $match: {
-                likedBy: new mongoose.Types.ObjectId(req.user._id)
-            }
-        },
-        {
-            $lookup: {
-                from: "videos",
-                localField: "video",
-                foreignField: "_id",
-                as: "liked_videos",
-                pipeline: [
-                    {
-                        $project: {
-                            _id: 1,
-                            title: 1,
-                            thumbnail: 1
+    try {
+        
+        const likedVideos = await Like.aggregate([
+            {
+                $match: {
+                    likedBy: new mongoose.Types.ObjectId(req.user._id)
+                }
+            },
+            {
+                $lookup: {
+                    from: "videos", // Ensure this matches the collection name in your MongoDB
+                    localField: "video",
+                    foreignField: "_id",
+                    as: "liked_videos",
+                    pipeline: [
+                        {
+                            $project: {
+                                _id: 1,
+                                title: 1,
+                                thumbnail: 1,
+                                description: 1, // Include other fields if necessary
+                                views: 1,
+                                createdAt: 1 // Add timestamps if needed
+                            }
                         }
-                    }
-                ]
+                    ]
+                }
+            },
+            {
+                $unwind: {
+                    path: "$liked_videos"
+                }
+            },
+            {
+                $replaceRoot: {
+                    newRoot: "$liked_videos"
+                }
             }
-        },
-        {
-            $unwind: "$liked_videos"
-        },
-        {
-            $replaceRoot: {
-                newRoot: "$liked_videos"
-            }
+        ]);
+
+        if (!likedVideos || likedVideos.length === 0) {
+            return res.status(404).json(new ApiResponse(404, [], "No liked videos found"));
         }
-    ])
-    
 
 
-    if (!getAllLikedVideos) {
-        throw new ApiError(500, "Something went wrong while fetching liked videos")
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                likedVideos,
+                "Liked videos fetched successfully"
+            )
+        );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching liked videos");
     }
- 
-
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            getAllLikedVideos[0].liked_videos,
-            "Liked videos fetched successfully"
-        )
-    )
-})
+});
