@@ -7,6 +7,7 @@ import Header from "./Header/Header";
 import SidebarButton from "./Buttons/SidebarButton";
 import Sidebar from "./Sidebar/Sidebar";
 import VideoCard from "./VideoItem/VideoCard";
+import VideoListItem from "./VideoItem/VideoListItem";
 
 
 
@@ -22,4 +23,5 @@ export {
     SidebarButton,
     Sidebar,
     VideoCard,
+    VideoListItem,
 }
