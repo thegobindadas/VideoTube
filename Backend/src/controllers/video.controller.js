@@ -126,6 +126,63 @@ export const getVideoById = asyncHandler(async (req, res) => {
 })
 
 
+export const getVideoDetailsById = asyncHandler(async (req, res) => {
+    try {
+        const { videoId } = req.params;
+
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required")
+        }
+
+        if (!isValidObjectId(videoId)) {
+            throw new ApiError(400, "Invalid video id");
+        }
+
+
+        const video = await Video.findById(videoId).populate('owner', 'username fullName avatar');
+        
+        if (!video) {
+            throw new ApiError(404, "Video not found");
+        }
+
+
+        // Fetch the total likes and dislikes for the video
+        const totalLikes = await LikeDislike.countDocuments({ video: videoId, type: 'like' });
+        const totalDislikes = await LikeDislike.countDocuments({ video: videoId, type: 'dislike' });
+
+
+        const responseData = {
+            title: video.title,
+            description: video.description,
+            videoUrl: video.videoFile,
+            views: video.views,
+            createdAt: video.createdAt,
+            totalLikes,
+            totalDislikes,
+            authorId: video.owner._id,
+            authorName: video.owner.fullName,
+            authorUsername: video.owner.username,
+            authorAvatar: video.owner.avatar,
+            authorTotalSubscribers: await Subscription.countDocuments({ channel: video.owner._id })
+        };
+
+
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                responseData,
+                "Video fetched successfully"
+            )
+        )
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching video")
+    }
+})
+
+
 export const updateVideoDetails = asyncHandler(async (req, res) => {
 
     try {

@@ -4,6 +4,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js"
 import { 
     publishAVideo,
     getVideoById,
+    getVideoDetailsById,
     updateVideoDetails,
     deleteVideo,
     togglePublishStatus,
@@ -34,6 +35,8 @@ router.route("/").post(
 );
 
 router.route("/:videoId").get(getVideoById)
+
+router.route("/:videoId/info").get(getVideoDetailsById)
     
 router.route("/:videoId").patch(upload.single("thumbnail"), updateVideoDetails);
 
