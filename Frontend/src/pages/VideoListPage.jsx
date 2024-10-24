@@ -13,16 +13,17 @@ function VideoListPage() {
 
     <section className="w-full pb-[70px] sm:ml-[70px] sm:pb-0 lg:ml-0">
       <div className="flex flex-col gap-4 p-4">
-        {videos.map((video, index) => (
+        {videos.map((video) => (
             <VideoListItem
-                key={index}
+                key={video._id}
+                _id={video._id}
                 thumbnail={video.thumbnail}
                 duration={video.duration}
-                avatar={video.avatar}
+                avatar={video.owner.avatar}
                 title={video.title}
                 views={video.views}
-                timeAgo={video.timeAgo}
-                author={video.author}
+                createdAt={video.createdAt}
+                author={video.owner.fullName}
                 description={video.description}
             />
         ))}
