@@ -11,8 +11,6 @@ import CollectionIcon from "./CollectionIcon";
 import SubscriberIcon from "./SubscriberIcon";
 import VideoIcon from "./VideoIcon";
 import TweetIcon from "./TweetIcon";
-import TweetLikeIcon from "./TweetLikeIcon";
-import TweetDislikeIcon from "./TweetDislikeIcon";
 import CheckboxIcon from "./CheckboxIcon";
 
 
@@ -31,7 +29,5 @@ export {
     SubscriberIcon,
     VideoIcon,
     TweetIcon,
-    TweetLikeIcon,
-    TweetDislikeIcon,
     CheckboxIcon,
 }
