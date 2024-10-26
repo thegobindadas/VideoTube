@@ -34,6 +34,8 @@ function WatchHistoryPage() {
             });
 
             const { watchHistory, totalPages } = response.data.data;
+            console.log(watchHistory);
+            
 
             dispatch(setHistory(watchHistory));
 
@@ -76,7 +78,7 @@ function WatchHistoryPage() {
                 <div className="flex flex-col gap-4 p-4">
                     {watchHistory.length > 0 ? (
                         watchHistory.map((video) => (
-                            <Link to={`watch/${video._id}`} key={video._id}>
+                            <Link to={`/watch/${video._id}`} key={video._id}>
                                 <VideoListItem
                                     key={video._id}
                                     _id={video._id}

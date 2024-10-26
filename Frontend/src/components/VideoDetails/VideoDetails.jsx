@@ -17,7 +17,7 @@ function VideoDetails() {
         try {
             const response = await axios.get(`/api/v1/video/${videoId}/info`);
             setVideoInfo(response.data.data);
-            incrementVideoViews(response.data.data.views);
+            incrementVideoViews();
             setLoading(false);
         } catch (error) {
             console.error(error.message);
@@ -26,13 +26,10 @@ function VideoDetails() {
         }
     };
 
-    const incrementVideoViews = async (currentViews) => {
+    const incrementVideoViews = async () => {
         try {
             await axios.post(`/api/v1/video/${videoId}/increment-views`);
-            setVideoInfo(prevInfo => ({
-                ...prevInfo,
-                views: currentViews + 1,
-            }));
+            
         } catch (error) {
             console.error('Error incrementing views:', error.message);
         }
