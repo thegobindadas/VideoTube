@@ -4,6 +4,7 @@ import { formatViewsCount, formatSubscriberCount } from '../../utils/numberUtils
 import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, } from "../index"
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 function VideoDetails() {
@@ -75,7 +76,7 @@ function VideoDetails() {
                                     <img src={videoInfo.authorAvatar} alt={videoInfo.authorName} className="h-full w-full rounded-full" />
                                 </div>
                                 <div className="block">
-                                    <p className="text-gray-200">{videoInfo.authorName}</p>
+                                    <p className="text-gray-200"><Link to={`/${videoInfo.authorId}`}>{videoInfo.authorName}</Link></p>
                                     <p className="text-sm text-gray-400">{formatSubscriberCount(videoInfo.authorTotalSubscribers)} </p>
                                 </div>
                             </div>

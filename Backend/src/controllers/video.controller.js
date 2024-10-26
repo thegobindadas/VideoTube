@@ -409,7 +409,7 @@ export const getAllVideos = asyncHandler(async (req, res) => {
             .sort(sortOptions) // Apply sorting
             .skip((page - 1) * limit) // Skip for pagination
             .limit(Number(limit)) // Limit the number of videos per page
-            .populate('owner', 'username fullName avatar') // Populate owner (channel) information
+            .populate('owner', '_id username fullName avatar') // Populate owner (channel) information
             .select('title description thumbnail views duration createdAt'); // Select relevant video fields
 
         // Get the total number of videos for pagination

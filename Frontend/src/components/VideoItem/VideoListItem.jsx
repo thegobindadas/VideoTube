@@ -1,7 +1,8 @@
 import React from 'react'
 import { convertSeconds, getTimeAgo } from '../../utils/timeUtils';
+import { Link } from 'react-router-dom';
 
-function VideoListItem({ _id, thumbnail, duration, avatar, title, views, createdAt, author, description }) {
+function VideoListItem({ _id, thumbnail, duration, avatar, title, views, createdAt, author, authorId, description }) {
 
   const videoDuration = convertSeconds(duration);
   const timeAgo = getTimeAgo(createdAt);
@@ -37,7 +38,7 @@ function VideoListItem({ _id, thumbnail, duration, avatar, title, views, created
                 alt={author}
                 className="h-full w-full rounded-full" />
             </div>
-            <p className="text-sm text-gray-200">{author}</p>
+            <p className="text-sm text-gray-200"><Link to={`/${authorId}`}>{author}</Link></p>
           </div>
           <p className="mt-2 hidden text-sm md:block">{description}</p>
         </div>

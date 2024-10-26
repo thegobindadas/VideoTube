@@ -1,7 +1,8 @@
 import React from 'react'
 import { convertSeconds, getTimeAgo } from '../../utils/timeUtils';
+import { Link } from 'react-router-dom';
 
-function VideoCard({ _id, thumbnail, duration, avatar, title, views, createdAt, author }) {
+function VideoCard({ _id, thumbnail, duration, avatar, title, views, createdAt, authorId, authorUsername, author }) {
 
   const videoDuration = convertSeconds(duration);
   const timeAgo = getTimeAgo(createdAt);
@@ -29,7 +30,7 @@ function VideoCard({ _id, thumbnail, duration, avatar, title, views, createdAt, 
         <div className="w-full">
           <h6 className="mb-1 font-semibold">{title}</h6>
           <p className="flex text-sm text-gray-200">{views} Views · {timeAgo}</p>
-          <p className="text-sm text-gray-200">{author}</p>
+          <p className="text-sm text-gray-200"><Link to={`/${authorId}`}>{author}</Link></p>
         </div>
       </div>
     </div>

@@ -582,7 +582,7 @@ export const getWatchHistory = asyncHandler(async (req, res) => {
                             pipeline: [
                                 {
                                     $project: {
-                                        _id: 0,
+                                        _id: 1,
                                         avatar: 1,
                                         username: 1,
                                         fullName: 1

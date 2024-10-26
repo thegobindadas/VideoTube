@@ -89,6 +89,7 @@ function WatchHistoryPage() {
                                     views={video.views}
                                     createdAt={video.createdAt}
                                     author={video.owner.fullName}
+                                    authorId={video.owner._id}
                                     description={video.description}
                                 />
                             </Link>

@@ -85,6 +85,8 @@ function VideoGalleryPage() {
                                 title={video.title}
                                 views={video.views}
                                 createdAt={video.createdAt}
+                                authorId={video.owner._id}
+                                authorUsername={video.owner.username}
                                 author={video.owner.fullName}
                             />
                         </Link>
