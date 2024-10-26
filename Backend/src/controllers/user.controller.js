@@ -1,4 +1,5 @@
 import config from "../config/index.js";
+import mongoose, { isValidObjectId } from "mongoose"
 import jwt from "jsonwebtoken"
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js"
@@ -541,11 +542,16 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
 
 
 export const getWatchHistory = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
 
     const user = await User.aggregate([
         {
-            $match: {
-                _id: new mongoose.Types.ObjectId(req.user._id)
+            $match: { _id: new mongoose.Types.ObjectId(req.user._id) }
+        },
+        {
+            $project: {
+                watchHistory: { $slice: ["$watchHistory", skip, parseInt(limit)] } // Skip and limit within the watch history array
             }
         },
         {
@@ -556,6 +562,18 @@ export const getWatchHistory = asyncHandler(async (req, res) => {
                 as: "watchHistory",
                 pipeline: [
                     {
+                        $project: {
+                            _id: 1,
+                            thumbnail: 1,
+                            duration: 1,
+                            title: 1,
+                            views: 1,
+                            createdAt: 1,
+                            description: 1,
+                            owner: 1
+                        }
+                    },
+                    {
                         $lookup: {
                             from: "users",
                             localField: "owner",
@@ -564,38 +582,42 @@ export const getWatchHistory = asyncHandler(async (req, res) => {
                             pipeline: [
                                 {
                                     $project: {
+                                        _id: 0,
+                                        avatar: 1,
                                         username: 1,
-                                        fullName: 1,
-                                        avatar: 1
+                                        fullName: 1
                                     }
                                 }
                             ]
                         }
                     },
-                    {
-                        $addFields: {
-                            owner: {
-                                $first: "$owner"
-                            }
-                        }
-                    }
+                    { $addFields: { owner: { $first: "$owner" } } }
                 ]
             }
         }
-    ])
+    ]);
 
     if (!user?.length) {
-        throw new ApiError(404, "User not found")
+        throw new ApiError(404, "User not found");
     }
 
+    const totalVideos = await User.aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(req.user._id) } },
+        { $project: { totalVideos: { $size: "$watchHistory" } } }
+    ]);
 
-    return res
-    .status(200)
-    .json(
+    const totalPages = Math.ceil(totalVideos[0]?.totalVideos / limit);
+
+    return res.status(200).json(
         new ApiResponse(
             200,
-            user[0].watchHistory, 
+            {
+                watchHistory: user[0].watchHistory,
+                totalPages,
+                currentPage: parseInt(page),
+                totalVideos: totalVideos[0]?.totalVideos
+            },
             "Watch history fetched successfully"
         )
-    )
-})
+    );
+});

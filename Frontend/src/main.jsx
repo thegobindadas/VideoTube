@@ -10,6 +10,7 @@ import store from './store/store.js'
 import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
+import WatchHistoryPage from './pages/WatchHistoryPage.jsx'
 import VideoPage from './pages/VideoPage.jsx'
 
 
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
+        index: true,
         element: <VideoGalleryPage />,
       },
       {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "history",
+        element: <WatchHistoryPage />,
       },
       {
         path: "watch/:videoId",

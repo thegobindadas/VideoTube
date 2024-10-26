@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    videos: [],
+    history: [],
     loading: false,
     error: null,
     page: 1,
-    hasMore: true
+    hasMore: true,
 };
 
-const videoSlice = createSlice({
-    name: 'videos',
+const watchHistorySlice = createSlice({
+    name: 'watchHistory',
     initialState,
     reducers: {
         setLoading: (state, action) => {
@@ -18,12 +18,12 @@ const videoSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
-        setVideos: (state, action) => {
-            // Append unique videos by checking their _id
-            const newVideos = action.payload.filter(newVideo => 
-                !state.videos.some(existingVideo => existingVideo._id === newVideo._id)
+        setHistory: (state, action) => {
+            // Append unique history entries by checking their _id
+            const newHistory = action.payload.filter(newEntry =>
+                !state.history.some(existingEntry => existingEntry._id === newEntry._id)
             );
-            state.videos = [...state.videos, ...newVideos];
+            state.history = [...state.history, ...newHistory];
         },
         setPage: (state, action) => {
             state.page = action.payload;
@@ -31,22 +31,22 @@ const videoSlice = createSlice({
         setHasMore: (state, action) => {
             state.hasMore = action.payload;
         },
-        resetVideos: (state) => {
-            state.videos = []; 
-            state.page = 1;   
-            state.hasMore = true; 
+        resetHistory: (state) => {
+            state.history = [];
+            state.page = 1;
+            state.hasMore = true;
         },
     },
 });
 
 
 export const { 
-    setVideos, 
+    setHistory, 
     setLoading, 
     setError, 
     setPage, 
     setHasMore, 
-    resetVideos, 
-} = videoSlice.actions;
+    resetHistory, 
+} = watchHistorySlice.actions;
 
-export default videoSlice.reducer;
+export default watchHistorySlice.reducer;
