@@ -3,6 +3,8 @@ import { Sidebar, VideoCard } from "../components/index"
 import axios from 'axios';
 import { setVideos, setLoading, setError, setPage, setHasMore } from '../store/videoSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 
 
 function VideoGalleryPage() {
@@ -20,7 +22,7 @@ function VideoGalleryPage() {
             const response = await axios.get(`/api/v1/video`, {
                 params: {
                     page: page,
-                    limit: 10
+                    limit: 9
                 },
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -74,17 +76,18 @@ function VideoGalleryPage() {
             <section className="w-full pb-[70px] sm:ml-[70px] sm:pb-0 lg:ml-0">
                 <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-4 p-4">
                     {videos.map((video) => (
-                        <VideoCard
-                            key={video._id}
-                            _id={video._id}
-                            thumbnail={video.thumbnail}
-                            duration={video.duration}
-                            avatar={video.owner.avatar}
-                            title={video.title}
-                            views={video.views}
-                            createdAt={video.createdAt}
-                            author={video.owner.fullName}
-                        />
+                        <Link to={`watch/${video._id}`} key={video._id}>
+                            <VideoCard
+                                _id={video._id}
+                                thumbnail={video.thumbnail}
+                                duration={video.duration}
+                                avatar={video.owner.avatar}
+                                title={video.title}
+                                views={video.views}
+                                createdAt={video.createdAt}
+                                author={video.owner.fullName}
+                            />
+                        </Link>
                     ))}
                 </div>
                 {/* If there are no more videos, show a message */}

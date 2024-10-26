@@ -1,7 +1,7 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import { Video } from "../models/video.model.js";
 import { Subscription } from "../models/subscription.model.js"
-import { Like } from "../models/like.model.js"
+import { LikeDislike } from "../models/likeDislike.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -50,7 +50,7 @@ export const getChannelStats = asyncHandler(async (req, res) => {
 
 
         // Get the total number of likes across all videos for the channel
-        const totalLikes = await Like.countDocuments({
+        const totalLikes = await LikeDislike.countDocuments({
             video: { $in: await Video.find({ owner: channelId }).select("_id") }
         });
 

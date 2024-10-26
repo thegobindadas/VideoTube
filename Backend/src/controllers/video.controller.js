@@ -1,5 +1,8 @@
 import mongoose, { isValidObjectId } from "mongoose"
+import { User } from "../models/user.model.js"
 import { Video } from "../models/video.model.js";
+import { LikeDislike } from "../models/likeDislike.model.js"
+import { Subscription } from "../models/subscription.model.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -151,7 +154,7 @@ export const getVideoDetailsById = asyncHandler(async (req, res) => {
         const totalDislikes = await LikeDislike.countDocuments({ video: videoId, type: 'dislike' });
 
 
-        const responseData = {
+        const videoDetails = {
             title: video.title,
             description: video.description,
             videoUrl: video.videoFile,
@@ -173,7 +176,7 @@ export const getVideoDetailsById = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                responseData,
+                videoDetails,
                 "Video fetched successfully"
             )
         )
@@ -376,7 +379,7 @@ export const togglePublishStatus = asyncHandler(async (req, res) => {
 
 export const getAllVideos = asyncHandler(async (req, res) => {
     try {
-        const { page = 1, limit = 10, query = "", sortBy = "createdAt", sortType = "desc", userId } = req.query;
+        const { page = 1, limit = 9, query = "", sortBy = "createdAt", sortType = "desc", userId } = req.query;
 
         // Create a base search criteria object
         const searchCriteria = {
@@ -425,6 +428,67 @@ export const getAllVideos = asyncHandler(async (req, res) => {
         );
     } catch (error) {
         throw new ApiError(500, error.message || "Error occurred while fetching videos");
+    }
+});
+
+
+export const incrementVideoViews = asyncHandler(async (req, res) => {
+    try {
+        const { videoId } = req.params;
+        const userId = req.user._id;
+
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required");
+        }
+
+        if (!isValidObjectId(videoId)) {
+            throw new ApiError(400, "Invalid video id");
+        }
+
+
+        // Find the video by ID
+        const video = await Video.findById(videoId);
+        
+        if (!video) {
+            throw new ApiError(404, "Video not found");
+        }
+
+
+        const user = await User.findById(userId);
+        const hasWatched = user.watchHistory.includes(videoId);
+
+
+        if (!hasWatched) {
+            user.watchHistory.push(videoId);
+            await user.save();
+
+            
+            await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
+
+
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    {},
+                    "View count incremented successfully"
+                )
+            );
+        } else {
+         
+            return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    {},
+                    "User has already viewed this video"
+                )
+            );
+        }
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while incrementing video views");
     }
 });
 

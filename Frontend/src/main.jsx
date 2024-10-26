@@ -10,6 +10,7 @@ import store from './store/store.js'
 import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
+import VideoPage from './pages/VideoPage.jsx'
 
 
 
@@ -30,9 +31,14 @@ const router = createBrowserRouter([
         path: "login",
         element: <LoginPage />,
       },
+      {
+        path: "watch/:videoId",
+        element: <VideoPage />,
+      },
     ]
   }
 ])
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

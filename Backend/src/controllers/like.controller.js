@@ -1,5 +1,5 @@
 import mongoose, { isValidObjectId } from "mongoose"
-import { Like } from "../models/like.model.js"
+import { LikeDislike } from "../models/likeDislike.model.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
@@ -82,6 +82,47 @@ export const toggleVideoLikeDislike = asyncHandler(async (req, res) => {
         }
     } catch (error) {
         throw new ApiError(500, error.message || "Something went wrong while toggling like/dislike on video");
+    }
+});
+
+
+export const isVideoLikeDislike = asyncHandler(async (req, res) => {
+    try {
+        const { videoId } = req.params;
+
+        if (!videoId) {
+            throw new ApiError(400, "Video id is required");
+        }
+
+        if (!isValidObjectId(videoId)) {
+            throw new ApiError(400, "Invalid video id");
+        }
+
+        // Check if a like or dislike exists for the user on this video
+        const interaction = await LikeDislike.findOne({
+            video: videoId,
+            likedBy: req.user?._id
+        });
+
+        let status;
+        if (interaction) {
+            status = interaction.type; // either "like" or "dislike"
+        } else {
+            status = null; // no interaction found
+        }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200, 
+                    { status }, 
+                    "Video like/dislike status retrieved successfully"
+                )
+            );
+
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching like/dislike status");
     }
 });
 
@@ -257,7 +298,7 @@ export const toggleTweetLikeDislike = asyncHandler(async (req, res) => {
 export const getLikedVideos = asyncHandler(async (req, res) => {
     try {
         
-        const likedVideos = await Like.aggregate([
+        const likedVideos = await LikeDislike.aggregate([
             {
                 $match: {
                     likedBy: new mongoose.Types.ObjectId(req.user._id)
@@ -265,7 +306,7 @@ export const getLikedVideos = asyncHandler(async (req, res) => {
             },
             {
                 $lookup: {
-                    from: "videos", // Ensure this matches the collection name in your MongoDB
+                    from: "videos",
                     localField: "video",
                     foreignField: "_id",
                     as: "liked_videos",
