@@ -3,14 +3,14 @@ import { upload } from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js"
 import { 
     publishAVideo,
-    getVideoById,
-    getVideoDetailsById,
-    updateVideoDetails,
-    deleteVideo,
-    togglePublishStatus,
+    fetchVideoById,
+    fetchVideoDetails,
+    updateVideoInfo,
+    removeVideo,
+    toggleVideoPublishStatus,
     getAllVideos,
-    incrementVideoViews,
-    getRecommendedVideos,
+    increaseViewCount,
+    fetchRecommendedVideos,
 } from "../controllers/video.controller.js"
 
 
@@ -35,21 +35,21 @@ router.route("/").post(
     publishAVideo
 );
 
-router.route("/:videoId").get(getVideoById)
+router.route("/:videoId").get(fetchVideoById)
 
-router.route("/:videoId/info").get(getVideoDetailsById)
+router.route("/:videoId/details").get(fetchVideoDetails)
     
-router.route("/:videoId").patch(upload.single("thumbnail"), updateVideoDetails);
+router.route("/:videoId/update").patch(upload.single("thumbnail"), updateVideoInfo);
 
-router.route("/:videoId").delete(deleteVideo)
+router.route("/:videoId/delete").delete(removeVideo)
 
-router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
+router.route("/:videoId/toggle-publish").patch(toggleVideoPublishStatus);
 
 router.route("/").get(getAllVideos)
 
-router.route("/:videoId/increment-views").post(incrementVideoViews)
+router.route("/:videoId/increment-view").post(increaseViewCount)
 
-router.route("/recommended-videos/:videoId").get(getRecommendedVideos)
+router.route("/:videoId/recommendations").get(fetchRecommendedVideos)
 
 
 

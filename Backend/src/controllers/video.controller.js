@@ -96,7 +96,7 @@ export const publishAVideo = asyncHandler(async (req, res) => {
 })
 
 
-export const getVideoById = asyncHandler(async (req, res) => {
+export const fetchVideoById = asyncHandler(async (req, res) => {
 
     try {
         const { videoId } = req.params
@@ -129,7 +129,7 @@ export const getVideoById = asyncHandler(async (req, res) => {
 })
 
 
-export const getVideoDetailsById = asyncHandler(async (req, res) => {
+export const fetchVideoDetails = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params;
 
@@ -186,7 +186,7 @@ export const getVideoDetailsById = asyncHandler(async (req, res) => {
 })
 
 
-export const updateVideoDetails = asyncHandler(async (req, res) => {
+export const updateVideoInfo = asyncHandler(async (req, res) => {
 
     try {
         const { videoId } = req.params
@@ -268,7 +268,7 @@ export const updateVideoDetails = asyncHandler(async (req, res) => {
 })
 
 
-export const deleteVideo = asyncHandler(async (req, res) => {
+export const removeVideo = asyncHandler(async (req, res) => {
     try {
 
         const { videoId } = req.params
@@ -330,7 +330,7 @@ export const deleteVideo = asyncHandler(async (req, res) => {
 })
 
 
-export const togglePublishStatus = asyncHandler(async (req, res) => {
+export const toggleVideoPublishStatus = asyncHandler(async (req, res) => {
     try {
 
         const { videoId } = req.params
@@ -432,7 +432,7 @@ export const getAllVideos = asyncHandler(async (req, res) => {
 });
 
 
-export const incrementVideoViews = asyncHandler(async (req, res) => {
+export const increaseViewCount = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params;
         const userId = req.user._id;
@@ -493,7 +493,7 @@ export const incrementVideoViews = asyncHandler(async (req, res) => {
 });
 
 
-export const getRecommendedVideos = asyncHandler(async (req, res) => {
+export const fetchRecommendedVideos = asyncHandler(async (req, res) => {
     try{
         const { currentVideoId } = req.params
         const { userId = null } = req.body
