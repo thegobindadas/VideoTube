@@ -47,7 +47,7 @@ router.route("/:videoId/toggle-publish").patch(toggleVideoPublishStatus);
 
 router.route("/").get(getAllVideos)
 
-router.route("/:videoId/increment-view").post(increaseViewCount)
+router.route("/:videoId/view").post(increaseViewCount)
 
 router.route("/:videoId/recommendations").get(fetchRecommendedVideos)
 

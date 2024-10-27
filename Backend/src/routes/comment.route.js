@@ -22,7 +22,7 @@ router.route("/update/:commentId").patch(updateComment)
 
 router.route("/delete/:commentId").delete(deleteComment)
 
-router.route("/:videoId").get(getVideoComments)
+router.route("/video/:videoId").get(getVideoComments)
 
 
 

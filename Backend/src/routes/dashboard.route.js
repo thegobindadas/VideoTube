@@ -14,9 +14,9 @@ router.use(verifyJWT);
 
 
 
-router.route("/stats").get(getChannelStats);
+router.route("/channel/stats").get(getChannelStats);
 
-router.route("/videos").get(getChannelVideos);
+router.route("/channel/:channelId/videos").get(getChannelVideos);
 
 
 

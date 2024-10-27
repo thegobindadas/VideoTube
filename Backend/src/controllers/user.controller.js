@@ -305,7 +305,7 @@ export const changeCurrentPassword = asyncHandler(async (req, res) => {
 })
 
 
-export const getCurrentUser = asyncHandler(async (req, res) => {
+export const getCurrentUserProfile = asyncHandler(async (req, res) => {
     return res
     .status(200)
     .json(
@@ -318,7 +318,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 })
 
 
-export const updateAccountDetails = asyncHandler(async (req, res) => {
+export const updateUserAccountDetails = asyncHandler(async (req, res) => {
 
     const { fullName, email } = req.body
 
@@ -541,7 +541,7 @@ export const getUserChannelProfile = asyncHandler(async (req, res) => {
 })
 
 
-export const getWatchHistory = asyncHandler(async (req, res) => {
+export const getUserWatchHistory = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
     const skip = (page - 1) * limit;
 
