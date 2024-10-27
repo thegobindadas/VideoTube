@@ -17,8 +17,8 @@ function VideoGalleryPage() {
 
     const fetchVideos = useCallback(async (page) => {
         try {
-            dispatch(setLoading(true));
-            const token = localStorage.getItem('token');
+            dispatch(setLoading(true));            
+            const token = localStorage.getItem('token');            
             const response = await axios.get(`/api/v1/video`, {
                 params: {
                     page: page,

@@ -12,7 +12,12 @@ const VideoLikeDislikeButton = ({ videoId, initialLikes, initialDislikes }) => {
   // Function to handle like/dislike actions
   const toggleLikeDislike = async (type) => {
     try {
-      await axios.post(`/api/v1/likes/toggle/v/${videoId}`, { type });
+      const token = localStorage.getItem("token");
+      await axios.post(`/api/v1/likes/toggle/v/${videoId}`, { type }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       updateCounts(type);
     } catch (error) {
       console.error('Error toggling like/dislike:', error);

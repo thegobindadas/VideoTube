@@ -30,13 +30,15 @@ export const isSubscribed = asyncHandler(async (req, res) => {
 
 
         // Respond with true or false based on the subscription status
-        return res.status(200).json(
-            new ApiResponse(
-                200,
-                { isSubscribed: !!subscription }, // Convert to boolean
-                "Subscription status retrieved successfully"
-            )
-        );
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    { isSubscribed: !!subscription }, // Convert to boolean
+                    "Subscription status retrieved successfully"
+                )
+            );
     } catch (error) {
         throw new ApiError(500, error.message || "Something went wrong while checking subscription status");
     }
@@ -75,7 +77,7 @@ export const toggleSubscription = asyncHandler(async (req, res) => {
             return res.status(200).json(
                 new ApiResponse(
                     200,
-                    null,
+                    {isSubscribed: false},
                     "Subscription unsubscribed successfully"
                 )
             );
@@ -93,7 +95,10 @@ export const toggleSubscription = asyncHandler(async (req, res) => {
             return res.status(201).json(
                 new ApiResponse(
                     201,
-                    subscription,
+                    {
+                        ...subscription,
+                        isSubscribed: true
+                    },
                     "Subscription subscribed successfully"
                 )
             );

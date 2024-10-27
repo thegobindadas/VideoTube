@@ -49,14 +49,11 @@ function LogIn() {
             
             const response = await axios.post('/api/v1/user/login', loginData);
             
-            const { token } = response.data.data.accessToken; 
-            localStorage.setItem('token', token)
-
-            const { refreshToken } = response.data.data.refreshToken; 
-            localStorage.setItem('refreshToken', refreshToken)
+            const { accessToken, refreshToken } = response.data.data; 
+            localStorage.setItem('token', accessToken)
+            localStorage.setItem('refreshToken', refreshToken)    
             
-
-            console.log('User logged in successfully:', response.data);
+            //console.log('User logged in successfully: ', response.data);
 
 
             if (response.data) {
