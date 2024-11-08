@@ -1,11 +1,13 @@
 import React from 'react'
 import { convertSeconds, getTimeAgo } from '../../utils/timeUtils';
+import { formatViewsCount } from "../../utils/numberUtils"
 import { Link } from 'react-router-dom';
 
 function VideoGalleryItem({ _id, thumbnail, duration, avatar, title, views, createdAt, authorId, authorUsername, author }) {
 
   const videoDuration = convertSeconds(duration);
   const timeAgo = getTimeAgo(createdAt);
+  const viewsCount = formatViewsCount(views);
 
   
   return (
@@ -29,7 +31,7 @@ function VideoGalleryItem({ _id, thumbnail, duration, avatar, title, views, crea
         </div>
         <div className="w-full">
           <h6 className="mb-1 font-semibold">{title}</h6>
-          <p className="flex text-sm text-gray-200">{views} Views · {timeAgo}</p>
+          <p className="flex text-sm text-gray-200">{viewsCount} Views · {timeAgo}</p>
           <p className="text-sm text-gray-200"><Link to={`/${authorId}`}>{author}</Link></p>
         </div>
       </div>

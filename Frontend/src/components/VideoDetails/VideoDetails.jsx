@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { getTimeAgo } from '../../utils/timeUtils';
-import { formatViewsCount, formatSubscriberCount } from '../../utils/numberUtils';
-import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn } from "../index";
+import { formatViewsCount } from '../../utils/numberUtils';
+import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn, CommentSection } from "../index";
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import videoServices from '../../services/videoServices';
@@ -83,16 +83,7 @@ function VideoDetails() {
                         </div>
                     </div>
 
-                    <button className="peer w-full rounded-lg border p-4 text-left duration-200 hover:bg-white/5 focus:bg-white/5 sm:hidden">
-                        <h6 className="font-semibold">573 Comments...</h6>
-                    </button>
-                    <div className="fixed inset-x-0 top-full z-[60] h-[calc(100%-69px)] overflow-auto rounded-lg border bg-[#121212] p-4 duration-200 hover:top-[67px] peer-focus:top-[67px] sm:static sm:h-auto sm:max-h-[500px] lg:max-h-none">
-                        <div className="block">
-                            <h6 className="mb-4 font-semibold">573 Comments</h6>
-                            <input type="text" className="w-full rounded-lg border bg-transparent px-2 py-1 placeholder-white" placeholder="Add a Comment" />
-                        </div>
-                        <hr className="my-4 border-white" />
-                    </div>
+                    <CommentSection videoId={videoInfo._id} />
                 </>
             ) : (
                 <p>No video information available</p>

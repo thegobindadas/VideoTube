@@ -27,6 +27,11 @@ import SavePlaylistButton from "./VideoSaveToPlaylist/SavePlaylistButton";
 import PlaylistDropdown from "./VideoSaveToPlaylist/PlaylistDropdown";
 import PlaylistCheckbox from "./VideoSaveToPlaylist/PlaylistCheckbox";
 
+import CommentButton from "./VideoComments/CommentButton";
+import CommentInput from "./VideoComments/CommentInput";
+import CommentItem from "./VideoComments/CommentItem";
+import CommentSection from "./VideoComments/CommentSection";
+
 
 export { 
     AuthInput,
@@ -56,4 +61,9 @@ export {
     SavePlaylistButton,
     PlaylistDropdown,
     PlaylistCheckbox,
+
+    CommentButton,
+    CommentInput,
+    CommentItem,
+    CommentSection,
 }

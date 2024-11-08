@@ -158,7 +158,7 @@ export const deleteComment = asyncHandler(async (req, res) => {
 export const getVideoComments = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params
-        const { page = 1, limit = 10 } = req.query
+        const { page = 1, limit = 3 } = req.query
 
 
         if (!videoId) {
@@ -172,10 +172,10 @@ export const getVideoComments = asyncHandler(async (req, res) => {
 
 
         const comments = await Comment.find({ video: videoId })
-            .populate('owner', 'username avatar') // Populate the comment owner's username and avatar
-            .sort({ createdAt: -1 }) // Sort comments by newest first
-            .skip((page - 1) * limit) // Pagination: skip comments based on the page number
-            .limit(Number(limit)); // Limit the number of comments per page
+            .populate('owner', 'username fullName avatar')
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit) 
+            .limit(Number(limit));
         
 
         if (!comments) {
