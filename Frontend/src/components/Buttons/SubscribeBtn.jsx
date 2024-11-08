@@ -1,61 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import subscriptionServices from '../../services/subscriptionServices';
 
 function SubscribeBtn({ channelId }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const toggleSubscription = async () => {
+
+  const handleToggleSubscription = async () => {
     setLoading(true);
-
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `/api/v1/subscriptions/c/${channelId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Set subscription status based on server response
-      setIsSubscribed(response.data.data.isSubscribed);
+      const subscriptionStatus = await subscriptionServices.toggleSubscription(channelId);
+      setIsSubscribed(subscriptionStatus.data.isSubscribed);
     } catch (error) {
-      console.error("Error toggling subscription:", error);
+      console.error("Error toggling subscription: ", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const checkSubscriptionStatus = async () => {
+    const fetchSubscriptionStatus = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `/api/v1/subscriptions/c/subscription-status/${channelId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setIsSubscribed(response.data.data.isSubscribed);
+        const subscriptionStatus = await subscriptionServices.getSubscriptionStatus(channelId);
+        setIsSubscribed(subscriptionStatus.data.isSubscribed);
       } catch (error) {
-        console.error("Error checking subscription status:", error);
+        console.error("Error checking subscription status: ", error);
       }
     };
 
-    checkSubscriptionStatus();
+    if (channelId) {
+      fetchSubscriptionStatus();
+    }
   }, [channelId]);
+
 
   return (
     <button
       className={`group mr-1 flex w-full items-center gap-x-2 ${
         isSubscribed ? 'bg-gray-400' : 'bg-[#ae7aff]'
       } px-3 py-2 text-center font-bold text-black shadow-[5px_5px_0px_0px_#4f4e4e] transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] active:shadow-[0px_0px_0px_0px_#4f4e4e] sm:w-auto`}
-      onClick={toggleSubscription}
+      onClick={handleToggleSubscription}
       disabled={loading} // Disable button while loading
     >
       <span className="inline-block w-5">

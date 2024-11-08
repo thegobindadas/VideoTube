@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { TextInput, Button } from "../index"
+import { AuthInput, Button } from "../index"
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
 import { setUser } from '../../store/userSlice'
 import { useDispatch } from "react-redux"
+import { handleError } from "../../utils/errorHandler"
+import authService from "../../services/authService"
+import userService from "../../services/userService"
 
-function LogIn() {
+function LoginForm() {
 
     const [error, setError] = useState("")
     const { register, handleSubmit, formState: { errors } } = useForm()
@@ -16,14 +19,9 @@ function LogIn() {
 
     const getCurrentUser = async () => {
         try {
-            const response = await axios.get('/api/v1/user/current-user', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            const response = await userService.getCurrentUser()
                         
-            return response.data.data.user
-
+            return response.data.user
         } catch (error) {
             setError(error.response?.data.message || 'Error fetching current user');
             console.error('Error fetching current user:', error);
@@ -31,7 +29,7 @@ function LogIn() {
     }
 
 
-    const LoginUser = async (data) => {
+    const handleLoginUser = async (data) => {
         setError("")
         try {
             const loginData = {};
@@ -47,31 +45,19 @@ function LogIn() {
             }    
 
             
-            const response = await axios.post('/api/v1/user/login', loginData);
-            
-            const { accessToken, refreshToken } = response.data.data; 
-            localStorage.setItem('token', accessToken)
-            localStorage.setItem('refreshToken', refreshToken)    
-            
-            //console.log('User logged in successfully: ', response.data);
+            const response = await authService.loginUser(loginData);
+                        
+            //console.log('User logged in successfully: ', response);
 
 
-            if (response.data) {
+            if (response) {
                 const user = await getCurrentUser()
                 
                 if(user) dispatch(setUser(user));
                 navigate("/");
             }
         } catch (error) {
-            if (error.response?.data) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(error.response.data, 'text/html');
-                const preElement = doc.querySelector('pre');
-                const errorMessage = preElement ? preElement.textContent.split('\n')[0].replace("Error: ", "") : 'An error occurred';
-                setError(errorMessage); 
-            } else {
-                setError(error.message || 'An error occurred');
-            }
+            setError(handleError(error));
             console.error('Error registering user:', error.response?.data || error.message);
         }
     }
@@ -84,9 +70,9 @@ function LogIn() {
                 <h1 className="mb-2 text-5xl font-extrabold text-white">Log in</h1>
                 <p className="text-xs text-slate-400">Before we start, please log into your account</p>
             </div>
-            <form onSubmit={handleSubmit(LoginUser)} className="my-14 flex w-full flex-col items-start justify-start gap-4">
+            <form onSubmit={handleSubmit(handleLoginUser)} className="my-14 flex w-full flex-col items-start justify-start gap-4">
                 
-            <TextInput
+            <AuthInput
             label="Email: "
             placeholder="Enter your email"
             type="email"
@@ -100,14 +86,14 @@ function LogIn() {
             />
             {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
-            <TextInput
+            <AuthInput
                 label="username: "
                 placeholder="Enter your username"
                 {...register("username", { required: true })}
             />
             {errors.username && <p className="text-red-500">Username is required.</p>}
 
-                <TextInput
+                <AuthInput
                     label="Password: "
                     type="password"
                     placeholder="Enter your password"
@@ -141,4 +127,4 @@ function LogIn() {
   )
 }
 
-export default LogIn
+export default LoginForm

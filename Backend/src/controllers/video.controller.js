@@ -129,12 +129,12 @@ export const fetchVideoById = asyncHandler(async (req, res) => {
 })
 
 
-export const fetchVideoDetails = asyncHandler(async (req, res) => {
+export const getVideoLikeDislikeCounts = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params;
 
         if (!videoId) {
-            throw new ApiError(400, "Video id is required")
+            throw new ApiError(400, "Video id is required");
         }
 
         if (!isValidObjectId(videoId)) {
@@ -142,31 +142,15 @@ export const fetchVideoDetails = asyncHandler(async (req, res) => {
         }
 
 
-        const video = await Video.findById(videoId).populate('owner', 'username fullName avatar');
-        
-        if (!video) {
-            throw new ApiError(404, "Video not found");
-        }
+        const [likesCount, dislikesCount] = await Promise.all([
+            LikeDislike.countDocuments({ video: videoId, type: 'like' }),
+            LikeDislike.countDocuments({ video: videoId, type: 'dislike' })
+        ]);
 
 
-        // Fetch the total likes and dislikes for the video
-        const totalLikes = await LikeDislike.countDocuments({ video: videoId, type: 'like' });
-        const totalDislikes = await LikeDislike.countDocuments({ video: videoId, type: 'dislike' });
-
-
-        const videoDetails = {
-            title: video.title,
-            description: video.description,
-            videoUrl: video.videoFile,
-            views: video.views,
-            createdAt: video.createdAt,
-            totalLikes,
-            totalDislikes,
-            authorId: video.owner._id,
-            authorName: video.owner.fullName,
-            authorUsername: video.owner.username,
-            authorAvatar: video.owner.avatar,
-            authorTotalSubscribers: await Subscription.countDocuments({ channel: video.owner._id })
+        const responseData = {
+            totalLikes: likesCount,
+            totalDislikes: dislikesCount
         };
 
 
@@ -175,15 +159,56 @@ export const fetchVideoDetails = asyncHandler(async (req, res) => {
         .status(200)
         .json(
             new ApiResponse(
-                200,
-                videoDetails,
-                "Video fetched successfully"
+                200, 
+                responseData, 
+                "Like and dislike counts fetched successfully"
             )
-        )
+        );
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while fetching video")
+        throw new ApiError(500, error.message || "Something went wrong while fetching like and dislike counts");
     }
-})
+});
+
+
+export const getVideoOwnerDetails = asyncHandler(async (req, res) => {
+    try {
+        const { ownerId } = req.params;
+
+        if (!ownerId) {
+            throw new ApiError(400, "Owner id is required");
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(ownerId)) {
+            throw new ApiError(400, "Invalid owner id");
+        }
+
+
+        const owner = await User.findById(ownerId)
+            .select('username fullName avatar')
+            .lean();
+
+        if (!owner) {
+            throw new ApiError(404, "Owner not found");
+        }
+
+
+        owner.totalSubscribers = await Subscription.countDocuments({ channel: ownerId });
+
+
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, 
+                owner, 
+                "Owner details fetched successfully"
+            )
+        );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching owner details");
+    }
+});
 
 
 export const updateVideoInfo = asyncHandler(async (req, res) => {

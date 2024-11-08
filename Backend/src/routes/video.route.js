@@ -4,7 +4,8 @@ import { verifyJWT } from "../middlewares/auth.middleware.js"
 import { 
     publishAVideo,
     fetchVideoById,
-    fetchVideoDetails,
+    getVideoLikeDislikeCounts,
+    getVideoOwnerDetails,
     updateVideoInfo,
     removeVideo,
     toggleVideoPublishStatus,
@@ -37,8 +38,10 @@ router.route("/").post(
 
 router.route("/:videoId").get(fetchVideoById)
 
-router.route("/:videoId/details").get(fetchVideoDetails)
-    
+router.route("/:videoId/like-dislike-counts").get(getVideoLikeDislikeCounts)
+
+router.route("/owner/:ownerId").get(getVideoOwnerDetails)
+
 router.route("/:videoId/update").patch(upload.single("thumbnail"), updateVideoInfo);
 
 router.route("/:videoId/delete").delete(removeVideo)

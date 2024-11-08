@@ -1,53 +1,59 @@
-import TextInput from "./Inputs/TextInput";
+import AuthInput from "./Inputs/AuthInput";
 import AvatarInput from "./Inputs/AvatarInput";
+
 import Button from "./Buttons/Button";
-import SubscribeBtn from "./Buttons/SubscribeBtn";
-import Signup from "./Signup/Signup";
-import LogIn from "./LogIn/LogIn";
-import Header from "./Header/Header";
 import SidebarButton from "./Buttons/SidebarButton";
-import Sidebar from "./Sidebar/Sidebar";
-import VideoCard from "./VideoItem/VideoCard";
-import VideoListItem from "./VideoItem/VideoListItem";
+import SubscribeBtn from "./Buttons/SubscribeBtn";
 
-import SavePlaylistButton from "./SaveToPlaylist/SavePlaylistButton";
-import PlaylistCheckbox from "./SaveToPlaylist/PlaylistCheckbox";
-import PlaylistDropdown from "./SaveToPlaylist/PlaylistDropdown";
-import SaveToPlaylist from "./SaveToPlaylist/SaveToPlaylist";
+import SignupForm from "./Auth/SignupForm";
+import LoginForm from "./Auth/LogInForm";
 
-import VideoPlayer from "./VideoDetails/VideoPlayer";
-import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
-import VideoDetails from "./VideoDetails/VideoDetails";
+import Header from "./Layouts/Header";
+import Sidebar from "./Layouts/Sidebar";
+
+import VideoGalleryItem from "./VideoGallery/VideoGalleryItem";
+import VideoGallerySection from "./VideoGallery/VideoGallerySection";
 
 import RecommendedVideoItem from "./RecommendedVideoList/RecommendedVideoItem";
 import RecommendedVideoList from "./RecommendedVideoList/RecommendedVideoList";
 
+import VideoPlayer from "./VideoDetails/VideoPlayer";
+import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
+import VideoOwnerDetails from "./VideoDetails/VideoOwnerDetails";
+import VideoDetails from "./VideoDetails/VideoDetails";
 
-export {
-    TextInput,
+import SaveToPlaylist from "./VideoSaveToPlaylist/SaveToPlaylist";
+import SavePlaylistButton from "./VideoSaveToPlaylist/SavePlaylistButton";
+import PlaylistDropdown from "./VideoSaveToPlaylist/PlaylistDropdown";
+import PlaylistCheckbox from "./VideoSaveToPlaylist/PlaylistCheckbox";
+
+
+export { 
+    AuthInput,
     AvatarInput,
 
     Button,
+    SidebarButton,
     SubscribeBtn,
 
-    Signup,
-    LogIn,
+    SignupForm,
+    LoginForm,
+
     Header,
-    SidebarButton,
     Sidebar,
-    VideoCard,
-    VideoListItem,
 
-    SavePlaylistButton,
-    PlaylistCheckbox,
-    PlaylistDropdown,
-    SaveToPlaylist,
-
-    VideoPlayer,
-    VideoLikeDislikeButton,
-    VideoDetails,
-
+    VideoGalleryItem,
+    VideoGallerySection,
     RecommendedVideoItem,
     RecommendedVideoList,
 
+    VideoPlayer,
+    VideoLikeDislikeButton,
+    VideoOwnerDetails,
+    VideoDetails,
+
+    SaveToPlaylist,
+    SavePlaylistButton,
+    PlaylistDropdown,
+    PlaylistCheckbox,
 }

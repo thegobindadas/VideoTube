@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { TextInput, AvatarInput, Button } from "../index"
+import { AuthInput, AvatarInput, Button } from "../index"
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
+import { handleError } from "../../utils/errorHandler"
+import authService from "../../services/authService"
 
-function Signup() {
+function SignupForm() {
 
     const [error, setError] = useState("")
     const { register, handleSubmit, formState: { errors } } = useForm()
     const navigate = useNavigate();
 
 
-    const registerUser = async (data) => {
+    const handleRegisterUser = async (data) => {
         setError("")
         try {
 
@@ -27,27 +29,15 @@ function Signup() {
             }
         
 
-            const response = await axios.post('/api/v1/user/register', registerData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data', 
-                },
-            });
+            const response = await authService.registerUser(registerData)
         
-            if (response.data) {
-                console.log('User registered successfully:', response.data);
-                navigate("login")
+            if (response) {
+                console.log('User registered successfully:', response);
+                navigate("/login")
             }
             
         } catch (error) {
-            if (error.response?.data) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(error.response.data, 'text/html');
-                const preElement = doc.querySelector('pre');
-                const errorMessage = preElement ? preElement.textContent.split('\n')[0].replace("Error: ", "") : 'An error occurred';
-                setError(errorMessage); 
-            } else {
-                setError(error.message || 'An error occurred');
-            }
+            setError(handleError(error));
             console.error('Error registering user:', error.response?.data || error.message);
         }
     }
@@ -60,7 +50,7 @@ function Signup() {
                 <h1 className="mb-2 text-5xl font-extrabold text-white">Register</h1>
                 <p className="text-xs text-slate-400">Before we start, please create your account</p>
             </div>
-            <form onSubmit={handleSubmit(registerUser)} className="my-14 flex w-full flex-col items-start justify-start gap-4">
+            <form onSubmit={handleSubmit(handleRegisterUser)} className="my-14 flex w-full flex-col items-start justify-start gap-4">
                                 
                 <AvatarInput 
                     {...register("avatar", {
@@ -68,7 +58,7 @@ function Signup() {
                     })} 
                 />
 
-                <TextInput
+                <AuthInput
                     label="Full Name: "
                     placeholder="Enter your full name"
                     {...register("fullName", {
@@ -76,7 +66,7 @@ function Signup() {
                     })}
                 />
 
-                <TextInput
+                <AuthInput
                 label="Email: "
                 placeholder="Enter your email"
                 type="email"
@@ -90,14 +80,14 @@ function Signup() {
                 />
                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
-                <TextInput
+                <AuthInput
                     label="username: "
                     placeholder="Enter your username"
                     {...register("username", { required: true })}
                 />
                 {errors.username && <p className="text-red-500">Username is required.</p>}
 
-                <TextInput
+                <AuthInput
                     label="Password: "
                     type="password"
                     placeholder="Enter your password"
@@ -130,8 +120,7 @@ function Signup() {
             </form>
         </div>
     </div>
-    
   )
 }
 
-export default Signup
+export default SignupForm

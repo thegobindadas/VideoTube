@@ -1,7 +1,7 @@
 import React from 'react'
 import { Sidebar, VideoDetails, RecommendedVideoList  } from "../components/index"
 
-function VideoPage() {
+function VideoDetailsPage() {
   return (
     <div className="flex min-h-[calc(100vh-66px)] sm:min-h-[calc(100vh-82px)]">
       <Sidebar />
@@ -16,4 +16,4 @@ function VideoPage() {
   )
 }
 
-export default VideoPage
+export default VideoDetailsPage

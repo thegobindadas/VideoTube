@@ -10,8 +10,7 @@ import store from './store/store.js'
 import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
-import WatchHistoryPage from './pages/WatchHistoryPage.jsx'
-import VideoPage from './pages/VideoPage.jsx'
+import VideoDetailsPage from './pages/VideoDetailsPage.jsx'
 
 
 
@@ -33,12 +32,8 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "history",
-        element: <WatchHistoryPage />,
-      },
-      {
         path: "watch/:videoId",
-        element: <VideoPage />,
+        element: <VideoDetailsPage />,
       },
     ]
   }

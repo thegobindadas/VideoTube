@@ -2,7 +2,7 @@ import React from 'react'
 import { convertSeconds, getTimeAgo } from '../../utils/timeUtils';
 import { Link } from 'react-router-dom';
 
-function VideoCard({ _id, thumbnail, duration, avatar, title, views, createdAt, authorId, authorUsername, author }) {
+function VideoGalleryItem({ _id, thumbnail, duration, avatar, title, views, createdAt, authorId, authorUsername, author }) {
 
   const videoDuration = convertSeconds(duration);
   const timeAgo = getTimeAgo(createdAt);
@@ -37,4 +37,4 @@ function VideoCard({ _id, thumbnail, duration, avatar, title, views, createdAt, 
   )
 }
 
-export default VideoCard
+export default VideoGalleryItem

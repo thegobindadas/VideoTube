@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { getTimeAgo } from '../../utils/timeUtils';
 import { formatViewsCount, formatSubscriberCount } from '../../utils/numberUtils';
-import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, SubscribeBtn } from "../index"
+import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn } from "../index";
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import videoServices from '../../services/videoServices';
 
 
 function VideoDetails() {
@@ -12,48 +12,34 @@ function VideoDetails() {
     const [videoInfo, setVideoInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [viewIncremented, setViewIncremented] = useState(false);
     
 
-    const fetchVideoInfo = async () => {
+    const loadVideoDetails = useCallback(async () => {
+        setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get(`/api/v1/video/${videoId}/info`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-            });
-            setVideoInfo(response.data.data);
-            incrementVideoViews();
-            setLoading(false);
+            const videoData = await videoServices.fetchVideoById(videoId)
+            setVideoInfo(videoData.data);
         } catch (error) {
-            console.error(error.message);
-            setError(error.message || 'Something went wrong');
+            setError(error.message || 'Failed to load video details.');
+        } finally {
             setLoading(false);
         }
-    };
-
-    const incrementVideoViews = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            console.log(token);
-            
-            await axios.post(`/api/v1/video/${videoId}/increment-views`, {}, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-            });
-        } catch (error) {
-            console.error('Error incrementing views:', error.message);
-        }
-    };
+    }, [videoId]);
 
 
     useEffect(() => {
-        fetchVideoInfo(); 
-    }, [videoId]);
+        if (videoInfo && !viewIncremented) {
+            videoServices.incrementVideoViews(videoId)
+                .then(() => setViewIncremented(true))
+                .catch(error => console.error("Error while incrementing views: ", error.message));
+        }
+    }, [videoInfo, videoId, viewIncremented]);
 
-    
-    
+
+    useEffect(() => {
+        loadVideoDetails();
+    }, [loadVideoDetails]);
 
 
 
@@ -65,7 +51,7 @@ function VideoDetails() {
         <div className="col-span-12 w-full">
             {videoInfo ? (
                 <>
-                    <VideoPlayer videoUrl={videoInfo.videoUrl} />
+                    <VideoPlayer videoUrl={videoInfo.videoFile} />
 
                     <div className="group mb-4 w-full rounded-lg border p-4 duration-200 hover:bg-white/5 focus:bg-white/5" role="button" tabIndex="0">
                         <div className="flex flex-wrap gap-y-2">
@@ -75,24 +61,18 @@ function VideoDetails() {
                             </div>
                             <div className="w-full md:w-1/2 lg:w-full xl:w-1/2">
                                 <div className="flex items-center justify-between gap-x-4 md:justify-end lg:justify-between xl:justify-end">
-                                    <VideoLikeDislikeButton videoId={videoId} initialLikes={videoInfo.totalLikes} initialDislikes={videoInfo.totalDislikes} />
+                                    <VideoLikeDislikeButton videoId={videoInfo._id} />
                                     <SaveToPlaylist />
                                 </div>
                             </div>
                         </div>
 
                         <div className="mt-4 flex items-center justify-between">
-                            <div className="flex items-center gap-x-4">
-                                <div className="mt-2 h-12 w-12 shrink-0">
-                                    <img src={videoInfo.authorAvatar} alt={videoInfo.authorName} className="h-full w-full rounded-full" />
-                                </div>
-                                <div className="block">
-                                    <p className="text-gray-200"><Link to={`/${videoInfo.authorId}`}>{videoInfo.authorName}</Link></p>
-                                    <p className="text-sm text-gray-400">{formatSubscriberCount(videoInfo.authorTotalSubscribers)} </p>
-                                </div>
-                            </div>
+
+                            <VideoOwnerDetails channelId={videoInfo.owner}  />
+
                             <div className="block">
-                                <SubscribeBtn channelId={videoInfo.authorId} />
+                                <SubscribeBtn channelId={videoInfo.owner} />
                             </div>
                         </div>
 

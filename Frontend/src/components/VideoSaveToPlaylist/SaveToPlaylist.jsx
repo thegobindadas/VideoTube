@@ -4,7 +4,7 @@ import { SavePlaylistButton, PlaylistDropdown } from '../index';
 
 const SaveToPlaylist = () => {
   
-    const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
   
   const playlists = [
     { id: '1', name: 'Collections' },
