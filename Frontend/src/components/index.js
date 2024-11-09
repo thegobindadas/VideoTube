@@ -13,7 +13,8 @@ import Sidebar from "./Layouts/Sidebar";
 
 import VideoGalleryItem from "./VideoGallery/VideoGalleryItem";
 import VideoGallerySection from "./VideoGallery/VideoGallerySection";
-
+import WatchHistoryCard from "./WatchHistory/WatchHistoryCard";
+import WatchHistory from "./WatchHistory/WatchHistory";
 import RecommendedVideoItem from "./RecommendedVideoList/RecommendedVideoItem";
 import RecommendedVideoList from "./RecommendedVideoList/RecommendedVideoList";
 
@@ -49,6 +50,8 @@ export {
 
     VideoGalleryItem,
     VideoGallerySection,
+    WatchHistoryCard,
+    WatchHistory,
     RecommendedVideoItem,
     RecommendedVideoList,
 

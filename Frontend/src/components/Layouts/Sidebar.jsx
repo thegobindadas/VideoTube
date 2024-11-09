@@ -17,7 +17,7 @@ function Sidebar() {
                 <SidebarButton label="Liked Videos" Icon={LikedVideosIcon} onClick={() => navigate("/like-videos")}/>
             </li>
             <li className="">
-                <SidebarButton label="History" Icon={HistoryIcon} onClick={() => navigate("/history")} />
+                <SidebarButton label="History" Icon={HistoryIcon} onClick={() => navigate("/watch-history")} />
             </li>
             <li className="hidden sm:block">
                 <SidebarButton label="My Content" Icon={ContentIcon} />

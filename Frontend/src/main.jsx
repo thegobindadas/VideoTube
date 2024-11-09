@@ -10,6 +10,7 @@ import store from './store/store.js'
 import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
+import WatchHistoryPage from './pages/WatchHistoryPage.jsx'
 import VideoDetailsPage from './pages/VideoDetailsPage.jsx'
 
 
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "watch/:videoId",
         element: <VideoDetailsPage />,
+      },
+      {
+        path: "watch-history",
+        element: <WatchHistoryPage />,
       },
     ]
   }
