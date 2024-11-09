@@ -2,6 +2,7 @@ import React from 'react'
 
 function SidebarButton({
         label,
+        sidebarType,
         type = "button",
         Icon,
         ...props
@@ -13,7 +14,7 @@ function SidebarButton({
       <span className="inline-block w-5 shrink-0 sm:group-hover:mr-4 lg:mr-4">
         <Icon />
       </span>
-      <span className="block sm:hidden sm:group-hover:inline lg:inline">{label}</span>
+      <span className={`block sm:hidden sm:group-hover:inline ${sidebarType === 'normal' ? 'lg:inline' : ''}`}>{label}</span>
     </button>
   )
 }
