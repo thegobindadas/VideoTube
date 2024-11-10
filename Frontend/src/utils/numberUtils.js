@@ -18,6 +18,10 @@ export function formatSubscriberCount(subscribers) {
     return formatCount(subscribers, 'subscribers');
 }
 
+export function formatSubscribedToCount(SubscribedTo) {
+    return formatCount(SubscribedTo, 'Subscribed');
+}
+
 export function formatLikeCount(likes) {
     return formatCount(likes, 'likes');
 }

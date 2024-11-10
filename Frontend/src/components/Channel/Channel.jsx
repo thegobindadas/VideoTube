@@ -17,7 +17,7 @@ function Channel({ username }) {
         { id: 'tweets', label: 'Tweets' },
         { id: 'subscribed', label: 'Subscribed' },
     ];
-
+    
     useEffect(() => {
         const fetchChannelData = async () => {
             dispatch(setLoading(true));

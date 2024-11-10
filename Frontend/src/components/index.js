@@ -10,6 +10,7 @@ import LoginForm from "./Auth/LogInForm";
 
 import Header from "./Layouts/Header";
 import Sidebar from "./Layouts/Sidebar";
+import NoContentMessage from "./NoContentMessage/NoContentMessage";
 
 import VideoGalleryItem from "./VideoGallery/VideoGalleryItem";
 import VideoGallerySection from "./VideoGallery/VideoGallerySection";
@@ -53,6 +54,7 @@ export {
 
     Header,
     Sidebar,
+    NoContentMessage,
 
     VideoGalleryItem,
     VideoGallerySection,
