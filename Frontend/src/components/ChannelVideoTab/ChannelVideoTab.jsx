@@ -11,6 +11,7 @@ function ChannelVideoTab({ channelId }) {
     const dispatch = useDispatch();
     const { videos, loading, error, page, hasMore } = useSelector((state) => state.channelVideos);
     const loader = useRef(null);
+    const [loadingMore, setLoadingMore] = useState(false); // New state for loading more videos
     const [totalPages, setTotalPages] = useState(1);
 
     const noContentMessages = {
@@ -18,11 +19,15 @@ function ChannelVideoTab({ channelId }) {
         text: "This page has yet to upload a video. Search another page in order to find more videos.",
     };
 
-
-
+    
     const fetchChannelVideos = useCallback(async () => {
         try {
-            dispatch(setLoading(true));
+            if (page === 1) {
+                dispatch(setLoading(true));
+            } else {
+                setLoadingMore(true); // Set loading more state when fetching additional pages
+            }
+
             const response = await videoServices.getChannelVideos(channelId, page);
             const fetchedChannelVideos = response.data.videos;
             setTotalPages(response.data.totalPages);
@@ -32,6 +37,7 @@ function ChannelVideoTab({ channelId }) {
             dispatch(setError(err.message));
         } finally {
             dispatch(setLoading(false));
+            setLoadingMore(false);
         }
     }, [channelId, page, dispatch]);
 
@@ -46,18 +52,16 @@ function ChannelVideoTab({ channelId }) {
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting && hasMore && !loading) {
+                if (entries[0].isIntersecting && hasMore && !loading && !loadingMore) {
                     dispatch(setPage(page + 1));
                 }
             },
-            {
-                threshold: 1.0,
-            }
+            { threshold: 1.0 }
         );
 
         if (loader.current) observer.observe(loader.current);
         return () => observer.disconnect();
-    }, [hasMore, loading, dispatch, page]);
+    }, [hasMore, loading, loadingMore, dispatch, page]);
 
 
     useEffect(() => {
@@ -69,14 +73,7 @@ function ChannelVideoTab({ channelId }) {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-
-    if (!videos.length) return (
-        <div className="flex justify-center p-4">
-            <NoContentMessage Icon={VideoIcon} message={noContentMessages} />
-        </div>
-    );
-
-    if (videos.length === 0) {
+    if (!videos.length) {
         return (
             <div className="flex justify-center p-4">
                 <NoContentMessage Icon={VideoIcon} message={noContentMessages} />
@@ -104,5 +101,6 @@ function ChannelVideoTab({ channelId }) {
         </div>
     );
 }
+
 
 export default ChannelVideoTab
