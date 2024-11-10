@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {CommentButton, CommentInput, CommentItem } from "../index"
 import commentServices from "../../services/commentServices"
-import { setComments, setLoading, setError, setPage, setHasMore } from '../../store/commentSlice';
+import { setComments, setLoading, setError, setPage, setHasMore, resetComments } from '../../store/commentSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function CommentSection({ videoId }) {
@@ -40,6 +40,14 @@ export default function CommentSection({ videoId }) {
       dispatch(setLoading(false));
     }
   }, [dispatch]);
+
+
+  useEffect(() => {
+    // Reset comments when videoId changes or component unmounts
+    dispatch(resetComments());
+    setTotalComments(0); // Reset total comments state
+    setTotalPages(1); // Reset totalPages as well
+  }, [dispatch, videoId]);
 
 
   useEffect(() => {

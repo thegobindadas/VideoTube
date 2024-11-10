@@ -1,7 +1,7 @@
 import React from 'react';
 import { getTimeAgo } from '../../utils/timeUtils';
 
-export default function CommentItem({ ownerId,fullName, username, avatar, content, createdAt }) {
+export default function CommentItem({ ownerId, fullName, username, avatar, content, createdAt }) {
 
     const timeAgo = getTimeAgo(createdAt);
 
