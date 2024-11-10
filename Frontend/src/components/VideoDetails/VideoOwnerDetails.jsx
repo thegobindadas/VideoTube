@@ -44,11 +44,20 @@ function VideoOwnerDetails({ channelId }) {
   return (
     <div className="flex items-center gap-x-4">
       <div className="mt-2 h-12 w-12 shrink-0">
-        <img src={videoOwnerInfo.avatar} alt={videoOwnerInfo.fullName || "Video Owner"} className="h-full w-full rounded-full" />
+        <img 
+          src={videoOwnerInfo.avatar} 
+          alt={videoOwnerInfo.fullName || "Video Owner"} 
+          className="h-full w-full rounded-full" />
       </div>
       <div className="block">
-        <p className="text-gray-200"><Link to={`/${videoOwnerInfo._id}`}>{videoOwnerInfo.fullName || "Unknown"}</Link></p>
-        <p className="text-sm text-gray-400">{formatSubscriberCount(videoOwnerInfo.totalSubscribers)} </p>
+        <p className="text-gray-200">
+          <Link to={`/channel/${videoOwnerInfo.username}`}>
+            {videoOwnerInfo.fullName || "Unknown"}
+          </Link>
+        </p>
+        <p className="text-sm text-gray-400">
+          {formatSubscriberCount(videoOwnerInfo.totalSubscribers)}
+        </p>
       </div>
     </div>
   )

@@ -24,6 +24,22 @@ export class UserService {
     }
 
 
+    async getUserChannelProfile(username) {
+        const token = this.getToken();
+        try {
+            const response = await axios.get(`/api/v1/user/channel/${username}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+ 
+            return response.data
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
     async getUserWatchHistory(page=1) {
         const token = this.getToken();
         try {

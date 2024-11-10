@@ -4,6 +4,7 @@ import videoSlice from "./videoSlice"
 import watchHistorySlice from "./watchHistorySlice"
 import commentSlice from "./commentSlice"
 import recommendedVideosSlice from "./recommendedVideosSlice"
+import channelSlice from "./channelSlice"
 
 
 const store = configureStore({
@@ -12,7 +13,8 @@ const store = configureStore({
         videos: videoSlice,
         watchHistory: watchHistorySlice,
         comments: commentSlice,
-        recommendedVideos: recommendedVideosSlice
+        recommendedVideos: recommendedVideosSlice,
+        channel: channelSlice,
     }
 });
 

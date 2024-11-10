@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage.jsx'
 import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
 import WatchHistoryPage from './pages/WatchHistoryPage.jsx'
 import VideoDetailsPage from './pages/VideoDetailsPage.jsx'
+import ChannelPage from './pages/ChannelPage.jsx'
 
 
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "watch-history",
         element: <WatchHistoryPage />,
+      },
+      {
+        path: "channel/:username",
+        element: <ChannelPage />,
       },
     ]
   }

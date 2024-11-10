@@ -33,6 +33,12 @@ import CommentInput from "./VideoComments/CommentInput";
 import CommentItem from "./VideoComments/CommentItem";
 import CommentSection from "./VideoComments/CommentSection";
 
+import Channel from "./Channel/Channel";
+import ChannelCoverPhoto from "./Channel/ChannelCoverPhoto";
+import ChannelInfo from "./Channel/ChannelInfo";
+import ChannelTabs from "./Channel/ChannelTabs";
+
+
 
 export { 
     AuthInput,
@@ -69,4 +75,9 @@ export {
     CommentInput,
     CommentItem,
     CommentSection,
+
+    Channel,
+    ChannelCoverPhoto,
+    ChannelInfo,
+    ChannelTabs,
 }

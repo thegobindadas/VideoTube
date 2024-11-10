@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import subscriptionServices from '../../services/subscriptionServices';
 
-function SubscribeBtn({ channelId }) {
-  const [isSubscribed, setIsSubscribed] = useState(false);
+function SubscribeBtn({ channelId, subscriptionStatus }) {
+  const [isSubscribed, setIsSubscribed] = useState(subscriptionStatus || false);
   const [loading, setLoading] = useState(false);
 
 
@@ -19,19 +19,19 @@ function SubscribeBtn({ channelId }) {
   };
 
   useEffect(() => {
-    const fetchSubscriptionStatus = async () => {
-      try {
-        const subscriptionStatus = await subscriptionServices.getSubscriptionStatus(channelId);
-        setIsSubscribed(subscriptionStatus.data.isSubscribed);
-      } catch (error) {
-        console.error("Error checking subscription status: ", error);
-      }
-    };
-
-    if (channelId) {
+    if (subscriptionStatus === undefined && channelId) {
+      // Fetch only if subscriptionStatus prop is not provided
+      const fetchSubscriptionStatus = async () => {
+        try {
+          const result = await subscriptionServices.getSubscriptionStatus(channelId);
+          setIsSubscribed(result.data.isSubscribed);
+        } catch (error) {
+          console.error("Error checking subscription status: ", error);
+        }
+      };
       fetchSubscriptionStatus();
     }
-  }, [channelId]);
+  }, [channelId, subscriptionStatus]);
 
 
   return (
