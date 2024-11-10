@@ -13,6 +13,13 @@ function ChannelVideoTab({ channelId }) {
     const loader = useRef(null);
     const [totalPages, setTotalPages] = useState(1);
 
+    const noContentMessages = {
+        title: "No videos uploaded",
+        text: "This page has yet to upload a video. Search another page in order to find more videos.",
+    };
+
+
+
     const fetchChannelVideos = useCallback(async () => {
         try {
             dispatch(setLoading(true));
@@ -28,11 +35,13 @@ function ChannelVideoTab({ channelId }) {
         }
     }, [channelId, page, dispatch]);
 
+
     useEffect(() => {
         if (page <= totalPages) {
             fetchChannelVideos();
         }
     }, [fetchChannelVideos, page, totalPages]);
+
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -52,15 +61,20 @@ function ChannelVideoTab({ channelId }) {
 
 
     useEffect(() => {
-        
         dispatch(resetVideos());
         dispatch(setPage(1));
     }, [channelId, dispatch]);
 
-    const noContentMessages = {
-        title: "No videos uploaded",
-        text: "This page has yet to upload a video. Search another page in order to find more videos.",
-    };
+
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    if (!videos.length) return (
+        <div className="flex justify-center p-4">
+            <NoContentMessage Icon={VideoIcon} message={noContentMessages} />
+        </div>
+    );
 
     if (videos.length === 0) {
         return (
