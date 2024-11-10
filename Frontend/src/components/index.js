@@ -18,6 +18,8 @@ import WatchHistoryCard from "./WatchHistory/WatchHistoryCard";
 import WatchHistory from "./WatchHistory/WatchHistory";
 import RecommendedVideoItem from "./RecommendedVideoList/RecommendedVideoItem";
 import RecommendedVideoList from "./RecommendedVideoList/RecommendedVideoList";
+import ChannelVideoTabCrad from "./ChannelVideoTab/ChannelVideoTabCrad";
+import ChannelVideoTab from "./ChannelVideoTab/ChannelVideoTab";
 
 import VideoPlayer from "./VideoDetails/VideoPlayer";
 import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
@@ -62,6 +64,8 @@ export {
     WatchHistory,
     RecommendedVideoItem,
     RecommendedVideoList,
+    ChannelVideoTabCrad,
+    ChannelVideoTab,
 
     VideoPlayer,
     VideoLikeDislikeButton,

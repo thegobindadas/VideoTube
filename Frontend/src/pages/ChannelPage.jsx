@@ -10,7 +10,6 @@ function ChannelPage() {
     <div className="flex min-h-[calc(100vh-66px)] sm:min-h-[calc(100vh-82px)]">
         <Sidebar type="normal" />
 
-
         <Channel username={username} />
     </div>
   )

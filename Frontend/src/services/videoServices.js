@@ -147,6 +147,27 @@ export class VideoServices {
         }
     }
 
+
+    async getChannelVideos(channelId, page=1) {
+        const token = this.getToken();
+        try {
+            const response = await axios.get(`/api/v1/video/channel/${channelId}/videos`, {
+                params: {
+                    page: page,
+                    limit: 4
+                },
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+            });
+                        
+            return response.data;
+        } catch (error) {
+            console.error('Error while fetching channel videos: ', error.message);
+            throw error;
+        }
+    }
+
 }
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo,  } from "../index"
+import { SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab,   } from "../index"
 import { useDispatch, useSelector } from 'react-redux';
 import { setChannelData, setLoading, setError, resetChannelData } from '../../store/channelSlice';
 import userService from "../../services/userService"
@@ -48,7 +48,7 @@ function Channel({ username }) {
     const renderTabContent = () => {
         switch (activeTab) {
             case 'videos':
-                return <div>Videos content here</div>;
+                return <ChannelVideoTab channelId={channel._id} />;
             case 'playlist':
                 return <div>Playlist content here</div>;
             case 'tweets':

@@ -12,6 +12,7 @@ import {
     getAllVideos,
     increaseViewCount,
     fetchRecommendedVideos,
+    getChannelVideos,
 } from "../controllers/video.controller.js"
 
 
@@ -53,6 +54,8 @@ router.route("/").get(getAllVideos)
 router.route("/:videoId/view").post(increaseViewCount)
 
 router.route("/:videoId/recommendations").get(fetchRecommendedVideos)
+
+router.get("/channel/:channelId/videos", getChannelVideos);
 
 
 

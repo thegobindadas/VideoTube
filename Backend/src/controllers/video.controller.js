@@ -632,3 +632,44 @@ export const fetchRecommendedVideos = asyncHandler(async (req, res) => {
         throw new ApiError(500, error.message || "Error occurred while fetching recommended videos");
     }
 });
+
+
+export const getChannelVideos = asyncHandler(async (req, res) => {
+    try {
+        const { channelId } = req.params;
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 4; 
+        const skip = (page - 1) * limit;
+
+        if (!channelId) {
+            throw new ApiError(400, "Channel ID is required");
+        }
+
+        if (!isValidObjectId(channelId)) {
+            throw new ApiError(400, "Invalid channel ID");
+        }
+
+        
+        const videos = await Video.find({ owner: channelId })
+            .select("_id thumbnail title duration views createdAt")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        
+        const totalVideos = await Video.countDocuments({ owner: channelId });
+        const totalPages = Math.ceil(totalVideos / limit);
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200, 
+                    { videos, totalVideos, totalPages, currentPage: page }, 
+                    "Channel videos fetched successfully"
+                )
+            );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Failed to fetch channel videos");
+    }
+});
