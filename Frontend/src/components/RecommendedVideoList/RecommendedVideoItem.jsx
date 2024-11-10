@@ -1,10 +1,13 @@
 import React from 'react'
 import { convertSeconds, getTimeAgo } from '../../utils/timeUtils';
+import { formatViewsCount } from "../../utils/numberUtils"
 
-function RecommendedVideoItem({ _id, thumbnail, title, duration, authorAvatar, authorName, views, createdAt }) {
+
+function RecommendedVideoItem({ thumbnail, title, duration, views, createdAt, ownerId, ownerUsername, ownerName, ownerAvatar }) {
 
     const videoDuration = convertSeconds(duration);
     const timeAgo = getTimeAgo(createdAt);
+    const viewsCount = formatViewsCount(views);
 
 
   return (
@@ -23,14 +26,14 @@ function RecommendedVideoItem({ _id, thumbnail, title, duration, authorAvatar, a
         <div className="flex gap-x-2 px-2 pb-4 pt-1 md:w-7/12 md:px-0 md:py-0.5">
             <div className="h-12 w-12 shrink-0 md:hidden">
             <img
-                src={authorAvatar}
-                alt={authorName}
+                src={ownerAvatar}
+                alt={ownerName}
                 className="h-full w-full rounded-full" />
             </div>
             <div className="w-full pt-1 md:pt-0">
                 <h6 className="mb-1 text-sm font-semibold">{title}</h6>
-                <p className="mb-0.5 mt-2 text-sm text-gray-200">{authorName}</p>
-                <p className="flex text-sm text-gray-200">{views} Views · {timeAgo}</p>
+                <p className="mb-0.5 mt-2 text-sm text-gray-200">{ownerName}</p>
+                <p className="flex text-sm text-gray-200">{viewsCount} · {timeAgo}</p>
             </div>
         </div>
     </div>

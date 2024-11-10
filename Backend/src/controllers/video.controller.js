@@ -523,17 +523,14 @@ export const fetchRecommendedVideos = asyncHandler(async (req, res) => {
         const { videoId } = req.params;
         const { userId = null } = req.body;
 
-
         if (!isValidObjectId(videoId)) {
             throw new ApiError(400, "Invalid video ID format");
         }
 
-
         // Step 1: Fetch the current video
         const currentVideo = await Video.findById(videoId)
-            .populate('owner', 'username')
+            .populate('owner', 'username fullName avatar') // Populate owner with username, fullName, and avatar
             .exec();
-
 
         if (!currentVideo) {
             throw new ApiError(404, "The requested video does not exist");
@@ -547,16 +544,16 @@ export const fetchRecommendedVideos = asyncHandler(async (req, res) => {
             throw new ApiError(500, "Owner information is missing for this video");
         }
 
-
         // Step 2: Fetch videos from the same owner (i.e., channel)
         const relatedVideos = await Video.find({
             _id: { $ne: videoId },  // Exclude the current video
             owner: currentVideo.owner._id, // Same owner/channel
             isPublished: true
         })
+        .select('thumbnail title duration views createdAt') // Select only required fields
+        .populate('owner', 'username fullName avatar') // Populate owner fields
         .limit(5)
         .exec();
-
 
         // Step 3: Fetch videos based on similar title or description (using regex)
         const similarVideos = await Video.find({
@@ -567,19 +564,21 @@ export const fetchRecommendedVideos = asyncHandler(async (req, res) => {
             ],
             isPublished: true
         })
+        .select('thumbnail title duration views createdAt') // Select only required fields
+        .populate('owner', 'username fullName avatar') // Populate owner fields
         .limit(5)
         .exec();
-
 
         // Step 4: Fetch popular videos (based on views or likes)
         const popularVideos = await Video.find({
             _id: { $ne: videoId },
             isPublished: true
         })
+        .select('thumbnail title duration views createdAt') // Select only required fields
+        .populate('owner', 'username fullName avatar') // Populate owner fields
         .sort({ views: -1 })  // Sort by most views
         .limit(5)
         .exec();
-
 
         // Step 5: If user is logged in, fetch videos based on their watch history
         let watchHistoryVideos = [];
@@ -593,28 +592,38 @@ export const fetchRecommendedVideos = asyncHandler(async (req, res) => {
             }
         }
 
-
         // Step 6: Merge all video recommendations and remove duplicates
         let allVideos = [...relatedVideos, ...similarVideos, ...popularVideos, ...watchHistoryVideos];
-
 
         // Remove duplicates by video ID
         const uniqueVideos = allVideos.filter((video, index, self) =>
             index === self.findIndex((v) => v._id.toString() === video._id.toString())
         );
 
-
         // Step 7: Limit results to show a fixed number of videos
+        const recommendedVideos = uniqueVideos.slice(0, 10).map(video => ({
+            videoId: video._id,
+            thumbnail: video.thumbnail,
+            title: video.title,
+            duration: video.duration,
+            views: video.views,
+            createdAt: video.createdAt,
+            ownerId: video.owner._id,
+            ownerAvatar: video.owner.avatar,
+            ownerName: video.owner.fullName,
+            ownerUsername: video.owner.username // Adding username here
+        }));
+
         return res
             .status(200)
             .json(
                 new ApiResponse(
                     200,
-                    { videos: uniqueVideos.slice(0, 10) },
+                    { videos: recommendedVideos },
                     "Recommended Videos fetched successfully"
                 )
             );
-            
+
     } catch (error) {
         console.error("Error fetching recommended videos:", error);
         if (error instanceof ApiError) {
