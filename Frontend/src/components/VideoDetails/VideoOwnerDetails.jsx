@@ -2,61 +2,62 @@ import React, { useState, useEffect } from 'react'
 import { formatSubscriberCount } from '../../utils/numberUtils';
 import videoServices from '../../services/videoServices';
 import { Link } from 'react-router-dom';
-
+import { setOwnerInfo, setLoading, setError, resetOwnerInfo } from '../../store/ownerSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function VideoOwnerDetails({ channelId }) {
 
-  const [videoOwnerInfo, setVideoOwnerInfo] = useState({
-    "_id": "",
-    "username": "",
-    "fullName": "",
-    "avatar": "",
-    "totalSubscribers": 0,
-  });
+  const dispatch = useDispatch();
+  const { ownerInfo, loading, error } = useSelector((state) => state.owner);
 
 
   useEffect(() => {
     const fetchVideoOwnerDetails = async () => {
+      dispatch(setLoading());
       try {
         const ownerData = await videoServices.getVideoOwnerDetails(channelId);
         if (ownerData && ownerData.data) {
-          const { _id, username, fullName, avatar, totalSubscribers } = ownerData.data;
-          setVideoOwnerInfo({
-            _id,
-            username,
-            fullName,
-            avatar,
-            totalSubscribers,
-          });
+          dispatch(setOwnerInfo(ownerData.data));
         }
       } catch (error) {
         console.error('Error fetching video owner details:', error);
+        dispatch(setError('Failed to load owner information'));
       }
     };
 
     if (channelId) {
       fetchVideoOwnerDetails();
     }
-  }, [channelId]);
 
+
+    return () => {
+      dispatch(resetOwnerInfo());
+    };
+  }, [channelId, dispatch]);
+
+
+
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
 
   return (
     <div className="flex items-center gap-x-4">
       <div className="mt-2 h-12 w-12 shrink-0">
         <img 
-          src={videoOwnerInfo.avatar} 
-          alt={videoOwnerInfo.fullName || "Video Owner"} 
+          src={ownerInfo?.avatar} 
+          alt={ownerInfo?.fullName || "Video Owner"} 
           className="h-full w-full rounded-full" />
       </div>
       <div className="block">
         <p className="text-gray-200">
-          <Link to={`/channel/${videoOwnerInfo.username}`}>
-            {videoOwnerInfo.fullName || "Unknown"}
+          <Link to={`/channel/${ownerInfo?.username}`}>
+            {ownerInfo?.fullName || "Unknown"}
           </Link>
         </p>
         <p className="text-sm text-gray-400">
-          {formatSubscriberCount(videoOwnerInfo.totalSubscribers)}
+          {formatSubscriberCount(ownerInfo?.totalSubscribers || 0)}
         </p>
       </div>
     </div>

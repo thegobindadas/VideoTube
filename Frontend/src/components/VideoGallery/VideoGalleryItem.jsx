@@ -25,14 +25,16 @@ function VideoGalleryItem({ _id, thumbnail, duration, avatar, title, views, crea
       <div className="flex gap-x-2">
         <div className="h-10 w-10 shrink-0">
           <img
-          src={avatar}
-          alt={author}
-          className="h-full w-full rounded-full" />
+            src={avatar}
+            alt={author}
+            className="h-full w-full rounded-full" />
         </div>
         <div className="w-full">
           <h6 className="mb-1 font-semibold">{title}</h6>
-          <p className="flex text-sm text-gray-200">{viewsCount} Views · {timeAgo}</p>
-          <p className="text-sm text-gray-200"><Link to={`/${authorId}`}>{author}</Link></p>
+          <p className="flex text-sm text-gray-200">{viewsCount} · {timeAgo}</p>
+          <p className="text-sm text-gray-200">
+            {author}
+          </p>
         </div>
       </div>
     </div>
