@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { NoContentMessage, ChannelPlaylistTabCard } from "../index"
+import { Loader, NoContentMessage, ChannelPlaylistTabCard } from "../index"
 import { CollectionIcon } from "../../assets"
 import { setPlaylists, setLoading, setError, setPage, setHasMore, resetPlaylists } from '../../store/userPlaylistsSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -77,7 +77,7 @@ function ChannelPlaylistTab({ channelId }) {
 
 
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader msg="playlists" />;
   if (error) return <div>Error: {error}</div>;
   if (!playlists.length) {
     return (

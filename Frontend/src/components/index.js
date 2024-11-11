@@ -5,6 +5,8 @@ import Button from "./Buttons/Button";
 import SidebarButton from "./Buttons/SidebarButton";
 import SubscribeBtn from "./Buttons/SubscribeBtn";
 
+import Loader from "./UI/Loader";
+
 import SignupForm from "./Auth/SignupForm";
 import LoginForm from "./Auth/LogInForm";
 
@@ -50,6 +52,8 @@ export {
     Button,
     SidebarButton,
     SubscribeBtn,
+
+    Loader,
 
     SignupForm,
     LoginForm,

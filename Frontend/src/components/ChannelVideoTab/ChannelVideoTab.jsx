@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { NoContentMessage, ChannelVideoTabCrad } from "../index"
+import { Loader, NoContentMessage, ChannelVideoTabCrad } from "../index"
 import { VideoIcon } from "../../assets"
 import { setVideos, setLoading, setError, setPage, setHasMore, resetVideos } from '../../store/channelVideoSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,7 +66,7 @@ function ChannelVideoTab({ channelId }) {
         dispatch(setPage(1));
     }, [channelId, dispatch]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loader msg="videos" />;
     if (error) return <div>Error: {error}</div>;
     if (!videos.length) {
         return (
