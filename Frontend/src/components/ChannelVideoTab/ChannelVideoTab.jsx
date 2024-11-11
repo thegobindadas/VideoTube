@@ -19,13 +19,12 @@ function ChannelVideoTab({ channelId }) {
         text: "This page has yet to upload a video. Search another page in order to find more videos.",
     };
 
-    
     const fetchChannelVideos = useCallback(async () => {
         try {
             if (page === 1) {
                 dispatch(setLoading(true));
             } else {
-                setLoadingMore(true); // Set loading more state when fetching additional pages
+                setLoadingMore(true);
             }
 
             const response = await videoServices.getChannelVideos(channelId, page);
@@ -41,13 +40,11 @@ function ChannelVideoTab({ channelId }) {
         }
     }, [channelId, page, dispatch]);
 
-
     useEffect(() => {
         if (page <= totalPages) {
             fetchChannelVideos();
         }
     }, [fetchChannelVideos, page, totalPages]);
-
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -60,16 +57,14 @@ function ChannelVideoTab({ channelId }) {
         );
 
         if (loader.current) observer.observe(loader.current);
-        return () => observer.disconnect();
-    }, [hasMore, loading, loadingMore, dispatch, page]);
 
+        return () => observer.disconnect(); // cleanup observer on unmount
+    }, [hasMore, loading, loadingMore, dispatch, page]);
 
     useEffect(() => {
         dispatch(resetVideos());
         dispatch(setPage(1));
     }, [channelId, dispatch]);
-
-
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
