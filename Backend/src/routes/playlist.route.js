@@ -20,17 +20,17 @@ router.use(verifyJWT);
 
 router.route("/").post(createPlaylist)
 
+router.route("/add/video/:videoId/:playlistId").patch(addVideoToPlaylist);
+
 router.route("/user/:userId").get(getUserPlaylists);
 
 router.route("/:playlistId").get(getPlaylistById)
 
-router.route("/:playlistId").patch(updatePlaylist)
-   
-router.route("/:playlistId").delete(deletePlaylist);
-
-router.route("/add/video/:videoId/:playlistId/video").patch(addVideoToPlaylist);
-
 router.route("/remove/video/:videoId/:playlistId").patch(removeVideoFromPlaylist);
+
+router.route("/update/:playlistId").patch(updatePlaylist)
+   
+router.route("/remove/:playlistId").delete(deletePlaylist);
 
 
 
