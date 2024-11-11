@@ -11,7 +11,7 @@ function ChannelVideoTab({ channelId }) {
     const dispatch = useDispatch();
     const { videos, loading, error, page, hasMore } = useSelector((state) => state.channelVideos);
     const loader = useRef(null);
-    const [loadingMore, setLoadingMore] = useState(false); // New state for loading more videos
+    const [loadingMore, setLoadingMore] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
 
     const noContentMessages = {

@@ -114,6 +114,9 @@ export const addVideoToPlaylist = asyncHandler(async (req, res) => {
 export const getUserPlaylists = asyncHandler(async (req, res) => {
     try {
         const { userId } = req.params;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 2;
+        const skip = (page - 1) * limit;
 
         if (!userId) {
             throw new ApiError(400, "User ID is required");
@@ -153,24 +156,33 @@ export const getUserPlaylists = asyncHandler(async (req, res) => {
                     totalVideos: 1,
                     firstVideoThumbnail: 1
                 }
-            }
+            },
+            { $skip: skip },
+            { $limit: limit }
         ]);
+
+        const totalPlaylists = await Playlist.countDocuments({ owner: userId });
+
+        const totalPages = Math.ceil(totalPlaylists / limit);
 
         if (!playlists || playlists.length === 0) {
             throw new ApiError(404, "No playlists found for this user");
         }
 
 
-
-        return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
+        
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
                     playlists,
-                    "Playlists fetched successfully"
-                )
-            );
+                    totalPages,
+                    currentPage: page,
+                    totalPlaylists
+                },
+                "Playlists fetched successfully"
+            )
+        );
 
     } catch (error) {
         throw new ApiError(500, error.message || "An error occurred while fetching playlists");

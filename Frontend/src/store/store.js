@@ -7,6 +7,7 @@ import recommendedVideosSlice from "./recommendedVideosSlice"
 import channelSlice from "./channelSlice"
 import channelVideoSlice from "./channelVideoSlice"
 import ownerSlice from "./ownerSlice"
+import userPlaylistsSlice from "./userPlaylistsSlice"
 
 
 const store = configureStore({
@@ -19,6 +20,7 @@ const store = configureStore({
         recommendedVideos: recommendedVideosSlice,
         channel: channelSlice,
         channelVideos: channelVideoSlice,
+        userPlaylists: userPlaylistsSlice,
     }
 });
 

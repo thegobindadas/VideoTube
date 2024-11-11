@@ -18,8 +18,6 @@ import WatchHistoryCard from "./WatchHistory/WatchHistoryCard";
 import WatchHistory from "./WatchHistory/WatchHistory";
 import RecommendedVideoItem from "./RecommendedVideoList/RecommendedVideoItem";
 import RecommendedVideoList from "./RecommendedVideoList/RecommendedVideoList";
-import ChannelVideoTabCrad from "./ChannelVideoTab/ChannelVideoTabCrad";
-import ChannelVideoTab from "./ChannelVideoTab/ChannelVideoTab";
 
 import VideoPlayer from "./VideoDetails/VideoPlayer";
 import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
@@ -40,8 +38,10 @@ import Channel from "./Channel/Channel";
 import ChannelCoverPhoto from "./Channel/ChannelCoverPhoto";
 import ChannelInfo from "./Channel/ChannelInfo";
 import ChannelTabs from "./Channel/ChannelTabs";
-
-
+import ChannelVideoTabCrad from "./ChannelVideoTab/ChannelVideoTabCrad";
+import ChannelVideoTab from "./ChannelVideoTab/ChannelVideoTab";
+import ChannelPlaylistTab from "./ChannelPlaylistTab/ChannelPlaylistTab";
+import ChannelPlaylistTabCard from "./ChannelPlaylistTab/ChannelPlaylistTabCard";
 
 export { 
     AuthInput,
@@ -64,8 +64,6 @@ export {
     WatchHistory,
     RecommendedVideoItem,
     RecommendedVideoList,
-    ChannelVideoTabCrad,
-    ChannelVideoTab,
 
     VideoPlayer,
     VideoLikeDislikeButton,
@@ -86,4 +84,8 @@ export {
     ChannelCoverPhoto,
     ChannelInfo,
     ChannelTabs,
+    ChannelVideoTabCrad,
+    ChannelVideoTab,
+    ChannelPlaylistTab,
+    ChannelPlaylistTabCard,
 }

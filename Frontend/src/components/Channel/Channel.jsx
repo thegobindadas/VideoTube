@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab,   } from "../index"
+import { SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab, ChannelPlaylistTab,   } from "../index"
 import { useDispatch, useSelector } from 'react-redux';
 import { setChannelData, setLoading, setError, resetChannelData } from '../../store/channelSlice';
 import userService from "../../services/userService"
@@ -50,7 +50,7 @@ function Channel({ username }) {
             case 'videos':
                 return <ChannelVideoTab channelId={channel._id} />;
             case 'playlist':
-                return <div>Playlist content here</div>;
+                return <ChannelPlaylistTab channelId={channel._id} />;
             case 'tweets':
                 return <div>Tweets content here</div>;
             case 'subscribed':
