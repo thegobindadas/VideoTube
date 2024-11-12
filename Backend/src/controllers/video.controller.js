@@ -100,18 +100,28 @@ export const fetchVideoById = asyncHandler(async (req, res) => {
 
     try {
         const { videoId } = req.params
-        
+
         if (!videoId) {
             throw new ApiError(400, "Video id is required")
+        }
+
+        if (!isValidObjectId(videoId)) {
+            throw new ApiError(400, "Video id is not valid")
         }
     
     
         const video = await Video.findById(videoId)
+            .populate({
+                path: "owner",
+                select: "avatar fullName username"
+            })
+            .select("videoFile title description views createdAt");
     
         if (!video) {
             throw new ApiError(404, "Video does not exist")
         }
     
+        const totalSubscribers = await Subscription.countDocuments({ channel: video.owner._id });
     
     
         return res
@@ -119,7 +129,19 @@ export const fetchVideoById = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                video,
+                {
+                    videoId: video._id,
+                    videoFile: video.videoFile,
+                    title: video.title,
+                    description: video.description,
+                    views: video.views,
+                    createdAt: video.createdAt,
+                    ownerId: video.owner._id,
+                    ownerName: video.owner.fullName,
+                    ownerAvatar: video.owner.avatar,
+                    ownerUsername: video.owner.username,
+                    totalSubscribers
+                },
                 "Video fetched successfully"
             )
         )

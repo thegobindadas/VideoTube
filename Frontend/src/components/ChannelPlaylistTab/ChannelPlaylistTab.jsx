@@ -10,10 +10,10 @@ import { Link } from 'react-router-dom';
 function ChannelPlaylistTab({ channelId }) {
 
   const dispatch = useDispatch();
-    const { playlists, loading, error, page, hasMore } = useSelector((state) => state.userPlaylists);
-    const loader = useRef(null);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [totalPages, setTotalPages] = useState(1);
+  const { playlists, loading, error, page, hasMore } = useSelector((state) => state.userPlaylists);
+  const loader = useRef(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
 
   const noContentMessages = {
     title: "No playlist created",
@@ -34,7 +34,7 @@ function ChannelPlaylistTab({ channelId }) {
       const fetchedChannelPlaylists = response.data.playlists;
       setTotalPages(response.data.totalPages);
       dispatch(setHasMore(page < response.data.totalPages));
-      dispatch(setPlaylists(fetchedChannelPlaylists));
+      dispatch(setPlaylists(fetchedChannelPlaylists));      
     } catch (err) {
       dispatch(setError(err.message));
     } finally {

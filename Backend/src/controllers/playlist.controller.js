@@ -166,7 +166,20 @@ export const getUserPlaylists = asyncHandler(async (req, res) => {
         const totalPages = Math.ceil(totalPlaylists / limit);
 
         if (!playlists || playlists.length === 0) {
-            throw new ApiError(404, "No playlists found for this user");
+            return res
+                .status(200)
+                .json(
+                    new ApiResponse(
+                        200,
+                        {
+                            playlists: [],
+                            totalPages,
+                            currentPage: page,
+                            totalPlaylists: 0
+                        },
+                        "No playlists found for this user"
+                    )
+                );
         }
 
 

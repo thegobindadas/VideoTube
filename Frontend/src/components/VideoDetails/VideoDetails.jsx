@@ -1,9 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { getTimeAgo } from '../../utils/timeUtils';
 import { formatViewsCount } from '../../utils/numberUtils';
-import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn, CommentSection } from "../index";
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn, CommentSection, Loader } from "../index";
 import videoServices from '../../services/videoServices';
 
 
@@ -44,7 +42,7 @@ function VideoDetails({ videoId }) {
 
 
     // Handle loading and error states
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <Loader />;
     if (error) return <p>Error: {error}</p>;
 
     return (
@@ -61,7 +59,7 @@ function VideoDetails({ videoId }) {
                             </div>
                             <div className="w-full md:w-1/2 lg:w-full xl:w-1/2">
                                 <div className="flex items-center justify-between gap-x-4 md:justify-end lg:justify-between xl:justify-end">
-                                    <VideoLikeDislikeButton videoId={videoInfo._id} />
+                                    <VideoLikeDislikeButton videoId={videoInfo.videoId} />
                                     <SaveToPlaylist />
                                 </div>
                             </div>
@@ -69,10 +67,16 @@ function VideoDetails({ videoId }) {
 
                         <div className="mt-4 flex items-center justify-between">
 
-                            <VideoOwnerDetails channelId={videoInfo.owner}  />
+                            <VideoOwnerDetails 
+                                ownerId={videoInfo.ownerId}
+                                avatar={videoInfo.ownerAvatar}
+                                fullName={videoInfo.ownerName}
+                                username={videoInfo.ownerUsername}
+                                totalSubscribers={videoInfo.totalSubscribers}
+                            />
 
                             <div className="block">
-                                <SubscribeBtn channelId={videoInfo.owner} />
+                                <SubscribeBtn channelId={videoInfo.ownerId} />
                             </div>
                         </div>
 
@@ -83,7 +87,7 @@ function VideoDetails({ videoId }) {
                         </div>
                     </div>
 
-                    <CommentSection videoId={videoInfo._id} />
+                    <CommentSection videoId={videoInfo.videoId} />
                 </>
             ) : (
                 <p>No video information available</p>
