@@ -10,7 +10,7 @@ import {
     removeVideo,
     toggleVideoPublishStatus,
     getAllVideos,
-    increaseViewCount,
+    handelVideoView,
     fetchRecommendedVideos,
     getChannelVideos,
 } from "../controllers/video.controller.js"
@@ -51,7 +51,7 @@ router.route("/:videoId/toggle-publish").patch(toggleVideoPublishStatus);
 
 router.route("/").get(getAllVideos)
 
-router.route("/:videoId/view").post(increaseViewCount)
+router.route("/:videoId/view").post(handelVideoView)
 
 router.route("/:videoId/recommendations").get(fetchRecommendedVideos)
 

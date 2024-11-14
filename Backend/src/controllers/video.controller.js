@@ -479,7 +479,7 @@ export const getAllVideos = asyncHandler(async (req, res) => {
 });
 
 
-export const increaseViewCount = asyncHandler(async (req, res) => {
+export const handelVideoView = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params;
         const userId = req.user._id;
@@ -502,6 +502,12 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
 
 
         const user = await User.findById(userId);
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+
         const hasWatched = user.watchHistory.includes(videoId);
 
 
@@ -510,7 +516,8 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
             await user.save();
 
             
-            await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
+            video.views += 1;
+            await video.save();
 
 
             return res
@@ -518,7 +525,7 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
-                    {},
+                    video,
                     "View count incremented successfully"
                 )
             );
@@ -529,7 +536,7 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
-                    {},
+                    video,
                     "User has already viewed this video"
                 )
             );
