@@ -66,7 +66,7 @@ function VideoGallerySection() {
     }, [dispatch]);
 
 
-    if (loading) return <Loader />;
+
     if (error) return <p>Error: {error}</p>;
 
   return (
@@ -89,6 +89,14 @@ function VideoGallerySection() {
                 </Link>
             ))}
         </div>
+        
+        {/* Only show the loader if more videos are available */}
+        {loading && hasMore && (
+            <div className="text-center">
+                <Loader />
+            </div>
+        )}
+
         {/* If there are no more videos, show a message */}
         {page >= totalPages && (
             <p className="text-center text-gray-500">No more videos to load.</p>
