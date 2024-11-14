@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import axios from 'axios';
-import { setVideos, setLoading, setError, setPage, setHasMore } from '../../store/videoSlice';
+import { setVideos, setLoading, setError, setPage, setHasMore, resetVideos } from '../../store/videoSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { VideoGalleryItem } from "../index"
+import { Loader, VideoGalleryItem } from "../index"
 import videoServices from "../../services/videoServices"
 
 function VideoGallerySection() {
@@ -21,10 +21,10 @@ function VideoGallerySection() {
             const response = await videoServices.fetchAllVideos(page)
 
             const fetchedVideos = response.data.videos;
-            setTotalPages(response.data.totalPages);  // Set total pages from response
+            setTotalPages(response.data.totalPages);
 
             if (page >= response.data.totalPages) {
-                dispatch(setHasMore(false));  // If current page is the last page, stop loading more
+                dispatch(setHasMore(false));
             }
 
             dispatch(setVideos(fetchedVideos));
@@ -59,6 +59,15 @@ function VideoGallerySection() {
         return () => observer.disconnect();
     }, [hasMore, loading, dispatch, page, totalPages]);
 
+    useEffect(() => {
+        return () => {
+            dispatch(resetVideos());
+        };
+    }, [dispatch]);
+
+
+    if (loading) return <Loader />;
+    if (error) return <p>Error: {error}</p>;
 
   return (
     <section className="w-full pb-[70px] sm:ml-[70px] sm:pb-0 lg:ml-0">
