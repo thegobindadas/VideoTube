@@ -6,14 +6,13 @@ import commentSlice from "./commentSlice"
 import recommendedVideosSlice from "./recommendedVideosSlice"
 import channelSlice from "./channelSlice"
 import channelVideoSlice from "./channelVideoSlice"
-import ownerSlice from "./ownerSlice"
 import userPlaylistsSlice from "./userPlaylistsSlice"
+import VideoInfoSlice from "./VideoInfoSlice"
 
 
 const store = configureStore({
     reducer: {
         user : userSlice,
-        owner: ownerSlice,
         videos: videoSlice,
         watchHistory: watchHistorySlice,
         comments: commentSlice,
@@ -21,6 +20,7 @@ const store = configureStore({
         channel: channelSlice,
         channelVideos: channelVideoSlice,
         userPlaylists: userPlaylistsSlice,
+        VideoInfo: VideoInfoSlice,
     }
 });
 

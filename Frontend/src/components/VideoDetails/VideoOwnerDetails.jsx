@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { formatSubscriberCount } from '../../utils/numberUtils';
-import videoServices from '../../services/videoServices';
 import { Link } from 'react-router-dom';
-import { setOwnerInfo, setLoading, setError, resetOwnerInfo } from '../../store/ownerSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
 function VideoOwnerDetails({ ownerId, avatar, fullName, username, totalSubscribers }) {
 
