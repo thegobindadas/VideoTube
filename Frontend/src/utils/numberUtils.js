@@ -11,11 +11,11 @@ function formatCount(count, type) {
 }
 
 export function formatViewsCount(views) {
-    return formatCount(views, 'views');
+    return formatCount(views, 'Views');
 }
 
 export function formatSubscriberCount(subscribers) {
-    return formatCount(subscribers, 'subscribers');
+    return formatCount(subscribers, 'Subscribers');
 }
 
 export function formatSubscribedToCount(SubscribedTo) {
@@ -23,7 +23,7 @@ export function formatSubscribedToCount(SubscribedTo) {
 }
 
 export function formatLikeCount(likes) {
-    return formatCount(likes, 'likes');
+    return formatCount(likes, 'Likes');
 }
 
 export function formatCommentsCount(Comments) {
