@@ -8,6 +8,7 @@ import channelSlice from "./channelSlice"
 import channelVideoSlice from "./channelVideoSlice"
 import userPlaylistsSlice from "./userPlaylistsSlice"
 import VideoInfoSlice from "./VideoInfoSlice"
+import playlistInfoSlice from "./playlistInfoSlice"
 
 
 const store = configureStore({
@@ -21,6 +22,7 @@ const store = configureStore({
         channelVideos: channelVideoSlice,
         userPlaylists: userPlaylistsSlice,
         VideoInfo: VideoInfoSlice,
+        playlistInfo: playlistInfoSlice,
     }
 });
 
