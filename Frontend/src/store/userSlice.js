@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
   subscriptions: [],
-  watchHistory: [],
+  watchHistory: JSON.parse(localStorage.getItem('user'))?.watchHistory || [],
   status: 'idle',
   error: null,
 };
@@ -14,6 +14,7 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action) {
       state.user = action.payload;
+      state.watchHistory = action.payload.watchHistory || [];
       localStorage.setItem('user', JSON.stringify(action.payload));
     },
     logoutUser(state) {
@@ -30,10 +31,14 @@ const userSlice = createSlice({
       );
     },
     addToWatchHistory(state, action) {
-      state.watchHistory.push(action.payload);
-    },
+      if (!state.watchHistory.includes(action.payload)) {
+        state.watchHistory = [...state.watchHistory, action.payload];
+        localStorage.setItem('user', JSON.stringify({ ...state.user, watchHistory: state.watchHistory }));
+      }
+    }
   },
 });
+
 
 export const {
   setUser,

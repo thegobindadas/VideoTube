@@ -46,10 +46,10 @@ export class VideoServices {
     }
 
 
-    async incrementVideoViews(videoId) {
+    async handleVideoViews(videoId) {
         const token = this.getToken();
         try {
-            const response = axios.post(`/api/v1/video/${videoId}/view`, {}, {
+            const response = await axios.post(`/api/v1/video/${videoId}/view`, {}, {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },

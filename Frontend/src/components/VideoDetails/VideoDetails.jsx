@@ -3,44 +3,55 @@ import { getTimeAgo } from '../../utils/timeUtils';
 import { formatViewsCount } from '../../utils/numberUtils';
 import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn, CommentSection, Loader } from "../index";
 import videoServices from '../../services/videoServices';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading, setError, setVideoInfo, resetVideoInfo } from "../../store/VideoInfoSlice";
+import { addToWatchHistory } from "../../store/userSlice"
 
 function VideoDetails({ videoId }) {
     
-    const [videoInfo, setVideoInfo] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const dispatch = useDispatch();
+    const userData = useSelector((state) => state.user.user)
+    const { videoInfo, loading, error } = useSelector((state) => state.VideoInfo);
     const [viewIncremented, setViewIncremented] = useState(false);
     
 
     const loadVideoDetails = useCallback(async () => {
-        setLoading(true);
+        dispatch(setLoading());
+        
         try {
             const videoData = await videoServices.fetchVideoById(videoId)
-            setVideoInfo(videoData.data);
+            dispatch(setVideoInfo(videoData.data));           
         } catch (error) {
-            setError(error.message || 'Failed to load video details.');
-        } finally {
-            setLoading(false);
+            dispatch(setError(error.message || 'Failed to load video details.'));
         }
-    }, [videoId]);
+    }, [dispatch, videoId]);
 
 
     useEffect(() => {
-        if (videoInfo && !viewIncremented) {
-            videoServices.incrementVideoViews(videoId)
-                .then(() => setViewIncremented(true))
-                .catch(error => console.error("Error while incrementing views: ", error.message));
+        const hasWatchedVideo = userData?.watchHistory.includes(videoId);
+    
+        if (videoInfo && !viewIncremented && !hasWatchedVideo) {
+            videoServices.handleVideoViews(videoId)
+                .then((res) => {                    
+                    setViewIncremented(true);
+                    dispatch(setVideoInfo({ ...videoInfo, views: res.data.views }));
+                    dispatch(addToWatchHistory(videoId));
+                })
+                .catch((error) => console.error("Error while incrementing views: ", error.message));
         }
-    }, [videoInfo, videoId, viewIncremented]);
+    }, [videoInfo, videoId, viewIncremented, userData?.watchHistory, dispatch]);
+    
 
 
     useEffect(() => {
         loadVideoDetails();
+
+        return () => dispatch(resetVideoInfo());
     }, [loadVideoDetails]);
 
 
 
+    
     // Handle loading and error states
     if (loading) return <Loader />;
     if (error) return <p>Error: {error}</p>;
