@@ -205,38 +205,188 @@ export const getUserPlaylists = asyncHandler(async (req, res) => {
 
 export const getPlaylistById = asyncHandler(async (req, res) => {
     try {
-        const { playlistId } = req.params
+        const { playlistId } = req.params;
 
         if (!playlistId) {
-            throw new ApiError(400, "Playlist id is required")
+            throw new ApiError(400, "Playlist ID is required");
         }
-
 
         if (!isValidObjectId(playlistId)) {
-            throw new ApiError(400, "Invalid playlist id")
+            throw new ApiError(400, "Invalid Playlist ID");
         }
 
 
-        const playlist = await Playlist.findById(playlistId)
+        const playlist = await Playlist.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(playlistId) }
+            },
+            {
+                $lookup: {
+                    from: "videos",  
+                    localField: "videos",
+                    foreignField: "_id",
+                    as: "videoDetails"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "owner",
+                    foreignField: "_id",
+                    as: "ownerDetails"
+                }
+            },
+            {
+                $lookup: {
+                    from: "subscriptions",  
+                    localField: "owner",
+                    foreignField: "channel",
+                    as: "ownerSubscribers"
+                }
+            },
+            {
+                $addFields: {
+                    totalVideos: { $size: "$videos" },
+                    firstVideoThumbnail: { $arrayElemAt: ["$videoDetails.thumbnail", 0] },
+                    ownerId: { $arrayElemAt: ["$ownerDetails._id", 0] },
+                    ownerAvatar: { $arrayElemAt: ["$ownerDetails.avatar", 0] },
+                    ownerName: { $arrayElemAt: ["$ownerDetails.fullName", 0] },
+                    ownerUsername: { $arrayElemAt: ["$ownerDetails.username", 0] },
+                    ownerTotalSubscribers: { $size: "$ownerSubscribers" },
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    description: 1,
+                    createdAt: 1,
+                    totalVideos: 1,
+                    firstVideoThumbnail: 1,
+                    ownerId: 1,
+                    ownerAvatar: 1,
+                    ownerName: 1,
+                    ownerUsername: 1,
+                    ownerTotalSubscribers: 1
+                }
+            }
+        ]);
 
-        if (!playlist) {
-            throw new ApiError(404, "Playlist not found")
+        if (!playlist || playlist.length === 0) {
+            throw new ApiError(404, "Playlist not found");
         }
+
+
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                playlist[0],
+                "Playlist fetched successfully"
+            )
+        );
+
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching the playlist");
+    }
+});
+
+
+export const getPlaylistVideos = asyncHandler(async (req, res) => {
+    try {
+        const { playlistId } = req.params;
+
+        if (!playlistId) {
+            throw new ApiError(400, "Playlist ID is required");
+        }
+
+        if (!isValidObjectId(playlistId)) {
+            throw new ApiError(400, "Invalid Playlist ID");
+        }
+
+
+        const playlist = await Playlist.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(playlistId) }
+            },
+            {
+                $lookup: {
+                    from: "videos",
+                    localField: "videos",
+                    foreignField: "_id",
+                    as: "videoDetails"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$videoDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "videoDetails.owner",
+                    foreignField: "_id",
+                    as: "videoOwnerDetails"
+                }
+            },
+            {
+                $addFields: {
+                    videoThumbnail: "$videoDetails.thumbnail",
+                    videoDuration: "$videoDetails.duration",
+                    videoTitle: "$videoDetails.title",
+                    videoViews: "$videoDetails.views",
+                    videoCreatedAt: "$videoDetails.createdAt",
+                    videoOwnerId: { $arrayElemAt: ["$videoOwnerDetails._id", 0] },
+                    videoOwnerAvatar: { $arrayElemAt: ["$videoOwnerDetails.avatar", 0] },
+                    videoOwnerName: { $arrayElemAt: ["$videoOwnerDetails.fullName", 0] },
+                    videoOwnerUsername: { $arrayElemAt: ["$videoOwnerDetails.username", 0] }
+                }
+            },
+            {
+                $project: {
+                    videoThumbnail: 1,
+                    videoDuration: 1,
+                    videoTitle: 1,
+                    videoViews: 1,
+                    videoCreatedAt: 1,
+                    videoOwnerId: 1,
+                    videoOwnerAvatar: 1,
+                    videoOwnerName: 1,
+                    videoOwnerUsername: 1
+                }
+            }
+        ]);
+
+        if (!playlist || playlist.length === 0) {
+            return res
+                .status(200)
+                .json(
+                    new ApiResponse(
+                        200,
+                        [],
+                        "Playlist has no items"
+                    )
+                );
+        }
+
 
 
         return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                playlist,
-                "Playlist fetched successfully"
-            )
-        )
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    playlist,
+                    "Playlist videos fetched successfully"
+                )
+            );
+
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while fetching playlist")
+        throw new ApiError(500, error.message || "Something went wrong while fetching the playlist videos");
     }
-})
+});
 
 
 export const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
