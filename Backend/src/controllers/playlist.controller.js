@@ -311,7 +311,7 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
         const skip = (pageNum - 1) * limitNum;
 
 
-        const playlist = await Playlist.aggregate([
+        const playlistVideos = await Playlist.aggregate([
             {
                 $match: { _id: new mongoose.Types.ObjectId(playlistId) }
             },
@@ -368,30 +368,26 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
         ]);
 
 
-        const totalVideos = await Playlist.aggregate([
-            {
-                $match: { _id: new mongoose.Types.ObjectId(playlistId) }
-            },
-            {
-                $unwind: {
-                    path: "$videos",
-                    preserveNullAndEmptyArrays: true
-                }
-            }
-        ]).then(data => data.length);
+        const totalVideosResult = await Playlist.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(playlistId) } },
+            { $unwind: "$videos" },
+            { $count: "totalVideos" },
+        ]);
+
+        const totalVideos = totalVideosResult[0]?.totalVideos || 0;
 
 
-        if (!playlist || playlist.length === 0) {
+        if (!playlistVideos || playlistVideos.length === 0) {
             return res
                 .status(200)
                 .json(
                     new ApiResponse(
                         200,
                         {
-                            playlist: [],
+                            playlistVideos: [],
                             currentPage: pageNum,
                             totalPages: pageNum,
-                            totalVideos: 0
+                            totalVideos: totalVideos || 0,
                         },
                         "Playlist has no items"
                     )
@@ -406,7 +402,7 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     200,
                     {
-                        playlist,
+                        playlistVideos,
                         currentPage: pageNum,
                         totalPages: Math.ceil(totalVideos / limitNum),
                         totalVideos
