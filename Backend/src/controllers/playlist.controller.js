@@ -295,6 +295,7 @@ export const getPlaylistById = asyncHandler(async (req, res) => {
 export const getPlaylistVideos = asyncHandler(async (req, res) => {
     try {
         const { playlistId } = req.params;
+        const { page = 1, limit = 10 } = req.query;
 
         if (!playlistId) {
             throw new ApiError(400, "Playlist ID is required");
@@ -303,6 +304,11 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
         if (!isValidObjectId(playlistId)) {
             throw new ApiError(400, "Invalid Playlist ID");
         }
+
+
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const skip = (pageNum - 1) * limitNum;
 
 
         const playlist = await Playlist.aggregate([
@@ -356,8 +362,24 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
                     videoOwnerName: 1,
                     videoOwnerUsername: 1
                 }
-            }
+            },
+            { $skip: skip },
+            { $limit: limitNum } 
         ]);
+
+
+        const totalVideos = await Playlist.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(playlistId) }
+            },
+            {
+                $unwind: {
+                    path: "$videos",
+                    preserveNullAndEmptyArrays: true
+                }
+            }
+        ]).then(data => data.length);
+
 
         if (!playlist || playlist.length === 0) {
             return res
@@ -365,7 +387,12 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
                 .json(
                     new ApiResponse(
                         200,
-                        [],
+                        {
+                            playlist: [],
+                            currentPage: pageNum,
+                            totalPages: pageNum,
+                            totalVideos: 0
+                        },
                         "Playlist has no items"
                     )
                 );
@@ -378,7 +405,12 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
-                    playlist,
+                    {
+                        playlist,
+                        currentPage: pageNum,
+                        totalPages: Math.ceil(totalVideos / limitNum),
+                        totalVideos
+                    },
                     "Playlist videos fetched successfully"
                 )
             );
