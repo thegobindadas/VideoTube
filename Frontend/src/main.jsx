@@ -13,7 +13,7 @@ import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
 import WatchHistoryPage from './pages/WatchHistoryPage.jsx'
 import VideoDetailsPage from './pages/VideoDetailsPage.jsx'
 import ChannelPage from './pages/ChannelPage.jsx'
-
+import PlaylistVideosPage from './pages/PlaylistVideosPage.jsx'
 
 
 const router = createBrowserRouter([
@@ -44,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "channel/:username",
         element: <ChannelPage />,
+      },
+      {
+        path: "playlist/:playlistId",
+        element: <PlaylistVideosPage />,
       },
     ]
   }

@@ -45,6 +45,11 @@ import ChannelVideoTab from "./ChannelVideoTab/ChannelVideoTab";
 import ChannelPlaylistTab from "./ChannelPlaylistTab/ChannelPlaylistTab";
 import ChannelPlaylistTabCard from "./ChannelPlaylistTab/ChannelPlaylistTabCard";
 
+import ChannelPlaylist from "./ChannelPlaylist/ChannelPlaylist";
+import ChannelPlaylistOwnerInfo from "./ChannelPlaylist/ChannelPlaylistOwnerInfo";
+import ChannelPlaylistVideos from "./ChannelPlaylistVideos/ChannelPlaylistVideos";
+import ChannelPlaylistVideoCard from "./ChannelPlaylistVideos/ChannelPlaylistVideoCard";
+
 export { 
     AuthInput,
     AvatarInput,
@@ -92,4 +97,9 @@ export {
     ChannelVideoTab,
     ChannelPlaylistTab,
     ChannelPlaylistTabCard,
+
+    ChannelPlaylist,
+    ChannelPlaylistOwnerInfo,
+    ChannelPlaylistVideos,
+    ChannelPlaylistVideoCard
 }

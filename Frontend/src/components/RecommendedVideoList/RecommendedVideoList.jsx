@@ -19,7 +19,7 @@ function RecommendedVideoList({ videoId }) {
       try {
         const response = await videoServices.getRecommendationVideos(videoId);
 
-        dispatch(setRecommendedVideos(response.data.videos));  // Dispatch recommended videos to Redux store
+        dispatch(setRecommendedVideos(response.data.videos));
       } catch (err) {
         dispatch(setError(err.message));
       }

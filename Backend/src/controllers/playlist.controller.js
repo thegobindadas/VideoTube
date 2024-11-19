@@ -339,6 +339,7 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
             },
             {
                 $addFields: {
+                    videoId: "$videoDetails._id",
                     videoThumbnail: "$videoDetails.thumbnail",
                     videoDuration: "$videoDetails.duration",
                     videoTitle: "$videoDetails.title",
@@ -352,6 +353,7 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
             },
             {
                 $project: {
+                    videoId: 1,
                     videoThumbnail: 1,
                     videoDuration: 1,
                     videoTitle: 1,

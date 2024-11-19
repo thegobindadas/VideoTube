@@ -90,14 +90,15 @@ function ChannelPlaylistTab({ channelId }) {
   return (
     <div className="grid gap-4 pt-2 sm:grid-cols-[repeat(auto-fit,_minmax(400px,_1fr))]">
       {playlists.map((playlist) => (
-        <ChannelPlaylistTabCard 
-          key={playlist._id} 
-          name={playlist.name}
-          description={playlist.description}
-          createdAt={playlist.createdAt}
-          totalVideos={playlist.totalVideos}
-          thumbnail={playlist.firstVideoThumbnail}
-        />
+        <Link key={playlist._id} to={`/playlist/${playlist._id}`}>
+          <ChannelPlaylistTabCard 
+            name={playlist.name}
+            description={playlist.description}
+            createdAt={playlist.createdAt}
+            totalVideos={playlist.totalVideos}
+            thumbnail={playlist.firstVideoThumbnail}
+          />
+        </Link>
       ))}
       {page >= totalPages && (
         <p className="text-center text-gray-500">No more videos to load.</p>

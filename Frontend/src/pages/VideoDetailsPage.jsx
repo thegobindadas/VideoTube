@@ -16,7 +16,7 @@ function VideoDetailsPage() {
           <RecommendedVideoList videoId={videoId} />
         </div>
       </section>
-  </div>
+    </div>
   )
 }
 
