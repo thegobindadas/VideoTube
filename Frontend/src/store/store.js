@@ -10,6 +10,7 @@ import userPlaylistsSlice from "./userPlaylistsSlice"
 import VideoInfoSlice from "./VideoInfoSlice"
 import playlistInfoSlice from "./playlistInfoSlice"
 import playlistVideoSlice from "./playlistVideoSlice"
+import myPlaylistsSlice from "./myPlaylistsSlice"
 
 const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
         VideoInfo: VideoInfoSlice,
         playlistInfo: playlistInfoSlice,
         playlistVideos: playlistVideoSlice,
+        myPlaylists: myPlaylistsSlice,
     }
 });
 
