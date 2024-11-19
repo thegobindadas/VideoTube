@@ -84,6 +84,23 @@ export class PlaylistService {
         }
     }
 
+
+    async getMyPlaylists() {
+        const token = this.getToken();
+        try {
+            const response = await axios.get(`/api/v1/playlist/my-playlists`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error while fetching my playlists: ', error.message);
+            throw error;
+        }
+    }
+
 }
 
 

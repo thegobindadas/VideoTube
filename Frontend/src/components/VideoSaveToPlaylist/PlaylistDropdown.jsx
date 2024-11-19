@@ -15,8 +15,8 @@ const PlaylistDropdown = ({ playlists, onSave }) => {
 
   const handleCreatePlaylist = () => {
     if (newPlaylistName.trim()) {
-        console.log('New playlist created:', newPlaylistName);
-        setNewPlaylistName('');
+      console.log('New playlist created:', newPlaylistName);
+      setNewPlaylistName('');
     }
   };
 
@@ -26,11 +26,11 @@ const PlaylistDropdown = ({ playlists, onSave }) => {
       <ul className="mb-4">
         {playlists.map((playlist) => (
           <PlaylistCheckbox
-            key={playlist.id}
-            id={playlist.id}
+            key={playlist._id}
+            id={playlist._id}
             label={playlist.name}
-            checked={selectedPlaylists[playlist.id] || false}
-            onChange={() => handleCheckboxChange(playlist.id)}
+            checked={selectedPlaylists[playlist._id] || false}
+            onChange={() => handleCheckboxChange(playlist._id)}
           />
         ))}
       </ul>
@@ -55,5 +55,6 @@ const PlaylistDropdown = ({ playlists, onSave }) => {
     </div>
   );
 };
+
 
 export default PlaylistDropdown;

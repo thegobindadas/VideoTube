@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SavePlaylistButton, PlaylistDropdown } from '../index';
-
+import playlistService from "../../services/playlistService"
 
 const SaveToPlaylist = () => {
   
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  
-  const playlists = [
-    { id: '1', name: 'Collections' },
-    { id: '2', name: 'JavaScript Basics' },
-    { id: '3', name: 'C++ Tuts' },
-    { id: '4', name: 'Feel Good Music' },
-    { id: '5', name: 'Ed Sheeran' },
-    { id: '6', name: 'Python' },
-  ];
+  const [playlists, setPlaylists] = useState([]);
+  const [error, setError] = useState(null);
 
-  
+
   const handleSaveClick = () => {
     setDropdownVisible((prev) => !prev);
   };
+
+  const fetchMyPlaylists = async () => {
+    try {
+      const myPlaylists = await playlistService.getMyPlaylists();
+
+      setPlaylists(myPlaylists.data);
+    }catch (error) {
+      console.error('Error while fetching playlists: ', error.message);
+      setError(error.message || 'Failed to fetch playlists. Please try again later.');
+    }
+  };
+
+  useEffect(() => {
+    fetchMyPlaylists();
+
+    return () => {
+      setPlaylists([]);
+    };
+  }, []);
+  
+
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
 
   return (

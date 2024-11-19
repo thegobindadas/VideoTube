@@ -6,6 +6,7 @@ import {
     getPlaylistById,
     getPlaylistVideos,
     getUserPlaylists,
+    getMyPlaylists,
     updatePlaylist,
     removeVideoFromPlaylist,
     deletePlaylist,
@@ -24,6 +25,8 @@ router.route("/").post(createPlaylist)
 router.route("/add/video/:videoId/:playlistId").patch(addVideoToPlaylist);
 
 router.route("/user/:userId").get(getUserPlaylists);
+
+router.route("/my-playlists").get(getMyPlaylists);
 
 router.route("/:playlistId").get(getPlaylistById)
 
