@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
 const initialState = {
     playlists: [],
     loading: false,
@@ -35,19 +36,21 @@ const myPlaylistsSlice = createSlice({
         },
         saveVideoToPlaylist: (state, action) => {
             const { videoId, playlistId } = action.payload;
-            const playlist = state.playlists.find((pl) => pl._id === playlistId);
-
-            if (playlist && !playlist.videos.includes(videoId)) {
-                playlist.videos.push(videoId);
-            }
+            state.playlists = state.playlists.map(playlist => {
+                if (playlist._id === playlistId && !playlist.videos.includes(videoId)) {
+                    return { ...playlist, videos: [...playlist.videos, videoId] };
+                }
+                return playlist;
+            });
         },
         removeVideoFromPlaylist: (state, action) => {
             const { videoId, playlistId } = action.payload;
-            const playlist = state.playlists.find((pl) => pl._id === playlistId);
-
-            if (playlist) {
-                playlist.videos = playlist.videos.filter((vid) => vid !== videoId);
-            }
+            state.playlists = state.playlists.map(playlist => {
+                if (playlist._id === playlistId) {
+                    return { ...playlist, videos: playlist.videos.filter(vid => vid !== videoId) };
+                }
+                return playlist;
+            });
         },
         createPlaylist: (state, action) => {
             const newPlaylist = action.payload;

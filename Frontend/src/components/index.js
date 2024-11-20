@@ -26,10 +26,9 @@ import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
 import VideoOwnerDetails from "./VideoDetails/VideoOwnerDetails";
 import VideoDetails from "./VideoDetails/VideoDetails";
 
-import SaveToPlaylist from "./VideoSaveToPlaylist/SaveToPlaylist";
-import SavePlaylistButton from "./VideoSaveToPlaylist/SavePlaylistButton";
-import PlaylistDropdown from "./VideoSaveToPlaylist/PlaylistDropdown";
-import PlaylistCheckbox from "./VideoSaveToPlaylist/PlaylistCheckbox";
+import PlaylistSaveButton from "./VideoSaveToPlaylist/PlaylistSaveButton";
+import PlaylistModal from "./VideoSaveToPlaylist/PlaylistModal";
+import PlaylistItem from "./VideoSaveToPlaylist/PlaylistItem";
 
 import CommentButton from "./VideoComments/CommentButton";
 import CommentInput from "./VideoComments/CommentInput";
@@ -79,10 +78,9 @@ export {
     VideoOwnerDetails,
     VideoDetails,
 
-    SaveToPlaylist,
-    SavePlaylistButton,
-    PlaylistDropdown,
-    PlaylistCheckbox,
+    PlaylistSaveButton,
+    PlaylistModal,
+    PlaylistItem,
 
     CommentButton,
     CommentInput,

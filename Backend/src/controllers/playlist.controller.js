@@ -206,6 +206,9 @@ export const getUserPlaylists = asyncHandler(async (req, res) => {
 export const getMyPlaylists = asyncHandler(async (req, res) => {
     try {
         const userId = req.user._id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
 
         if (!userId) {
             throw new ApiError(400, "User ID is required");
@@ -216,32 +219,44 @@ export const getMyPlaylists = asyncHandler(async (req, res) => {
         }
 
 
-        const playlists = await Playlist.find({ owner: userId }, { _id: 1, name: 1 });
+        const playlists = await Playlist.find({ owner: userId })
+            .skip(skip)
+            .limit(limit);
 
-        if (!playlists || playlists.length === 0) {
-            return res
-                .status(200)
-                .json(
-                    new ApiResponse(
-                        200, 
-                        [], 
-                        "No playlists found for this user"
-                    )
-                );
+
+        const totalPlaylists = await Playlist.countDocuments({ owner: userId });
+        const totalPages = Math.ceil(totalPlaylists / limit);
+
+
+        if (playlists.length === 0 || page > totalPages) {
+            return res.status(200).json(
+                new ApiResponse(
+                    200,
+                    {
+                        playlists: [],
+                        totalPages,
+                        currentPage: page,
+                        totalPlaylists: 0,
+                    },
+                    "No playlists found for this user"
+                )
+            );
         }
 
 
-
-        return res
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
+        
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
                     playlists,
-                    "Playlists fetched successfully"
-                )
-            );
-
+                    totalPages,
+                    currentPage: page,
+                    totalPlaylists,
+                },
+                "Playlists fetched successfully"
+            )
+        );
     } catch (error) {
         throw new ApiError(500, error.message || "Something went wrong while fetching playlists");
     }

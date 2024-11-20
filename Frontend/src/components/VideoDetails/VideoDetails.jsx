@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { getTimeAgo } from '../../utils/timeUtils';
 import { formatViewsCount } from '../../utils/numberUtils';
-import { VideoPlayer, VideoLikeDislikeButton, SaveToPlaylist, VideoOwnerDetails, SubscribeBtn, CommentSection, Loader } from "../index";
+import { VideoPlayer, VideoLikeDislikeButton, PlaylistSaveButton, VideoOwnerDetails, SubscribeBtn, CommentSection, Loader } from "../index";
 import videoServices from '../../services/videoServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setError, setVideoInfo, resetVideoInfo } from "../../store/VideoInfoSlice";
@@ -71,7 +71,7 @@ function VideoDetails({ videoId }) {
                             <div className="w-full md:w-1/2 lg:w-full xl:w-1/2">
                                 <div className="flex items-center justify-between gap-x-4 md:justify-end lg:justify-between xl:justify-end">
                                     <VideoLikeDislikeButton videoId={videoInfo.videoId} />
-                                    <SaveToPlaylist />
+                                    <PlaylistSaveButton videoId={videoInfo.videoId} />
                                 </div>
                             </div>
                         </div>
