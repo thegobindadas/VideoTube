@@ -48,24 +48,42 @@ export const getUserTweets = asyncHandler(async (req, res) => {
             throw new ApiError(400, "User id is required")
         }
 
+        if (!isValidObjectId(userId)) {
+            throw new ApiError(400, "Invalid user id")
+        }
+
 
         const tweets = await Tweet.find({ owner: userId })
+            .populate({
+                path: "owner",
+                select: "avatar username fullName _id"
+            })
+            .select("content createdAt _id");
 
-        if (!tweets) {
-            throw new ApiError(404, "Tweets not found")
+
+        if (!tweets || tweets.length === 0) {
+            return res
+                .status(200)
+                .json(
+                    new ApiResponse(
+                        200,
+                        [],
+                        "No tweets found for this user"
+                    )
+                )
         }
 
 
 
         return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                tweets,
-                "Tweets fetched successfully"
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    tweets,
+                    "Tweets fetched successfully"
+                )
             )
-        )
     } catch (error) {
         throw new ApiError(500, error.message || "Something went wrong while fetching tweets")
     }
