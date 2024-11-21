@@ -3,6 +3,8 @@ import { PlaylistItem } from '../index';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setError, setPlaylists, setPage, setHasMore, createPlaylist } from "../../store/myPlaylistsSlice"
 import playlistService from "../../services/playlistService"
+import { handleError } from "../../utils/errorHandler"
+
 
 
 const PlaylistModal = ({ videoId, closeModal }) => {
@@ -64,7 +66,8 @@ const PlaylistModal = ({ videoId, closeModal }) => {
         }
     } catch (error) {
       console.error('Error creating playlist:', error.message);
-      dispatch(setError(error.message));
+      const errorMessage = handleError(error);
+      dispatch(setError(errorMessage || error.message));
     } finally {
       dispatch(setLoading(false));
     }
