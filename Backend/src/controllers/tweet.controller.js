@@ -41,53 +41,67 @@ export const createTweet = asyncHandler(async (req, res) => {
 
 export const getUserTweets = asyncHandler(async (req, res) => {
     try {
-
-        const { userId } = req.params
+        const { userId } = req.params;
+        const { page = 1, limit = 4 } = req.query; 
 
         if (!userId) {
-            throw new ApiError(400, "User id is required")
+            throw new ApiError(400, "User id is required");
         }
 
         if (!isValidObjectId(userId)) {
-            throw new ApiError(400, "Invalid user id")
+            throw new ApiError(400, "Invalid user id");
         }
 
+        
+        const skip = (page - 1) * limit;
 
+        
         const tweets = await Tweet.find({ owner: userId })
+            .skip(skip) 
+            .limit(limit)
             .populate({
                 path: "owner",
-                select: "avatar username fullName _id"
+                select: "avatar username fullName _id" 
             })
-            .select("content createdAt _id");
+            .select("content createdAt _id"); 
 
+        
+        const totalTweets = await Tweet.countDocuments({ owner: userId });
+
+        
+        const totalPages = Math.ceil(totalTweets / limit);
 
         if (!tweets || tweets.length === 0) {
-            return res
-                .status(200)
-                .json(
-                    new ApiResponse(
-                        200,
-                        [],
-                        "No tweets found for this user"
-                    )
-                )
-        }
-
-
-
-        return res
-            .status(200)
-            .json(
+            return res.status(200).json(
                 new ApiResponse(
                     200,
-                    tweets,
+                    {
+                        tweets: [],
+                        totalTweets: totalTweets || 0,
+                        totalPages,
+                        currentPage: page
+                    },
                     "Tweets fetched successfully"
                 )
+            );
+        }
+
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    tweets,
+                    totalTweets,
+                    totalPages,
+                    currentPage: page
+                },
+                "Tweets fetched successfully"
             )
+        );
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while fetching tweets")
+        throw new ApiError(500, error.message || "Something went wrong while fetching tweets");
     }
-})
+});
 
 
 export const updateTweet = asyncHandler(async (req, res) => {
