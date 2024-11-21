@@ -78,23 +78,29 @@ function ChannelPlaylistVideos({ playlistId }) {
 
   if (error) return <p>Error: {error}</p>;
 
+  
+
   return (
     <div className="flex w-full flex-col gap-y-4">
-      {playlistVideos.map((playlistVideo) => (
-        <Link to={`/watch/${playlistVideo.videoId}`} key={playlistVideo.videoId}>
-          <ChannelPlaylistVideoCard
-            videoThumbnail={playlistVideo.videoThumbnail}
-            videoDuration={playlistVideo.videoDuration}
-            videoTitle={playlistVideo.videoTitle}
-            videoViews={playlistVideo.videoViews}
-            videoCreatedAt={playlistVideo.videoCreatedAt}
-            videoOwnerId={playlistVideo.videoOwnerId}
-            videoOwnerAvatar={playlistVideo.videoOwnerAvatar}
-            videoOwnerName={playlistVideo.videoOwnerName}
-            videoOwnerUsername={playlistVideo.videoOwnerUsername}
-          />
-        </Link>
-      ))}
+      {playlistVideos.length > 0 ? (
+        playlistVideos.map((playlistVideo) => (
+          <Link to={`/watch/${playlistVideo.videoId}`} key={playlistVideo.videoId}>
+            <ChannelPlaylistVideoCard
+              videoThumbnail={playlistVideo.videoThumbnail}
+              videoDuration={playlistVideo.videoDuration}
+              videoTitle={playlistVideo.videoTitle}
+              videoViews={playlistVideo.videoViews}
+              videoCreatedAt={playlistVideo.videoCreatedAt}
+              videoOwnerId={playlistVideo.videoOwnerId}
+              videoOwnerAvatar={playlistVideo.videoOwnerAvatar}
+              videoOwnerName={playlistVideo.videoOwnerName}
+              videoOwnerUsername={playlistVideo.videoOwnerUsername}
+            />
+          </Link>
+        ))
+      ) : (
+        <p className="text-center text-gray-500">This playlist has no videos yet.</p>
+      )}
 
 
       {/* Only show the loader if more videos are available */}
@@ -105,7 +111,7 @@ function ChannelPlaylistVideos({ playlistId }) {
       )}
 
       {/* If there are no more videos, show a message */}
-      {page >= totalPages && (
+      {page >= totalPages && playlistVideos.length > 0 && !loading && (
         <p className="text-center text-gray-500">No more videos to load.</p>
       )}
       <div ref={loader} className="loader"></div>

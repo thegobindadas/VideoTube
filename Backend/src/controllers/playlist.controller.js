@@ -382,9 +382,12 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
                 }
             },
             {
+                $match: { "videoDetails": { $ne: [] } }
+            },
+            {
                 $unwind: {
                     path: "$videoDetails",
-                    preserveNullAndEmptyArrays: true
+                    preserveNullAndEmptyArrays: true 
                 }
             },
             {
@@ -424,36 +427,36 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
                 }
             },
             { $skip: skip },
-            { $limit: limitNum } 
+            { $limit: limitNum }
         ]);
-
-
+        
+        
         const totalVideosResult = await Playlist.aggregate([
             { $match: { _id: new mongoose.Types.ObjectId(playlistId) } },
             { $unwind: "$videos" },
             { $count: "totalVideos" },
         ]);
-
+        
         const totalVideos = totalVideosResult[0]?.totalVideos || 0;
+        
 
-
-        if (!playlistVideos || playlistVideos.length === 0) {
+        if (playlistVideos.length === 0) {
             return res
                 .status(200)
                 .json(
                     new ApiResponse(
                         200,
                         {
-                            playlistVideos: [],
+                            playlistVideos: [],  
                             currentPage: pageNum,
-                            totalPages: pageNum,
+                            totalPages: 0,
                             totalVideos: totalVideos || 0,
                         },
                         "Playlist has no items"
                     )
                 );
         }
-
+        
 
 
         return res
@@ -470,7 +473,6 @@ export const getPlaylistVideos = asyncHandler(async (req, res) => {
                     "Playlist videos fetched successfully"
                 )
             );
-
     } catch (error) {
         throw new ApiError(500, error.message || "Something went wrong while fetching the playlist videos");
     }
