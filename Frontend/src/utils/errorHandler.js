@@ -1,14 +1,12 @@
 
 
 export const handleError = (error) => {
-    if (error.response?.data) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(error.response.data, 'text/html');
-        const preElement = doc.querySelector('pre');
-        return preElement 
-            ? preElement.textContent.split('\n')[0].replace("Error: ", "") 
-            : 'An error occurred';
-    } else {
-        return error.message || 'An error occurred';
+    if (error.response && error.response.data) {
+        const html = error.response.data;
+        const match = html.match(/Error:\s(.+?)<br>/);
+        return match ? match[1] : 'An unexpected error occurred.';
     }
+
+    
+    return error.message || 'Something went wrong while creating the playlist.';
 };
