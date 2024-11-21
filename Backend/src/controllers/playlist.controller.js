@@ -8,7 +8,7 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 
 
 export const createPlaylist = asyncHandler(async (req, res) => {
-    try {
+    
         const { name, description = name.trim() + " videos" } = req.body
     
         if (!name || !description) {
@@ -16,8 +16,8 @@ export const createPlaylist = asyncHandler(async (req, res) => {
         }
     
     
-        const existingPlaylist = await Playlist.findOne({ 
-            name,
+        const existingPlaylist = await Playlist.findOne({
+            name: new RegExp(`^${name}$`, 'i'),
             owner: req.user._id
         });
     
@@ -47,9 +47,7 @@ export const createPlaylist = asyncHandler(async (req, res) => {
                     "Playlist created successfully"
                 )
             )
-    } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while creating playlist");
-    }
+   
 })
 
 
