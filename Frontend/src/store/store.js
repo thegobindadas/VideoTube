@@ -11,6 +11,8 @@ import VideoInfoSlice from "./VideoInfoSlice"
 import playlistInfoSlice from "./playlistInfoSlice"
 import playlistVideoSlice from "./playlistVideoSlice"
 import myPlaylistsSlice from "./myPlaylistsSlice"
+import channelTweetSlice from "./channelTweetSlice"
+
 
 const store = configureStore({
     reducer: {
@@ -26,6 +28,7 @@ const store = configureStore({
         playlistInfo: playlistInfoSlice,
         playlistVideos: playlistVideoSlice,
         myPlaylists: myPlaylistsSlice,
+        channelTweets: channelTweetSlice,
     }
 });
 
