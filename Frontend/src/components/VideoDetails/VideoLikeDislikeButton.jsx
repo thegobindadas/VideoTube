@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { LikeIcon, DislikeIcon } from "../../assets"
 import { formatLikeCount } from '../../utils/numberUtils';
-import axios from "axios";
 import videoServices from '../../services/videoServices';
 
 const VideoLikeDislikeButton = ({ videoId }) => {

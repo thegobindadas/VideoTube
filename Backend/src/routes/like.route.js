@@ -6,6 +6,7 @@ import {
     isVideoLikeDislike,
     toggleCommentLikeDislike,
     toggleTweetLikeDislike,
+    isTweetLikeDislike,
 } from "../controllers/like.controller.js"
 
 
@@ -24,6 +25,8 @@ router.route("/video/:videoId/like-status").get(isVideoLikeDislike);
 router.route("/toggle/comment/:commentId").post(toggleCommentLikeDislike);
 
 router.route("/toggle/tweet/:tweetId").post(toggleTweetLikeDislike);
+
+router.route("/tweet/:tweetId/like-status").get(isTweetLikeDislike);
 
 router.route("/videos").get(getLikedVideos);
 

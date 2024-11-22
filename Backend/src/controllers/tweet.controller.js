@@ -56,20 +56,49 @@ export const getUserTweets = asyncHandler(async (req, res) => {
         const skip = (page - 1) * limit;
 
         
-        const tweets = await Tweet.find({ owner: userId })
-            .skip(skip) 
-            .limit(limit)
-            .populate({
-                path: "owner",
-                select: "avatar username fullName _id" 
-            })
-            .select("content createdAt _id"); 
+        const tweets = await Tweet.aggregate([
+            { $match: { owner: new mongoose.Types.ObjectId(userId) } }, 
+            { $skip: skip }, 
+            { $limit: parseInt(limit) },
+            {
+                $lookup: {
+                    from: "likedislikes", 
+                    localField: "_id",
+                    foreignField: "tweet",
+                    as: "interactions",
+                },
+            },
+            {
+                $addFields: {
+                    likeCount: {
+                        $size: {
+                            $filter: { input: "$interactions", as: "i", cond: { $eq: ["$$i.type", "like"] } },
+                        },
+                    },
+                    dislikeCount: {
+                        $size: {
+                            $filter: { input: "$interactions", as: "i", cond: { $eq: ["$$i.type", "dislike"] } },
+                        },
+                    },
+                },
+            },
+            {
+                $project: {
+                    interactions: 0,
+                },
+            },
+        ]);
 
         
+        const populatedTweets = await Tweet.populate(tweets, {
+            path: "owner",
+            select: "avatar username fullName _id",
+        });
+
         const totalTweets = await Tweet.countDocuments({ owner: userId });
 
-        
         const totalPages = Math.ceil(totalTweets / limit);
+
 
         if (!tweets || tweets.length === 0) {
             return res.status(200).json(
@@ -79,21 +108,23 @@ export const getUserTweets = asyncHandler(async (req, res) => {
                         tweets: [],
                         totalTweets: totalTweets || 0,
                         totalPages,
-                        currentPage: page
+                        currentPage: page,
                     },
                     "Tweets fetched successfully"
                 )
             );
         }
 
+
+        
         return res.status(200).json(
             new ApiResponse(
                 200,
                 {
-                    tweets,
+                    tweets: populatedTweets,
                     totalTweets,
                     totalPages,
-                    currentPage: page
+                    currentPage: page,
                 },
                 "Tweets fetched successfully"
             )

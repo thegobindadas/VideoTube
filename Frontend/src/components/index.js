@@ -45,7 +45,7 @@ import ChannelPlaylistTab from "./ChannelPlaylistTab/ChannelPlaylistTab";
 import ChannelPlaylistTabCard from "./ChannelPlaylistTab/ChannelPlaylistTabCard";
 import ChannelTweetTab from "./ChannelTweetTab/ChannelTweetTab";
 import ChannelTweetTabCard from "./ChannelTweetTab/ChannelTweetTabCard";
-import tweetLikeDislikeButton from "./ChannelTweetTab/tweetLikeDislikeButton";
+import TweetLikeDislikeButton from "./ChannelTweetTab/TweetLikeDislikeButton"
 
 import ChannelPlaylist from "./ChannelPlaylist/ChannelPlaylist";
 import ChannelPlaylistOwnerInfo from "./ChannelPlaylist/ChannelPlaylistOwnerInfo";
@@ -100,7 +100,7 @@ export {
     ChannelPlaylistTabCard,
     ChannelTweetTab,
     ChannelTweetTabCard,
-    tweetLikeDislikeButton,
+    TweetLikeDislikeButton,
 
     ChannelPlaylist,
     ChannelPlaylistOwnerInfo,

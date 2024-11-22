@@ -295,6 +295,47 @@ export const toggleTweetLikeDislike = asyncHandler(async (req, res) => {
 });
 
 
+export const isTweetLikeDislike = asyncHandler(async (req, res) => {
+    try {
+        const { tweetId } = req.params;
+
+        if (!tweetId) {
+            throw new ApiError(400, "Tweet ID is required");
+        }
+
+        if (!isValidObjectId(tweetId)) {
+            throw new ApiError(400, "Invalid Tweet ID");
+        }
+
+        // Check if a like or dislike exists for the user on this tweet
+        const interaction = await LikeDislike.findOne({
+            tweet: tweetId,
+            likedBy: req.user?._id,
+        });
+
+        let status;
+        if (interaction) {
+            status = interaction.type; // either "like" or "dislike"
+        } else {
+            status = null; // no interaction found
+        }
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(
+                    200,
+                    { status },
+                    "Tweet like/dislike status retrieved successfully"
+                )
+            );
+    } catch (error) {
+        throw new ApiError(500, error.message || "Something went wrong while fetching like/dislike status for the tweet");
+    }
+});
+
+
+
 export const getLikedVideos = asyncHandler(async (req, res) => {
     try {
         
