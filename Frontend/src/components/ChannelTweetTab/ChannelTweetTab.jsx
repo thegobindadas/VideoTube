@@ -7,48 +7,48 @@ import tweetService from "../../services/tweetService"
 
 function ChannelTweetTab({ channelId }) {
 
-  const dispatch = useDispatch();
-  const { tweets, loading, error, page, hasMore } = useSelector((state) => state.channelTweets);
-  const observerRef = useRef();
+    const dispatch = useDispatch();
+    const { tweets, loading, error, page, hasMore } = useSelector((state) => state.channelTweets);
+    const observerRef = useRef();
 
 
-  const fetchTweets = useCallback(async () => {
-    try {
-        dispatch(setLoading(true));
-        const response = await tweetService.getUserTweets(channelId, page);
-        dispatch(setTweets({
-            tweets: response.data.tweets,
-            totalTweets: response.data.totalTweets,
-            totalPages: response.data.totalPages,
-            currentPage: response.data.currentPage,
-        }));
-        console.log(response.data.tweets);
-        
-        dispatch(setHasMore(response.data.currentPage < response.data.totalPages));
-    } catch (err) {
-        dispatch(setError(err.message));
-    } finally {
-        dispatch(setLoading(false));
-    }
-}, [dispatch, channelId, page]);
+    const fetchTweets = useCallback(async () => {
+        try {
+            dispatch(setLoading(true));
+            const response = await tweetService.getUserTweets(channelId, page);
+            dispatch(setTweets({
+                tweets: response.data.tweets,
+                totalTweets: response.data.totalTweets,
+                totalPages: response.data.totalPages,
+                currentPage: response.data.currentPage,
+            }));
+            console.log(response.data.tweets);
+            
+            dispatch(setHasMore(response.data.currentPage < response.data.totalPages));
+        } catch (err) {
+            dispatch(setError(err.message));
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }, [dispatch, channelId, page]);
 
-useEffect(() => {
-    fetchTweets();
-}, [fetchTweets]);
+    useEffect(() => {
+        fetchTweets();
+    }, [fetchTweets]);
 
-const lastTweetRef = useCallback(
-    (node) => {
-        if (loading) return;
-        if (observerRef.current) observerRef.current.disconnect();
-        observerRef.current = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && hasMore) {
-                dispatch(setPage(page + 1));
-            }
-        });
-        if (node) observerRef.current.observe(node);
-    },
-    [loading, hasMore, dispatch, page]
-);
+    const lastTweetRef = useCallback(
+        (node) => {
+            if (loading) return;
+            if (observerRef.current) observerRef.current.disconnect();
+            observerRef.current = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    dispatch(setPage(page + 1));
+                }
+            });
+            if (node) observerRef.current.observe(node);
+        },
+        [loading, hasMore, dispatch, page]
+    );
 
 
   const noContentMessages = {
