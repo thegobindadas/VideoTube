@@ -21,7 +21,7 @@ router.route("/c/:channelId").post(toggleSubscription);
 
 router.route("/c/:channelId/subscribers").get(getChannelSubscribers);
 
-router.route("/subscribed-channels/:channelId").get(getSubscribedChannels)
+router.route("/subscribed-channels").get(getSubscribedChannels)
 
 
 

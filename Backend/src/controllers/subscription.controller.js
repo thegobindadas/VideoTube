@@ -185,77 +185,87 @@ export const getChannelSubscribers = asyncHandler(async (req, res) => {
 })
 
 
-// controller to return channel list to which user has subscribed
 export const getSubscribedChannels = asyncHandler(async (req, res) => {
     try {
-        const { subscriberId } = req.params
-
-        if (!subscriberId) {
-            throw new ApiError(400, "Subscriber id is required")
-        }
-
-
-        if (!isValidObjectId(subscriberId)) {
-            throw new ApiError(400, "Invalid subscriber id")
-        }
-
-
-        const getSubscribedChannels = await User.aggregate([
-            {
-                $match: {
-                    _id: new mongoose.Types.ObjectId(subscriberId)
-                }
-            },
-            {
-                $lookup: {
-                    from: "subscriptions",
-                    localField: "_id",
-                    foreignField: "subscriber",
-                    as: "subscribedChannels"
-                }
-            },
-            {
-                $unwind: "$subscribedChannels"
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "subscribedChannels.channel",
-                    foreignField: "_id",
-                    as: "channel_details"
-                }
-            },
-            {
-                $unwind: "$channel_details"
-            },
-            {
-                $project: {
-                    _id: 0,
-                    channel: "$channel_details._id",
-                    username: "$channel_details.username",
-                    fullName: "$channel_details.fullName",
-                    avatar: "$channel_details.avatar"
-                }
-            }
-        ]);
-        
-
-        if (!getSubscribedChannels?.length) {
-            throw new ApiError(404, "User does not subscribed any channels")
-        }
-
-
-
-        return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                getSubscribedChannels,
-                "Subscribed channels fetched successfully"
-            )
-        )        
+      const requestingUserId = req.user._id;
+      const { userId, page = 1, limit = 10 } = req.query;
+      const targetUserId = userId || requestingUserId;
+      const skip = (page - 1) * limit;
+  
+      
+      const totalSubscribedChannels = await Subscription.countDocuments({ subscriber: targetUserId });
+  
+      
+      const subscribedChannels = await Subscription.aggregate([
+        { 
+          $match: { subscriber: new mongoose.Types.ObjectId(targetUserId) } 
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "channel",
+            foreignField: "_id",
+            as: "channelDetails"
+          }
+        },
+        { 
+          $unwind: "$channelDetails" 
+        },
+        {
+          $lookup: {
+            from: "subscriptions",
+            localField: "channel",
+            foreignField: "channel",
+            as: "subscribers"
+          }
+        },
+        {
+          $project: {
+            _id: "$channelDetails._id",
+            username: "$channelDetails.username",
+            fullName: "$channelDetails.fullName",
+            avatar: "$channelDetails.avatar",
+            totalSubscribers: { $size: "$subscribers" }
+          }
+        },
+        { $skip: skip }, 
+        { $limit: parseInt(limit) }
+      ]);
+  
+      
+      const channelIds = subscribedChannels.map(channel => channel._id);
+  
+      const subscriptionsByMe = await Subscription.find({
+        subscriber: requestingUserId,
+        channel: { $in: channelIds }
+      }).select("channel");
+  
+      const subscribedByMeSet = new Set(subscriptionsByMe.map(sub => sub.channel.toString()));
+  
+      
+      const result = subscribedChannels.map(channel => ({
+        ...channel,
+        isSubscribedByMe: subscribedByMeSet.has(channel._id.toString())
+      }));
+  
+  
+      const totalPages = Math.ceil(totalSubscribedChannels / limit);
+  
+  
+  
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          {
+            subscribedChannels: result,
+            currentPage: parseInt(page),
+            totalPages,
+            totalSubscribedChannels
+          },
+          "Fetched subscribed channels successfully"
+        )
+      )
     } catch (error) {
-        throw new ApiError(500, error.message || "Something went wrong while fetching subscribers")
+        throw new ApiError(500, error.message || "Something went wrong while fetching subscribed channels")
     }
 })
