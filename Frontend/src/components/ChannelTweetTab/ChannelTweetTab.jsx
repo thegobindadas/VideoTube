@@ -22,7 +22,6 @@ function ChannelTweetTab({ channelId }) {
                 totalPages: response.data.totalPages,
                 currentPage: response.data.currentPage,
             }));
-            console.log(response.data.tweets);
             
             dispatch(setHasMore(response.data.currentPage < response.data.totalPages));
         } catch (err) {
@@ -52,8 +51,8 @@ function ChannelTweetTab({ channelId }) {
 
 
   const noContentMessages = {
-    title: "No Tweets",
-    text: "This channel has yet to make a <strong>Tweet</strong> .",
+    title: "No people subscribers",
+    text: "This channel has yet to subscribe a new channel.",
   };
 
 

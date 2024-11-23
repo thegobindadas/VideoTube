@@ -46,6 +46,29 @@ export class SubscriptionServices {
         }
     }
 
+
+    async getSubscribedChannels(userId, page=1) {
+        const token = this.getToken();
+        try {
+            const response = await axios.get(`/api/v1/subscription/subscribed-channels`,
+                {
+                    params: {
+                        userId,
+                        page,
+                        limit: 5,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+                        
+            return response.data
+        } catch (error) {
+            console.error("Error while fetching subscribed channels: ", error.message);
+            throw error;
+        }
+    }
 }
 
 
