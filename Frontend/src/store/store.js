@@ -12,6 +12,7 @@ import playlistInfoSlice from "./playlistInfoSlice"
 import playlistVideoSlice from "./playlistVideoSlice"
 import myPlaylistsSlice from "./myPlaylistsSlice"
 import channelTweetSlice from "./channelTweetSlice"
+import subscribedChannelSlice from "./subscribedChannelSlice"
 
 
 const store = configureStore({
@@ -29,6 +30,7 @@ const store = configureStore({
         playlistVideos: playlistVideoSlice,
         myPlaylists: myPlaylistsSlice,
         channelTweets: channelTweetSlice,
+        subscribedChannels: subscribedChannelSlice,
     }
 });
 
