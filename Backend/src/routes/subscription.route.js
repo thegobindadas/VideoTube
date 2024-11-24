@@ -5,6 +5,7 @@ import {
     toggleSubscription,
     getChannelSubscribers,
     getSubscribedChannels,
+    searchSubscribedChannels,
 } from "../controllers/subscription.controller.js"
 
 
@@ -22,6 +23,8 @@ router.route("/c/:channelId").post(toggleSubscription);
 router.route("/c/:channelId/subscribers").get(getChannelSubscribers);
 
 router.route("/subscribed-channels").get(getSubscribedChannels)
+
+router.route("/search/subscribed-channels").get(searchSubscribedChannels)
 
 
 
