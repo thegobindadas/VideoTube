@@ -12,12 +12,9 @@ function Channel({ username }) {
     const userData = useSelector((state) => state.user.user)
     const [activeTab, setActiveTab] = useState('videos');
     const dispatch = useDispatch();
-
-    //console.log(userData);
-    //console.log(channel);
-    
     const isChannelOwner = channel?._id === userData?._id;
-    console.log(isChannelOwner);
+    
+    
     
 
     const tabs = [
