@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { EditIcon } from "../../assets"
-import { Button, SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab, ChannelPlaylistTab, ChannelTweetTab, ChannelSubscribedTab  } from "../index"
+import { Button, SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab, ChannelPlaylistTab, ChannelTweetTab, MyChannelTweetTab, ChannelSubscribedTab  } from "../index"
 import { useDispatch, useSelector } from 'react-redux';
 import { setChannelData, setLoading, setError, resetChannelData } from '../../store/channelSlice';
 import userService from "../../services/userService"
@@ -58,7 +58,11 @@ function Channel({ username }) {
             case 'playlist':
                 return <ChannelPlaylistTab channelId={channel._id} />;
             case 'tweets':
-                return <ChannelTweetTab channelId={channel._id} />;
+                return isChannelOwner ? (
+                    <MyChannelTweetTab channelId={channel._id} />
+                ) : (
+                    <ChannelTweetTab channelId={channel._id} />
+                );
             case 'subscribed':
                 return <ChannelSubscribedTab channelId={channel._id} />;
             default:

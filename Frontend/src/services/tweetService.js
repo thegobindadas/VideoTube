@@ -8,6 +8,23 @@ export class TweetService {
     }
 
 
+    async writeNewTweet(content) {
+        const token = this.getToken();
+        try {
+            const response = await axios.post(`/api/v1/tweet/`, {content}, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+                        
+            return response.data
+        } catch (error) {
+            console.error("Error while writing new tweet: ", error.message);
+            throw error;
+        }
+    }
+
+
     async getUserTweets(userId, page=1) {
         const token = this.getToken();
         try {

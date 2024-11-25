@@ -34,6 +34,18 @@ const channelTweetSlice = createSlice({
             state.totalPages = totalPages;
             state.currentPage = currentPage;
         },
+        setSingleTweet: (state, action) => {
+            const newTweet = action.payload;
+
+            const exists = state.tweets.some(tweet => tweet._id === newTweet._id);
+            if (!exists) {
+                state.tweets = [newTweet, ...state.tweets];
+            } else {
+                state.tweets = state.tweets.map(tweet => 
+                    tweet._id === newTweet._id ? newTweet : tweet
+                );
+            }
+        },
         setPage: (state, action) => {
             state.page = action.payload;
         },
@@ -53,7 +65,8 @@ const channelTweetSlice = createSlice({
 
 
 export const { 
-    setTweets, 
+    setTweets,
+    setSingleTweet,
     setLoading, 
     setError, 
     setPage, 
