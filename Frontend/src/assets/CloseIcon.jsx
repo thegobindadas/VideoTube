@@ -1,14 +1,16 @@
 import React from 'react'
 
-function CloseIcon() {
+function CloseIcon({stroke="currentColor", className=""}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth="1.5"
-      stroke="currentColor"
-      aria-hidden="true">
+      stroke={stroke}
+      aria-hidden="true"
+      className={className}
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -274,7 +274,7 @@ export const getSubscribedChannels = asyncHandler(async (req, res) => {
 export const searchSubscribedChannels = asyncHandler(async (req, res) => {
     try {
         const requestingUserId = req.user._id;
-        const { userId, page = 1, limit = 10, search = "" } = req.query;
+        const { userId, search = "", page = 1, limit = 10 } = req.query;
         const targetUserId = userId || requestingUserId;
         const skip = (page - 1) * limit;
 
