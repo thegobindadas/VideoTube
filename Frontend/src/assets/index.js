@@ -15,7 +15,7 @@ import CheckboxIcon from "./CheckboxIcon";
 import LikeIcon from "./LikeIcon";
 import DislikeIcon from "./DislikeIcon";
 import PeopleIcon from "./PeopleIcon";
-
+import EditIcon from "./EditIcon";
 
 
 export {
@@ -36,4 +36,5 @@ export {
     LikeIcon,
     DislikeIcon,
     PeopleIcon,
+    EditIcon,
 }

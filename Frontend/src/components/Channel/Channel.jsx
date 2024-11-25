@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab, ChannelPlaylistTab, ChannelTweetTab, ChannelSubscribedTab  } from "../index"
+import { EditIcon } from "../../assets"
+import { Button, SubscribeBtn, ChannelTabs, ChannelCoverPhoto, ChannelInfo, ChannelVideoTab, ChannelPlaylistTab, ChannelTweetTab, ChannelSubscribedTab  } from "../index"
 import { useDispatch, useSelector } from 'react-redux';
 import { setChannelData, setLoading, setError, resetChannelData } from '../../store/channelSlice';
 import userService from "../../services/userService"
@@ -8,8 +9,16 @@ function Channel({ username }) {
 
     const coverImg = "https://res.cloudinary.com/dceqm6gbx/image/upload/v1729432880/videohub/gkd0nxjlcr6hnscqq7h6.jpg"
     const { channel, loading, error } = useSelector((state) => state.channel);
+    const userData = useSelector((state) => state.user.user)
     const [activeTab, setActiveTab] = useState('videos');
     const dispatch = useDispatch();
+
+    //console.log(userData);
+    //console.log(channel);
+    
+    const isChannelOwner = channel?._id === userData?._id;
+    console.log(isChannelOwner);
+    
 
     const tabs = [
         { id: 'videos', label: 'Videos' },
@@ -89,11 +98,19 @@ function Channel({ username }) {
                     subscribed={channel.subscribedToCount} />
 
                 <div className="inline-block">
-                    <div className="inline-flex min-w-[145px] justify-end">
-
-                        <SubscribeBtn channelId={channel._id} subscriptionStatus={channel.isSubscribed} />
-
-                    </div>
+                    {isChannelOwner ? (
+                        <Button className = "group/btn mr-1 flex items-center gap-x-2  px-3 py-2 sm:w-auto">
+                            <span className="inline-block w-5">
+                                <EditIcon /> 
+                            </span>    
+                            Edit
+                        </Button>
+                    ) : (
+                        <div className="inline-flex min-w-[145px] justify-end">
+                            <SubscribeBtn channelId={channel._id} subscriptionStatus={channel.isSubscribed} />
+                        </div>
+                    )}
+                    
                 </div>
             </div>
 
