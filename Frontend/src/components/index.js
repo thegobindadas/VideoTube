@@ -39,8 +39,11 @@ import Channel from "./Channel/Channel";
 import ChannelCoverPhoto from "./Channel/ChannelCoverPhoto";
 import ChannelInfo from "./Channel/ChannelInfo";
 import ChannelTabs from "./Channel/ChannelTabs";
+
 import ChannelVideoTabCrad from "./ChannelVideoTab/ChannelVideoTabCrad";
+import MyChannelVideoTab from "./ChannelVideoTab/MyChannelVideoTab";
 import ChannelVideoTab from "./ChannelVideoTab/ChannelVideoTab";
+
 import ChannelPlaylistTab from "./ChannelPlaylistTab/ChannelPlaylistTab";
 import ChannelPlaylistTabCard from "./ChannelPlaylistTab/ChannelPlaylistTabCard";
 
@@ -101,8 +104,11 @@ export {
     ChannelCoverPhoto,
     ChannelInfo,
     ChannelTabs,
+
     ChannelVideoTabCrad,
+    MyChannelVideoTab,
     ChannelVideoTab,
+
     ChannelPlaylistTab,
     ChannelPlaylistTabCard,
     
