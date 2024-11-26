@@ -10,12 +10,12 @@ function AvatarInput({
     return (
         <div className="flex w-full items-center justify-center">
             <input
-             className="hidden"
-             id={id}
-             hidden=""
-             type={type}
-             ref={ref}
-             {...props}
+                className="hidden"
+                id={id}
+                hidden=""
+                type={type}
+                ref={ref}
+                {...props}
             />
             <label
              htmlFor={id}

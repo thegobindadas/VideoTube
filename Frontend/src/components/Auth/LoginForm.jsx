@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthInput, Button } from "../index"
 import { useForm } from 'react-hook-form'
-import axios from 'axios';
 import { setUser } from '../../store/userSlice'
 import { useDispatch } from "react-redux"
 import { handleError } from "../../utils/errorHandler"
