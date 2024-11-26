@@ -16,6 +16,7 @@ import LikeIcon from "./LikeIcon";
 import DislikeIcon from "./DislikeIcon";
 import PeopleIcon from "./PeopleIcon";
 import EditIcon from "./EditIcon";
+import PlusIcon from "./PlusIcon";
 
 
 export {
@@ -37,4 +38,5 @@ export {
     DislikeIcon,
     PeopleIcon,
     EditIcon,
+    PlusIcon,
 }
