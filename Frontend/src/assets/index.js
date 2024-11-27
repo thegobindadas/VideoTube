@@ -20,6 +20,7 @@ import PlusIcon from "./PlusIcon";
 import CancelIcon from "./CancelIcon";
 import LoadingIcon from "./LoadingIcon";
 import TableGridIcon from "./TableGridIcon";
+import CheckCircleIcon from "./CheckCircleIcon";
 
 export {
     LogoIcon,
@@ -44,4 +45,5 @@ export {
     CancelIcon,
     LoadingIcon,
     TableGridIcon,
+    CheckCircleIcon,
 }
