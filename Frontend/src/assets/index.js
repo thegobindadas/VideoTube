@@ -17,7 +17,9 @@ import DislikeIcon from "./DislikeIcon";
 import PeopleIcon from "./PeopleIcon";
 import EditIcon from "./EditIcon";
 import PlusIcon from "./PlusIcon";
-
+import CancelIcon from "./CancelIcon";
+import LoadingIcon from "./LoadingIcon";
+import TableGridIcon from "./TableGridIcon";
 
 export {
     LogoIcon,
@@ -39,4 +41,7 @@ export {
     PeopleIcon,
     EditIcon,
     PlusIcon,
+    CancelIcon,
+    LoadingIcon,
+    TableGridIcon,
 }
