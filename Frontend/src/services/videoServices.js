@@ -8,14 +8,15 @@ export class VideoServices {
     }
 
 
-    async uploadAVideo(videoData) {
+    async uploadAVideo(videoData, onUploadProgress) {
         const token = this.getToken();
         try {
             const response = await axios.post(`/api/v1/video/`, videoData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
-                }
+                },
+                onUploadProgress,
             });
                         
             return response.data;
