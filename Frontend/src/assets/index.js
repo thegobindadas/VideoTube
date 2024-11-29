@@ -21,6 +21,9 @@ import CancelIcon from "./CancelIcon";
 import LoadingIcon from "./LoadingIcon";
 import TableGridIcon from "./TableGridIcon";
 import CheckCircleIcon from "./CheckCircleIcon";
+import ViewIcon from "./ViewIcon";
+import ProfileIcon from "./ProfileIcon";
+import HeartIcon from "./HeartIcon";
 
 export {
     LogoIcon,
@@ -46,4 +49,7 @@ export {
     LoadingIcon,
     TableGridIcon,
     CheckCircleIcon,
+    ViewIcon,
+    ProfileIcon,
+    HeartIcon
 }
