@@ -1,9 +1,10 @@
 import React from 'react';
 
-const LikeIcon = ({ type }) => {
+
+const LikeIcon = ({ variant }) => {
   return (
     <>
-      {type === 'filled' ? (
+      {variant === 'filled' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="#ae7aff"
