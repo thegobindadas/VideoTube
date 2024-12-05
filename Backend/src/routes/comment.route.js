@@ -22,7 +22,7 @@ router.route("/update/:commentId").patch(updateComment);
 
 router.route("/delete/:commentId").delete(deleteComment);
 
-router.route("/video/:videoId/comments").get(getCommentsForVideo);
+router.route("/:videoId").get(getCommentsForVideo);
 
 
 
