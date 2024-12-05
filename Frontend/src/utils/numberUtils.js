@@ -1,4 +1,4 @@
-function formatCount(count, type) {
+function formatCountWithLabel(count, type) {
     if (count < 1000) {
         return `${count} ${type}`;
     } else if (count < 1_000_000) {
@@ -10,7 +10,7 @@ function formatCount(count, type) {
     }
 }
 
-export function formatNumber(count) {
+export function formatNumberCount(count) {
     if (count < 1000) {
         return `${count}`;
     } else if (count < 1_000_000) {
@@ -24,25 +24,25 @@ export function formatNumber(count) {
 
 
 export function formatViewsCount(views) {
-    return formatCount(views, 'Views');
+    return formatCountWithLabel(views, 'Views');
 }
 
 export function formatSubscriberCount(subscribers) {
-    return formatCount(subscribers, 'Subscribers');
+    return formatCountWithLabel(subscribers, 'Subscribers');
 }
 
 export function formatSubscribedToCount(SubscribedTo) {
-    return formatCount(SubscribedTo, 'Subscribed');
+    return formatCountWithLabel(SubscribedTo, 'Subscribed');
 }
 
 export function formatLikeCount(likes) {
-    return formatCount(likes, 'Likes');
+    return formatCountWithLabel(likes, 'Likes');
 }
 
 export function formatDislikeCount(dislikes) {
-    return formatCount(dislikes, 'Dislikes');
+    return formatCountWithLabel(dislikes, 'Dislikes');
 }
 
 export function formatCommentsCount(Comments) {
-    return formatCount(Comments, 'Comments');
+    return formatCountWithLabel(Comments, 'Comments');
 }

@@ -1,5 +1,5 @@
 
-export function convertSeconds(secondsInput) {
+export function formatDuration(secondsInput) {
     const hours = Math.floor(secondsInput / 3600);
     const minutes = Math.floor((secondsInput % 3600) / 60);
     const seconds = Math.floor(secondsInput % 60);
@@ -13,8 +13,7 @@ export function convertSeconds(secondsInput) {
 }
 
 
-
-export function getTimeAgo(inputTime) {
+export function formatTimeAgo(inputTime) {
     const now = new Date();
     const past = new Date(inputTime);
     const diffInSeconds = Math.floor((now - past) / 1000);
@@ -43,4 +42,14 @@ export function getTimeAgo(inputTime) {
         const months = Math.floor(diffInSeconds / month);
         return `${months} month${months > 1 ? 's' : ''} ago`;
     }
+}
+
+
+export function formatDateToMMDDYYYY(dateString) {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1; // getMonth() returns 0-indexed month
+    const day = date.getDate();
+    const year = date.getFullYear();
+    
+    return `${month}/${day}/${year}`;
 }
