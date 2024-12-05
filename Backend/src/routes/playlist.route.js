@@ -1,16 +1,18 @@
 import { Router } from 'express';
-import { verifyJWT } from "../middlewares/auth.middleware.js"
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
     createPlaylist,
     addVideoToPlaylist,
     getPlaylistById,
     getPlaylistVideos,
+    getPlaylistDetailsWithVideos,
     getUserPlaylists,
-    getMyPlaylists,
-    updatePlaylist,
+    getMyPlaylistsNames,
+    updatePlaylistDetails,
+    togglePlaylistVisibility,
     removeVideoFromPlaylist,
     deletePlaylist,
-} from "../controllers/playlist.controller.js"
+} from "../controllers/playlist.controller.js";
 
 
 
@@ -20,23 +22,29 @@ router.use(verifyJWT);
 
 
 
-router.route("/").post(createPlaylist)
+router.route("/").post(createPlaylist);
 
-router.route("/add/video/:videoId/:playlistId").patch(addVideoToPlaylist);
+router.route("/:playlistId/add/videos/:videoId").patch(addVideoToPlaylist);
 
-router.route("/user/:userId").get(getUserPlaylists);
+router.route("/user").get(getUserPlaylists);
 
-router.route("/my-playlists").get(getMyPlaylists);
+router.route("/me/names").get(getMyPlaylistsNames);
 
-router.route("/:playlistId").get(getPlaylistById)
+router.route("/:playlistId").get(getPlaylistById);
 
-router.route("/:playlistId/videos").get(getPlaylistVideos)
+router.route("/:playlistId/videos").get(getPlaylistVideos);
 
-router.route("/remove/video/:videoId/:playlistId").patch(removeVideoFromPlaylist);
+router.route("/:playlistId/details-with-videos").get(getPlaylistDetailsWithVideos);
 
-router.route("/update/:playlistId").patch(updatePlaylist)
+router.route("/update-details/:playlistId").patch(updatePlaylistDetails);
+
+router.route("/:playlistId/toggle-public").patch(togglePlaylistVisibility);
+
+router.route("/:playlistId/remove/videos/:videoId").patch(removeVideoFromPlaylist);
    
 router.route("/remove/:playlistId").delete(deletePlaylist);
+
+
 
 
 

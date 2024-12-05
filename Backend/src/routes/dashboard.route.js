@@ -1,9 +1,10 @@
-import { Router } from "express"
-import { verifyJWT } from "../middlewares/auth.middleware.js"
+import { Router } from "express";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
-    getChannelStats,
-    getChannelVideos,
-} from "../controllers/dashboard.controller.js"
+    getChannelStatistics,
+    getVideosByChannel,
+    getChannelData,
+} from "../controllers/dashboard.controller.js";
 
 
 
@@ -14,9 +15,16 @@ router.use(verifyJWT);
 
 
 
-router.route("/channel/stats").get(getChannelStats);
+router.route("/channel/stats").get(getChannelStatistics);
 
-router.route("/channel/:channelId/videos").get(getChannelVideos);
+router.route("/channel/videos").get(getVideosByChannel);
+
+router.route("/channel/details").get(getChannelData);
+
+
+
+
+
 
 
 
