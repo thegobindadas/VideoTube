@@ -27,6 +27,11 @@ import VideoPlayer from "./VideoDetails/VideoPlayer";
 import VideoOwnerDetails from "./VideoDetails/VideoOwnerDetails";
 import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
 
+import CommentSection from "./VideoComments/CommentSection";
+import CommentButton from "./VideoComments/CommentButton";
+import CommentInput from "./VideoComments/CommentInput";
+import CommentItem from "./VideoComments/CommentItem";
+
 
 export {
     AuthInput, 
@@ -56,5 +61,10 @@ export {
     VideoDetails,
     VideoPlayer,
     VideoOwnerDetails,
-    VideoLikeDislikeButton
+    VideoLikeDislikeButton,
+
+    CommentSection,
+    CommentButton,
+    CommentInput,
+    CommentItem,
 };

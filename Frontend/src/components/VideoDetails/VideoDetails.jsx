@@ -12,7 +12,8 @@ import {
     VideoPlayer,
     VideoOwnerDetails,
     VideoLikeDislikeButton, 
-    PlaylistSaveButton, CommentSection
+    PlaylistSaveButton, 
+    CommentSection
 } from "../index";
 
 
