@@ -11,11 +11,12 @@ const initialState = {
 };
 
 const myPlaylistSlice = createSlice({
-    name: 'myPlaylistNames',
+    name: 'myPlaylists',
     initialState,
     reducers: {
         setLoading: (state, action) => {
             state.loading = action.payload;
+            if(action.payload) state.error = null;
         },
         setError: (state, action) => {
             state.error = action.payload;

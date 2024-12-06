@@ -9,18 +9,19 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const createPlaylist = asyncHandler(async (req, res) => {
     
-    const { name, description } = req.body
-    
+    const { name , description } = req.body
+    const trimmedName = name.trim();
+
     if (!name) {
         throw new ApiError(400, "Playlist name is required.")
     }
 
 
-    const finalDescription = description || `${name.trim()} videos`;
+    const finalDescription = description || `${trimmedName} videos`;
     
     
     const existingPlaylist = await Playlist.findOne({
-        name: new RegExp(`^${name}$`, 'i'),
+        name: new RegExp(`^${trimmedName}$`, 'i'),
         owner: req.user._id
     });
 
@@ -30,7 +31,7 @@ export const createPlaylist = asyncHandler(async (req, res) => {
     
     
     const playlist = await Playlist.create({
-        name,
+        name: trimmedName,
         description: finalDescription,
         owner: req.user._id
     })

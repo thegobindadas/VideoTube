@@ -32,6 +32,10 @@ import CommentButton from "./VideoComments/CommentButton";
 import CommentInput from "./VideoComments/CommentInput";
 import CommentItem from "./VideoComments/CommentItem";
 
+import PlaylistSaveButton from "./VideoSaveToPlaylist/PlaylistSaveButton";
+import PlaylistModal from "./VideoSaveToPlaylist/PlaylistModal";
+import PlaylistItem from "./VideoSaveToPlaylist/PlaylistItem";
+
 
 export {
     AuthInput, 
@@ -67,4 +71,9 @@ export {
     CommentButton,
     CommentInput,
     CommentItem,
+
+    PlaylistSaveButton,
+    PlaylistModal,
+    PlaylistItem,
+
 };

@@ -22,7 +22,7 @@ const store = configureStore({
         comments: commentSlice,
         recommendedVideos: recommendedVideoSlice,
         watchHistory: watchHistorySlice,
-        myPlaylistNames: myPlaylistSlice,
+        myPlaylists: myPlaylistSlice,
         channel: channelSlice,
         channelVideos: channelVideoSlice,
         channelPlaylists: channelPlaylistSlice,
