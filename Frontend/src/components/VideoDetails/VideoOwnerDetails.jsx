@@ -1,6 +1,7 @@
-import React from 'react'
-import { formatSubscriberCount } from '../../utils/numberUtils';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatSubscriberCount } from "../../utils/numberUtils";
+
 
 function VideoOwnerDetails({ ownerId, avatar, fullName, username, totalSubscribers }) {
 

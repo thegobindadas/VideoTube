@@ -6,7 +6,7 @@ const initialState = {
   watchHistory: JSON.parse(localStorage.getItem('user'))?.watchHistory || [],
   subscribers: [],
   subscribedChannels: [],
-  status: false,
+  status: !!JSON.parse(localStorage.getItem('user')),
   error: null,
 };
 

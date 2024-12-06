@@ -43,7 +43,6 @@ const router = createBrowserRouter([
         path: "watch/:videoId",
         element: (
           <AuthLayout authentication>
-            {" "}
             <VideoPage />
           </AuthLayout>
         ),

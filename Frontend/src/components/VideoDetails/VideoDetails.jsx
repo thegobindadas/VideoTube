@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { formatTimeAgo } from '../../utils/timeUtils';
-import { handleError } from "../../utils/errorHandler"
-import { formatViewsCount } from '../../utils/numberUtils';
-import videoService from '../../services/videoService';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { formatTimeAgo } from "../../utils/timeUtils";
+import { handleError } from "../../utils/errorHandler";
+import { formatViewsCount } from "../../utils/numberUtils";
+import videoService from "../../services/videoService";
 import { setLoading, setError, setVideoInfo, resetVideoInfo } from "../../store/videoInfoSlice";
 import { addToWatchHistory } from "../../store/userSlice"
 import { 
@@ -26,14 +26,13 @@ function VideoDetails({ videoId }) {
 
 
     const loadVideoDetails = useCallback(async () => {
-        dispatch(setLoading());
-    
+        dispatch(setLoading(true));
         try {
             const videoData = await videoService.getVideoById({videoId})
             dispatch(setVideoInfo(videoData.data));
         } catch (error) {
             const errMsg = handleError(error)
-            dispatch(setError(errMsg || 'Failed to load video details.'));
+            dispatch(setError(errMsg || "Failed to load video details."));
         }
     }, [dispatch, videoId]);
 
@@ -105,10 +104,14 @@ function VideoDetails({ videoId }) {
 
                             
                             <div className="block">
-                                <SubscribeBtn 
-                                    channelId={videoInfo.ownerId} 
-                                    subscriptionStatus={videoInfo.isChannelSubscribed}
-                                />
+                                {
+                                    userData?._id !== videoInfo?.ownerId && (
+                                        <SubscribeBtn 
+                                            channelId={videoInfo.ownerId} 
+                                            subscriptionStatus={videoInfo.isChannelSubscribed}
+                                        />
+                                    )
+                                }
                             </div>
                         </div>
 

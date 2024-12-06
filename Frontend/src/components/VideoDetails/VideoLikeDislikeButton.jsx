@@ -1,13 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import { LikeIcon, DislikeIcon } from "../../assets"
-import { formatLikeCount } from '../../utils/numberUtils';
-import videoService from '../../services/videoService';
+import { LikeIcon, DislikeIcon } from "../../assets";
+import { formatLikeCount } from "../../utils/numberUtils";
+import { handleError } from "../../utils/errorHandler";
+import videoService from "../../services/videoService";
+
 
 const VideoLikeDislikeButton = ({ videoId, totalLikes, totalDislikes, isVideoLikedByMe }) => {
   
   const [likes, setLikes] = useState(totalLikes || 0);
   const [dislikes, setDislikes] = useState(totalDislikes || 0);
   const [likeStatus, setLikeStatus] = useState(isVideoLikedByMe || null);
+  const [error, setError] = useState(null);
 
 
   const fetchLikeDislikeStatus = useCallback(async () => {
@@ -16,7 +19,8 @@ const VideoLikeDislikeButton = ({ videoId, totalLikes, totalDislikes, isVideoLik
         const response = await videoService.isVideoLikeDislikeByUser({ videoId });
         setLikeStatus(response.data.status);
       } catch (error) {
-        console.error("Error fetching like/dislike status:", error);
+        console.error("Error fetching like/dislike status: ", handleError(error));
+        setError(handleError(error));
       }
     }
   }, [videoId, isVideoLikedByMe]);
@@ -27,7 +31,8 @@ const VideoLikeDislikeButton = ({ videoId, totalLikes, totalDislikes, isVideoLik
       await videoService.toggleVideoLikeDislike({videoId, type});
       updateLikeDislikeCount(type);
     } catch (error) {
-      console.error('Error toggling like/dislike:', error);
+      console.error("Error toggling like/dislike: ", handleError(error));
+      setError(handleError(error));
     }
   };
 
@@ -52,7 +57,7 @@ const VideoLikeDislikeButton = ({ videoId, totalLikes, totalDislikes, isVideoLik
         onClick={() => handleToggleLikeDislike('like')}
       >
         <span className={`inline-block w-5`}>
-          <LikeIcon type={likeStatus === "like" ? 'filled' : 'outlined'} />
+          <LikeIcon variant={likeStatus === "like" ? 'filled' : 'outlined'} />
         </span>
         {formatLikeCount(likes)}
       </button>
@@ -62,7 +67,7 @@ const VideoLikeDislikeButton = ({ videoId, totalLikes, totalDislikes, isVideoLik
         onClick={() => handleToggleLikeDislike('dislike')}
       >
         <span className={`inline-block w-5`}>
-          <DislikeIcon type={likeStatus === "dislike" ? 'filled' : 'outlined'} />
+          <DislikeIcon variant={likeStatus === "dislike" ? 'filled' : 'outlined'} />
         </span>
         {formatLikeCount(dislikes)}
       </button>
