@@ -14,6 +14,8 @@ import AuthLayout from "./AuthLayout/AuthLayout";
 import Header from "./Header/Header";
 import Sidebar from "./Sidebar/Sidebar";
 
+import SignupForm from "./Auth/SignupForm";
+import LoginForm from "./Auth/LoginForm";
 
 
 
@@ -34,4 +36,7 @@ export {
 
     Header,
     Sidebar,
+
+    SignupForm,
+    LoginForm,
 };

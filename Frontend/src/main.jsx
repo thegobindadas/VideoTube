@@ -7,13 +7,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 
+import { AuthLayout } from "./components/index.js"
 import SignupPage from './pages/SignupPage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import VideoGalleryPage from './pages/VideoGalleryPage.jsx'
-import WatchHistoryPage from './pages/WatchHistoryPage.jsx'
-import VideoDetailsPage from './pages/VideoDetailsPage.jsx'
-import ChannelPage from './pages/ChannelPage.jsx'
-import PlaylistVideosPage from './pages/PlaylistVideosPage.jsx'
+import LoginPage from "./pages/LoginPage.jsx"
 
 
 const router = createBrowserRouter([
@@ -27,31 +23,24 @@ const router = createBrowserRouter([
       },
       {
         path: "signup",
-        element: <SignupPage />,
+        element: (
+          <AuthLayout authentication={false}>
+            <SignupPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "watch/:videoId",
-        element: <VideoDetailsPage />,
-      },
-      {
-        path: "watch-history",
-        element: <WatchHistoryPage />,
-      },
-      {
-        path: "channel/:username",
-        element: <ChannelPage />,
-      },
-      {
-        path: "playlist/:playlistId",
-        element: <PlaylistVideosPage />,
+        element: (
+          <AuthLayout authentication={false}>
+            <LoginPage />
+          </AuthLayout>
+        ),
       },
     ]
   }
 ])
+
 
 
 createRoot(document.getElementById('root')).render(
