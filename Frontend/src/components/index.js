@@ -11,7 +11,8 @@ import SubscribeBtn from "./Buttons/SubscribeBtn";
 
 import AuthLayout from "./AuthLayout/AuthLayout";
 
-
+import Header from "./Header/Header";
+import Sidebar from "./Sidebar/Sidebar";
 
 
 
@@ -30,4 +31,7 @@ export {
     SubscribeBtn, 
     
     AuthLayout,
+
+    Header,
+    Sidebar,
 };
