@@ -209,7 +209,7 @@ export const getChannelSubscribersList = asyncHandler(async (req, res) => {
             "Fetched channel subscribers successfully."
             )
         );
-})
+});
 
 
 /* The above code is a JavaScript function that searches for subscribers of a specific channel based on

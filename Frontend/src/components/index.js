@@ -1,0 +1,1 @@
+import Protected from "./AuthLayout/AuthLayout";
