@@ -1,12 +1,12 @@
 import React from 'react'
-import { convertSeconds, getTimeAgo } from '../../utils/timeUtils';
+import { formatDuration, formatTimeAgo } from '../../utils/timeUtils';
 import { formatViewsCount } from "../../utils/numberUtils"
 
 
 function RecommendedVideoItem({ thumbnail, title, duration, views, createdAt, ownerId, ownerUsername, ownerName, ownerAvatar }) {
 
-    const videoDuration = convertSeconds(duration);
-    const timeAgo = getTimeAgo(createdAt);
+    const videoDuration = formatDuration(duration);
+    const timeAgo = formatTimeAgo(createdAt);
     const viewsCount = formatViewsCount(views);
 
 

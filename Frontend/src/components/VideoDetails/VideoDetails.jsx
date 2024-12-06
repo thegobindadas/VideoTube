@@ -107,7 +107,7 @@ function VideoDetails({ videoId }) {
                             <div className="block">
                                 <SubscribeBtn 
                                     channelId={videoInfo.ownerId} 
-                                    subscriptionStatus={isChannelSubscribed}
+                                    subscriptionStatus={videoInfo.isChannelSubscribed}
                                 />
                             </div>
                         </div>

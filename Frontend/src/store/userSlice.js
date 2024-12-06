@@ -18,11 +18,13 @@ const userSlice = createSlice({
       state.user = action.payload;
       state.watchHistory = action.payload.watchHistory || [];
       localStorage.setItem('user', JSON.stringify(action.payload));
+      state.status = true;
     },
     logoutUser(state) {
       state.user = null;
       state.watchHistory = [];
       localStorage.removeItem('user');
+      state.status = false;
     },
     addToWatchHistory(state, action) {
       if (!state.watchHistory.includes(action.payload)) {

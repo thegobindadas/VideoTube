@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import playlistService from "../../services/playlistService"
 import { useDispatch } from "react-redux";
-import { saveVideoToPlaylist, removeVideoFromPlaylist } from "../../store/myPlaylistsSlice";
+import { saveVideoToPlaylist, removeVideoFromPlaylist } from "../../store/myPlaylistSlice";
 
 const PlaylistItem = ({ videoId, playlist }) => {
   
