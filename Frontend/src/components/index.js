@@ -36,6 +36,8 @@ import PlaylistSaveButton from "./VideoSaveToPlaylist/PlaylistSaveButton";
 import PlaylistModal from "./VideoSaveToPlaylist/PlaylistModal";
 import PlaylistItem from "./VideoSaveToPlaylist/PlaylistItem";
 
+import RecommendedVideoList from "./RecommendedVideoList/RecommendedVideoList";
+import RecommendedVideoItem from "./RecommendedVideoList/RecommendedVideoItem";
 
 export {
     AuthInput, 
@@ -75,5 +77,8 @@ export {
     PlaylistSaveButton,
     PlaylistModal,
     PlaylistItem,
+
+    RecommendedVideoList,
+    RecommendedVideoItem,
 
 };
