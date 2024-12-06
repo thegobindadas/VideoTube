@@ -22,6 +22,10 @@ import LoginForm from "./Auth/LoginForm";
 import VideoGallery from "./VideoGallery/VideoGallery";
 import VideoGalleryItem from "./VideoGallery/VideoGalleryItem";
 
+import VideoDetails from "./VideoDetails/VideoDetails";
+import VideoPlayer from "./VideoDetails/VideoPlayer";
+import VideoOwnerDetails from "./VideoDetails/VideoOwnerDetails";
+import VideoLikeDislikeButton from "./VideoDetails/VideoLikeDislikeButton";
 
 
 export {
@@ -48,4 +52,9 @@ export {
 
     VideoGallery,
     VideoGalleryItem,
+
+    VideoDetails,
+    VideoPlayer,
+    VideoOwnerDetails,
+    VideoLikeDislikeButton
 };

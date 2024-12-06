@@ -130,18 +130,19 @@ export const getVideoById = asyncHandler(async (req, res) => {
     }
 
 
-    const [likesCount, dislikesCount, userLikeDislikeStatus] = await Promise.all([
+    const [likesCount, dislikesCount, userLikeDislikeStatus, totalSubscribers, isSubscribed] = await Promise.all([
         LikeDislike.countDocuments({ video: videoId, type: 'like' }),
         LikeDislike.countDocuments({ video: videoId, type: 'dislike' }),
-        LikeDislike.findOne({ video: videoId, likedBy: req.user?._id})
+        LikeDislike.findOne({ video: videoId, likedBy: req.user?._id}),
+        Subscription.countDocuments({ channel: video.owner._id }),
+        Subscription.exists({ subscriber: req.user?._id, channel: video.owner._id })
     ]);
 
-    const isVideoLikedByMe = userLikeDislikeStatus ? userLikeDislikeStatus.type : null;
+    const isVideoLikedByMe = userLikeDislikeStatus?.type || null;
 
-    
-    const totalSubscribers = video.owner
-        ? await Subscription.countDocuments({ channel: video.owner._id })
-        : 0;
+    const ownerTotalSubscribers = totalSubscribers || 0;
+
+    const isChannelSubscribed = isSubscribed ? true : false;
     
     
 
@@ -164,7 +165,8 @@ export const getVideoById = asyncHandler(async (req, res) => {
                     ownerName: video.owner.fullName,
                     ownerAvatar: video.owner.avatar,
                     ownerUsername: video.owner.username,
-                    ownerTotalSubscribers: totalSubscribers
+                    ownerTotalSubscribers,
+                    isChannelSubscribed
                 },
                 "Video fetched successfully."
             )
