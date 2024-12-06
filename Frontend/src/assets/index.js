@@ -9,6 +9,7 @@ import HomeIcon from "./HomeIcon";
 import HistoryIcon from "./HistoryIcon";
 import FolderIcon from "./FolderIcon";
 import SubscribersIcon from "./SubscribersIcon";
+import PlusIcon from "./PlusIcon";
 
 
 export {
@@ -23,4 +24,5 @@ export {
     HistoryIcon,
     FolderIcon,
     SubscribersIcon,
+    PlusIcon,
 }
