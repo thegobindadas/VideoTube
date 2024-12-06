@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from "../index"
-import { LogoIcon, SearchIcon, CloseIcon, LikedVideosIcon, ContentIcon, SupportIcon, SettingIcon } from "../../assets"
+import { VidplayIcon, SearchIcon, CloseIcon, ThumbsUpIcon, VideoCameraIcon, SupportIcon, SettingIcon } from "../../assets"
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -15,11 +15,11 @@ function Header() {
     const buttonsData = [
         {
             label: "Liked Videos",
-            Icon: <LikedVideosIcon />
+            Icon: <ThumbsUpIcon />
         },
         {
             label: "My Content",
-            Icon: <ContentIcon />
+            Icon: <VideoCameraIcon />
         },
         {
             label: "Support",
@@ -36,7 +36,7 @@ function Header() {
     <header className="sticky inset-x-0 top-0 z-50 w-full border-b border-white bg-[#121212] px-4">
         <nav className="mx-auto flex max-w-7xl items-center py-2">
             <div className="mr-4 w-12 shrink-0 sm:w-16">
-                <LogoIcon /> {/* logo-icon */}
+                <VidplayIcon /> {/* logo-icon */}
             </div>
 
             
@@ -52,7 +52,7 @@ function Header() {
             <div className="fixed inset-y-0 right-0 flex w-full max-w-xs shrink-0 translate-x-full flex-col border-l border-white bg-[#121212] duration-200 hover:translate-x-0 peer-focus:translate-x-0 sm:static sm:ml-4 sm:w-auto sm:translate-x-0 sm:border-none">
                 <div className="relative flex w-full items-center justify-between border-b border-white px-4 py-2 sm:hidden">
                     <span className="inline-block w-12">
-                        <LogoIcon /> {/* logo-icon */}
+                        <VidplayIcon /> {/* logo-icon */}
                     </span>
                     <button className="inline-block w-8">
                         <CloseIcon /> {/* Close-Icon */}

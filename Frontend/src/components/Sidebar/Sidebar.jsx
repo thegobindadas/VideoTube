@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SidebarButton } from "../index"
-import { HomeIcon, LikedVideosIcon, HistoryIcon, ContentIcon, CollectionIcon, SubscribersIcon, SupportIcon, SettingIcon } from "../../assets"
+import { HomeIcon, ThumbsUpIcon, HistoryIcon, VideoCameraIcon, FolderIcon, SubscribersIcon, SupportIcon, SettingIcon } from "../../assets"
 
 function Sidebar({ type }) {
 
@@ -14,16 +14,16 @@ function Sidebar({ type }) {
                 <SidebarButton label="Home" sidebarType={type} Icon={HomeIcon} onClick={() => navigate("/")}/>
             </li>
             <li className="hidden sm:block">
-                <SidebarButton label="Liked Videos" sidebarType={type} Icon={LikedVideosIcon} onClick={() => navigate("/like-videos")}/>
+                <SidebarButton label="Liked Videos" sidebarType={type} Icon={ThumbsUpIcon} onClick={() => navigate("/like-videos")}/>
             </li>
             <li className="">
                 <SidebarButton label="History" sidebarType={type} Icon={HistoryIcon} onClick={() => navigate("/watch-history")} />
             </li>
             <li className="hidden sm:block">
-                <SidebarButton label="My Content" sidebarType={type} Icon={ContentIcon} onClick={() => navigate("/dashboard")} />
+                <SidebarButton label="My Content" sidebarType={type} Icon={VideoCameraIcon} onClick={() => navigate("/dashboard")} />
             </li>
             <li className="">
-                <SidebarButton label="Collections" sidebarType={type} Icon={CollectionIcon} />
+                <SidebarButton label="Collections" sidebarType={type} Icon={FolderIcon} />
             </li>
             <li className="">
                 <SidebarButton label="Subscribers" sidebarType={type} Icon={SubscribersIcon} />
@@ -38,5 +38,6 @@ function Sidebar({ type }) {
     </aside>
   )
 }
+
 
 export default Sidebar
