@@ -91,10 +91,10 @@ function Header() {
                     ) : (
                         <div className="mb-8 mt-auto flex w-full flex-wrap gap-4 px-4 sm:mb-0 sm:mt-0 sm:items-center sm:px-0">
                             <button
-                             onClick={() => navigate("login")}
+                             onClick={() => navigate("/login")}
                              className="w-full bg-[#383737] px-3 py-2 hover:bg-[#4f4e4e] sm:w-auto sm:bg-transparent">Log in</button>
                             <Button 
-                             onClick={() => navigate("signup")}
+                             onClick={() => navigate("/signup")}
                              className="mr-1 px-3 py-2 sm:w-auto"> Sign up </Button>
                         </div>
                     )

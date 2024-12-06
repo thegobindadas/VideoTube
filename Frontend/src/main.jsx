@@ -10,6 +10,7 @@ import store from './store/store.js'
 import { AuthLayout } from "./components/index.js"
 import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from "./pages/LoginPage.jsx"
+import Home from './pages/Home.jsx'
 
 
 const router = createBrowserRouter([
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <VideoGalleryPage />,
+        element: <Home />,
       },
       {
         path: "signup",

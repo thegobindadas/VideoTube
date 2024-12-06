@@ -9,6 +9,8 @@ import Button from "./Buttons/Button";
 import SidebarButton from "./Buttons/SidebarButton";
 import SubscribeBtn from "./Buttons/SubscribeBtn";
 
+import Loader from "./UI/Loader";
+
 import AuthLayout from "./AuthLayout/AuthLayout";
 
 import Header from "./Header/Header";
@@ -17,6 +19,8 @@ import Sidebar from "./Sidebar/Sidebar";
 import SignupForm from "./Auth/SignupForm";
 import LoginForm from "./Auth/LoginForm";
 
+import VideoGallery from "./VideoGallery/VideoGallery";
+import VideoGalleryItem from "./VideoGallery/VideoGalleryItem";
 
 
 
@@ -32,6 +36,8 @@ export {
     SidebarButton, 
     SubscribeBtn, 
     
+    Loader,
+    
     AuthLayout,
 
     Header,
@@ -39,4 +45,7 @@ export {
 
     SignupForm,
     LoginForm,
+
+    VideoGallery,
+    VideoGalleryItem,
 };
