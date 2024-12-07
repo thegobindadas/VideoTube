@@ -27,7 +27,6 @@ export default function CommentSection({ videoId }) {
   };
 
 
-
   const fetchComments = useCallback(async (videoId, page) => {
     try {
       dispatch(setLoading(true));            
@@ -61,7 +60,7 @@ export default function CommentSection({ videoId }) {
     if (page <= totalPages) {
       fetchComments(videoId, page);
     }
-  }, [fetchComments, page, totalPages]);
+  }, [fetchComments, page, totalPages, videoId]);
 
 
   useEffect(() => {
@@ -71,9 +70,7 @@ export default function CommentSection({ videoId }) {
           dispatch(setPage(page + 1));
         }
       },
-      {
-        threshold: 1.0
-      }
+      { threshold: 1.0 }
     );
 
     if (loader.current) observer.observe(loader.current);
@@ -82,34 +79,45 @@ export default function CommentSection({ videoId }) {
   
 
 
-  if (loading) return <Loader />;
+  
+  if (loading && videoComments.length === 0) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
 
   return (
     <>
       <CommentButton totalComments={totalComments} onClick={toggleComments} />
+
       <div
         className={`fixed inset-x-0 top-full z-[60] h-[calc(100%-69px)] overflow-auto rounded-lg border bg-[#121212] p-4 duration-200 ${
           showComments ? 'top-[67px]' : ''
         } peer-focus:top-[67px] sm:static sm:h-auto sm:max-h-[500px] lg:max-h-none`}
-        >
-          <CommentInput videoId={videoId} totalComments={totalComments} />
-          <hr className="my-4 border-white" />
-            
-          {videoComments.map((comment) => (
-            <div key={comment._id}>
-              <CommentItem
-                comment={comment}
-              />
-              <hr className="my-4 border-white" />
-            </div>
-          ))}
+      >
+        <CommentInput videoId={videoId} totalComments={totalComments} />
 
-          {page >= totalPages && (
-            <p className="text-center text-gray-500">No more comments to load.</p>
-          )}
-          <div ref={loader} className="loader"></div>
+        <hr className="my-4 border-white" />
+            
+
+        {videoComments.length === 0 && !loading && (
+          <p className="text-center text-gray-500">No comments available.</p>
+        )}
+  
+        {videoComments.map((comment) => (
+          <div key={comment._id}>
+            <CommentItem comment={comment} />
+            <hr className="my-4 border-white" />
+          </div>
+        ))}
+  
+        {/* Show loader while new comments are being fetched */}
+        {loading && <Loader />}
+  
+        {/* Show "No more comments" message if all comments have been loaded */}
+        {page >= totalPages && videoComments.length > 0 && !loading && (
+          <p className="text-center text-gray-500">No more comments to load.</p>
+        )}
+
+        <div ref={loader} className="loader"></div>
       </div>
     </>
   );
