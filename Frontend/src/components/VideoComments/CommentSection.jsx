@@ -1,9 +1,12 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Loader, CommentButton, CommentInput, CommentItem } from "../index";
-import commentService from "../../services/commentService";
+import { handleError } from "../../utils/errorHandler"
 import { useDispatch, useSelector } from 'react-redux';
+import commentService from "../../services/commentService";
 import { 
-  setVideoComments, 
+  setVideoComments,
+  updateComment,
+  deleteComment,
   setLoading, 
   setError, 
   setPage, 
@@ -27,6 +30,48 @@ export default function CommentSection({ videoId }) {
   };
 
 
+  const onUpdateComment = async (commentId, updatedContent) => {
+    try {
+      
+      if (!updatedContent.trim()) {
+        dispatch(setError("Comment content cannot be empty or just spaces."));
+        return;
+      }
+
+      dispatch(setLoading(true));
+
+      const response = await commentService.updateComment({ commentId, content: updatedContent });
+      
+      if (response.success) {
+        dispatch(updateComment({ id: response.data._id, content: response.data.content }));
+      }
+    } catch (error) {
+      const errMsg = handleError(error)
+      dispatch(setError(errMsg));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  
+  const onDeleteComment = async (commentId) => {
+    try {
+      /*dispatch(setLoading(true));
+      const response = await commentService.deleteComment(commentId);
+
+      if (response.status === 200) {
+        // Remove the comment from the Redux store
+        dispatch(deleteComment(commentId));
+      }*/
+    } catch (error) {
+      const errMsg = handleError(error)
+      dispatch(setError(errMsg));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+
   const fetchComments = useCallback(async (videoId, page) => {
     try {
       dispatch(setLoading(true));            
@@ -42,7 +87,8 @@ export default function CommentSection({ videoId }) {
 
       dispatch(setVideoComments(fetchedComments));
     } catch (error) {
-      dispatch(setError(error.message));
+      const errMsg = handleError(error)
+      dispatch(setError(errMsg));
     } finally {
       dispatch(setLoading(false));
     }
@@ -79,7 +125,7 @@ export default function CommentSection({ videoId }) {
   
 
 
-  
+
   if (loading && videoComments.length === 0) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
@@ -104,7 +150,11 @@ export default function CommentSection({ videoId }) {
   
         {videoComments.map((comment) => (
           <div key={comment._id}>
-            <CommentItem comment={comment} />
+            <CommentItem 
+              comment={comment}
+              onUpdateComment={onUpdateComment}
+              onDeleteComment={onDeleteComment}
+            />
             <hr className="my-4 border-white" />
           </div>
         ))}

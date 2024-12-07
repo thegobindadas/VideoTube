@@ -36,15 +36,15 @@ const commentSlice = createSlice({
                 : [newComment, ...state.videoComments];
         },
         updateComment: (state, action) => {
-            const updatedComment = action.payload;
+            const { id, content } = action.payload;
             state.videoComments = state.videoComments.map(comment =>
-                comment._id === updatedComment._id ? { ...comment, ...updatedComment } : comment
+              comment._id === id ? { ...comment, content: content } : comment
             );
-        },
+        },                          
         deleteComment: (state, action) => {
             const commentId = action.payload;
             state.videoComments = state.videoComments.filter(comment => comment._id !== commentId);
-        },
+        },        
         setPage: (state, action) => {
             state.page = action.payload;
         },
