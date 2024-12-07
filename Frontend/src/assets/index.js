@@ -12,6 +12,9 @@ import SubscribersIcon from "./SubscribersIcon";
 import PlusIcon from "./PlusIcon";
 import LikeIcon from "./LikeIcon";
 import DislikeIcon from "./DislikeIcon";
+import AddProfileIcon from "./AddProfileIcon";
+import EditIcon from "./EditIcon";
+import DeleteIcon from "./DeleteIcon";
 
 
 export {
@@ -28,5 +31,8 @@ export {
     SubscribersIcon,
     PlusIcon,
     LikeIcon,
-    DislikeIcon
+    DislikeIcon,
+    AddProfileIcon,
+    EditIcon,
+    DeleteIcon,
 }
