@@ -18,7 +18,7 @@ const CommentInput = ({ videoId, totalComments }) => {
       if (content.trim()) {
         const addComment = await commentService.addComment({videoId, content})
         
-        if (addComment.data) {
+        if (addComment.success && addComment.data.owner === userData._id) {
           const fullComment = {
             _id: addComment.data._id,
             content: addComment.data.content,
@@ -31,6 +31,9 @@ const CommentInput = ({ videoId, totalComments }) => {
             },
             video: videoId,
           };
+          console.log("comment Input: ", addComment);
+          console.log("Comment: ", fullComment);
+          
           
           dispatch(setSingleCommentForVideo(fullComment));
 
@@ -46,15 +49,15 @@ const CommentInput = ({ videoId, totalComments }) => {
   
   return (
     <div className="block">
-        <h6 className="mb-4 font-semibold">{commentsCount}</h6>
-        <input
-            type="text"
-            className="w-full rounded-lg border bg-transparent px-2 py-1 placeholder-white"
-            placeholder="Add a Comment"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
-        />
+      <h6 className="mb-4 font-semibold">{commentsCount}</h6>
+      <input
+        type="text"
+        className="w-full rounded-lg border bg-transparent px-2 py-1 placeholder-white"
+        placeholder="Add a Comment"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+      />
     </div>
   );
 };

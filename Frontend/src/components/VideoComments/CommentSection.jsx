@@ -1,8 +1,16 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import {CommentButton, CommentInput, CommentItem } from "../index"
-import commentService from "../../services/commentService"
-import { setVideoComments, setLoading, setError, setPage, setHasMore, resetVideoComments } from '../../store/commentSlice';
+import { Loader, CommentButton, CommentInput, CommentItem } from "../index";
+import commentService from "../../services/commentService";
 import { useDispatch, useSelector } from 'react-redux';
+import { 
+  setVideoComments, 
+  setLoading, 
+  setError, 
+  setPage, 
+  setHasMore, 
+  resetVideoComments 
+} from '../../store/commentSlice';
+
 
 export default function CommentSection({ videoId }) {
 
@@ -73,6 +81,11 @@ export default function CommentSection({ videoId }) {
   }, [hasMore, loading, dispatch, page, totalPages]);
   
 
+
+  if (loading) return <Loader />;
+  if (error) return <p>Error: {error}</p>;
+
+
   return (
     <>
       <CommentButton totalComments={totalComments} onClick={toggleComments} />
@@ -87,19 +100,14 @@ export default function CommentSection({ videoId }) {
           {videoComments.map((comment) => (
             <div key={comment._id}>
               <CommentItem
-                ownerId={comment.owner._id}
-                fullName={comment.owner.fullName}
-                username={comment.owner.username}
-                avatar={comment.owner.avatar}
-                content={comment.content}
-                createdAt={comment.createdAt}
+                comment={comment}
               />
               <hr className="my-4 border-white" />
             </div>
           ))}
 
           {page >= totalPages && (
-            <p className="text-center text-gray-500">No more videos to load.</p>
+            <p className="text-center text-gray-500">No more comments to load.</p>
           )}
           <div ref={loader} className="loader"></div>
       </div>

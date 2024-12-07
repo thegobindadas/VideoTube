@@ -1,8 +1,10 @@
 import React from 'react';
 import { formatCommentsCount } from "../../utils/numberUtils"
 
+
 export default function CommentButton({ totalComments, onClick }) {
-    const commentsCount = formatCommentsCount(totalComments);
+
+  const commentsCount = formatCommentsCount(totalComments);
 
   return (
     <button
@@ -13,5 +15,3 @@ export default function CommentButton({ totalComments, onClick }) {
     </button>
   );
 }
-
-              
