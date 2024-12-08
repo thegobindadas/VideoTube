@@ -56,13 +56,12 @@ export default function CommentSection({ videoId }) {
   
   const onDeleteComment = async (commentId) => {
     try {
-      /*dispatch(setLoading(true));
-      const response = await commentService.deleteComment(commentId);
+      dispatch(setLoading(true));
+      const response = await commentService.deleteComment({commentId});
 
-      if (response.status === 200) {
-        // Remove the comment from the Redux store
+      if (response.success) {
         dispatch(deleteComment(commentId));
-      }*/
+      }
     } catch (error) {
       const errMsg = handleError(error)
       dispatch(setError(errMsg));

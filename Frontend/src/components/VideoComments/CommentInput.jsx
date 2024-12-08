@@ -30,10 +30,7 @@ const CommentInput = ({ videoId, totalComments }) => {
               avatar: userData.avatar,
             },
             video: videoId,
-          };
-          console.log("comment Input: ", addComment);
-          console.log("Comment: ", fullComment);
-          
+          };          
           
           dispatch(setSingleCommentForVideo(fullComment));
 
