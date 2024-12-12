@@ -12,6 +12,7 @@ import SignupPage from './pages/SignupPage.jsx'
 import LoginPage from "./pages/LoginPage.jsx"
 import Home from './pages/Home.jsx'
 import VideoPage from './pages/VideoPage.jsx'
+import ChannelPage from './pages/ChannelPage.jsx'
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication>
             <VideoPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "channel/:username",
+        element: (
+          <AuthLayout authentication>
+            <ChannelPage />
           </AuthLayout>
         ),
       },

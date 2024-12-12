@@ -39,6 +39,12 @@ import PlaylistItem from "./VideoSaveToPlaylist/PlaylistItem";
 import RecommendedVideoList from "./RecommendedVideoList/RecommendedVideoList";
 import RecommendedVideoItem from "./RecommendedVideoList/RecommendedVideoItem";
 
+import Channel from "./Channel/Channel";
+import ChannelCoverPhoto from "./Channel/ChannelCoverPhoto";
+import ChannelInfo from "./Channel/ChannelInfo";
+import ChannelTabs from "./Channel/ChannelTabs";
+
+
 export {
     AuthInput, 
     AvatarInput, 
@@ -81,4 +87,8 @@ export {
     RecommendedVideoList,
     RecommendedVideoItem,
 
+    Channel,
+    ChannelCoverPhoto,
+    ChannelInfo,
+    ChannelTabs,
 };
