@@ -10,10 +10,16 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 export const createPlaylist = asyncHandler(async (req, res) => {
     
     const { name , description } = req.body
-    const trimmedName = name.trim();
 
-    if (!name) {
-        throw new ApiError(400, "Playlist name is required.")
+    if (!name || typeof name !== "string") {
+        throw new ApiError(400, "Playlist name is required and must be a valid string.");
+    }
+
+
+    const trimmedName = name.trim();
+    
+    if (!trimmedName) {
+        throw new ApiError(400, "Playlist name cannot be empty after trimming.");
     }
 
 

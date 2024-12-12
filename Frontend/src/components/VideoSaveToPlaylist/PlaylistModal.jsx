@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { PlaylistItem } from '../index';
+import { handleError } from "../../utils/errorHandler";
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading, setError, setPlaylists, setPage, setHasMore, createPlaylist } from "../../store/myPlaylistSlice"
-import playlistService from "../../services/playlistService"
-import { handleError } from "../../utils/errorHandler"
-
+import { setLoading, setError, setPlaylists, setPage, setHasMore, createPlaylist } from "../../store/myPlaylistSlice";
+import playlistService from "../../services/playlistService";
 
 
 const PlaylistModal = ({ videoId, closeModal }) => {
@@ -12,6 +11,33 @@ const PlaylistModal = ({ videoId, closeModal }) => {
   const dispatch = useDispatch();
   const { playlists, loading, error, page, hasMore } = useSelector((state) => state.myPlaylists);
   const [newPlaylistName, setNewPlaylistName] = useState('');
+
+
+  const handleCloseModal = () => {
+    dispatch(setError(null)); // Clear error state
+    closeModal(); // Close the modal
+  };
+
+  // Close modal on clicking outside
+  const handleOutsideClick = (e) => {
+    if (e.target.classList.contains("modal-overlay")) {
+      handleCloseModal();
+    }
+  };
+
+  useEffect(() => {
+    // Close modal on pressing "Esc" key
+    const handleKeyPress = (e) => {
+      if (e.key === "Escape") {
+        handleCloseModal();
+      }
+    };
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
 
   const fetchMyPlaylists = async () => {
@@ -31,8 +57,8 @@ const PlaylistModal = ({ videoId, closeModal }) => {
         throw new Error(myPlaylists.message || 'Failed to fetch playlists.');
       }
     } catch (error) {
-      console.error('Error while fetching playlists: ', error.message);
-      dispatch(setError(error.message || 'Failed to fetch playlists.'));
+      const errorMessage = handleError(error);
+      dispatch(setError(errorMessage || "Failed to fetch playlists."));
     } finally {
       dispatch(setLoading(false));
     }
@@ -41,14 +67,18 @@ const PlaylistModal = ({ videoId, closeModal }) => {
 
   useEffect(() => {
     fetchMyPlaylists();
+
+    return () => {
+      dispatch(setError(null)); // Reset error when unmounting
+    };
   }, [page]);
 
 
 
   const handleCreatePlaylist = async () => {
     if (!newPlaylistName.trim()) {
-      console.error('Playlist name cannot be empty');
-      alert('Playlist name cannot be empty');
+      console.error("Playlist name cannot be empty");
+      alert("Playlist name cannot be empty");
       return;
     }
 
@@ -56,7 +86,7 @@ const PlaylistModal = ({ videoId, closeModal }) => {
         dispatch(setLoading(true));
         dispatch(setError(null));
 
-        const res = await playlistService.createANewPlaylist({newPlaylistName});
+        const res = await playlistService.createANewPlaylist({ name: newPlaylistName.trim() });
 
         if (res.success) {
           dispatch(createPlaylist(res.data));
@@ -65,7 +95,6 @@ const PlaylistModal = ({ videoId, closeModal }) => {
           throw new Error(res.message || 'Failed to create playlist.');
         }
     } catch (error) {
-      console.error('Error creating playlist:', error.message);
       const errorMessage = handleError(error);
       dispatch(setError(errorMessage || error.message));
     } finally {
@@ -127,11 +156,14 @@ const PlaylistModal = ({ videoId, closeModal }) => {
           Create new playlist
         </button>
       </div>
-      <button className="mt-4 text-white" onClick={closeModal}>
-        Close
-      </button>
+      {/*
+        <button className="mt-4 text-white" onClick={closeModal}>
+          Close
+        </button>
+      */}
     </div>
   );
 };
+
 
 export default PlaylistModal;

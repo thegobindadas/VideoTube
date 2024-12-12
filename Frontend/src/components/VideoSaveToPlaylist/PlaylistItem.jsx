@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import playlistService from "../../services/playlistService"
+import { CheckIcon } from "../../assets";
+import { handleError } from "../../utils/errorHandler";
 import { useDispatch } from "react-redux";
 import { saveVideoToPlaylist, removeVideoFromPlaylist } from "../../store/myPlaylistSlice";
+import playlistService from "../../services/playlistService";
+
 
 const PlaylistItem = ({ videoId, playlist }) => {
   
@@ -13,15 +16,16 @@ const PlaylistItem = ({ videoId, playlist }) => {
     setLoading(true);
     try {
       if (isChecked) {
-        await playlistService.removeVideoFromPlaylist(videoId, playlist._id);
+        await playlistService.removeVideoFromPlaylist({ playlistId: playlist._id, videoId });
         dispatch(removeVideoFromPlaylist({ videoId, playlistId: playlist._id }));
       } else {
-        await playlistService.addVideoToPlaylist(videoId, playlist._id);
+        await playlistService.addVideoToPlaylist({ playlistId: playlist._id, videoId });
         dispatch(saveVideoToPlaylist({ videoId, playlistId: playlist._id }));
       }
       setIsChecked(!isChecked);
     } catch (error) {
-      console.error("Failed to toggle video in playlist:", error.message);
+      const errorMessage = handleError(error);
+      console.error(errorMessage || error.message);
     } finally {
       setLoading(false);
     }
@@ -55,16 +59,7 @@ const PlaylistItem = ({ videoId, playlist }) => {
           }`}
         >
           {isChecked && !loading && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="3"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
-            </svg>
+            <CheckIcon />
           )}
         </span>
         {playlist.name}

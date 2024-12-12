@@ -15,6 +15,9 @@ import DislikeIcon from "./DislikeIcon";
 import AddProfileIcon from "./AddProfileIcon";
 import EditIcon from "./EditIcon";
 import DeleteIcon from "./DeleteIcon";
+import AddFileIcon from "./AddFileIcon";
+import CheckIcon from "./CheckIcon";
+
 
 
 export {
@@ -35,4 +38,6 @@ export {
     AddProfileIcon,
     EditIcon,
     DeleteIcon,
+    AddFileIcon,
+    CheckIcon,
 }
