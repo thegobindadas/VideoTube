@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { EditIcon } from "../../assets";
-import { 
+import {
+    Loader,
     Button, 
     SubscribeBtn, 
     ChannelTabs, 
     ChannelCoverPhoto, 
     ChannelInfo,
+    ChannelPlaylistTab,
     
     
 } from "../index";
@@ -58,7 +60,16 @@ function Channel({ username }) {
     };
 
 
-    const renderTabContent = () => {}
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'videos':
+                return "video tab";
+            case 'playlist':
+                return <ChannelPlaylistTab channelId={channel._id} />;
+            default:
+                return null;
+        }
+    };
     /*
     const renderTabContent = () => {
         switch (activeTab) {
@@ -87,7 +98,7 @@ function Channel({ username }) {
 
 
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
   if (error) return <div>Error: {error}</div>;
   if (!channel) return <div>No channel data available</div>;
 
