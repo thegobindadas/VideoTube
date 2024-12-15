@@ -8,7 +8,7 @@ import {
     ChannelCoverPhoto, 
     ChannelInfo,
     ChannelPlaylistTab,
-    
+    ChannelSubscribedTab,
     
 } from "../index";
 import { useDispatch, useSelector } from 'react-redux';
@@ -66,6 +66,8 @@ function Channel({ username }) {
                 return "video tab";
             case 'playlist':
                 return <ChannelPlaylistTab channelId={channel._id} />;
+            case 'subscribed':
+                return <ChannelSubscribedTab channelId={channel._id} />;
             default:
                 return null;
         }

@@ -48,6 +48,11 @@ import ChannelTabs from "./Channel/ChannelTabs";
 import ChannelPlaylistTab from "./ChannelPlaylistTab/ChannelPlaylistTab";
 import ChannelPlaylistTabCard from "./ChannelPlaylistTab/ChannelPlaylistTabCard";
 
+import ChannelSubscribedTab from "./ChannelSubscribedTab/ChannelSubscribedTab";
+import ChannelSubscribedTabCard from "./ChannelSubscribedTab/ChannelSubscribedTabCard";
+import SearchSubscribedChannel from "./ChannelSubscribedTab/SearchSubscribedChannel";
+
+
 
 export {
     AuthInput, 
@@ -99,4 +104,8 @@ export {
 
     ChannelPlaylistTab,
     ChannelPlaylistTabCard,
+
+    ChannelSubscribedTab,
+    ChannelSubscribedTabCard,
+    SearchSubscribedChannel,
 };

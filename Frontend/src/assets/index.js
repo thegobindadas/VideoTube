@@ -17,6 +17,7 @@ import EditIcon from "./EditIcon";
 import DeleteIcon from "./DeleteIcon";
 import AddFileIcon from "./AddFileIcon";
 import CheckIcon from "./CheckIcon";
+import PeopleIcon from "./PeopleIcon";
 
 
 
@@ -40,4 +41,5 @@ export {
     DeleteIcon,
     AddFileIcon,
     CheckIcon,
+    PeopleIcon,
 }
